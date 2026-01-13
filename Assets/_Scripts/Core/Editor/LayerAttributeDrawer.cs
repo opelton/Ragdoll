@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Potato.FPS.Editor
+namespace Potato.Core.Editor
 {
     [CustomPropertyDrawer(typeof(LayerIndexAttribute))]
     public class LayerAttributeDrawer : PropertyDrawer

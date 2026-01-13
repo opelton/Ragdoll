@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+using Potato.Core;
 using Potato.FPS.Game;
-using Potato.FPS.Editor;
 using Potato.Utils;
 
 namespace Potato.FPS.Gameplay

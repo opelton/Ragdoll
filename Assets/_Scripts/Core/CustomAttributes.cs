@@ -1,7 +1,6 @@
 using UnityEngine;
 
-namespace Potato.FPS.Editor
+namespace Potato.Core
 {
     public class LayerIndexAttribute : PropertyAttribute { }
-    
 }

@@ -1,9 +1,7 @@
 {
-    "name": "fps.Gameplay",
+    "name": "potato.core.editor",
     "rootNamespace": "",
     "references": [
-        "GUID:bff596cf5b5a6404b93b8de54a4046c4",
-        "GUID:2854a25ff5feefd4582ac58810f77f1a",
         "GUID:94e2445ce4cb5fe41b6f42eb71bb22e8"
     ],
     "includePlatforms": [],

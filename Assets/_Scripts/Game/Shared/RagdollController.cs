@@ -1,5 +1,5 @@
 using UnityEngine;
-using Potato.FPS.Editor;
+using Potato.Core;
 
 namespace Potato.FPS.Game
 {
