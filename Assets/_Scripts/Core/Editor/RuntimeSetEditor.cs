@@ -11,7 +11,7 @@ namespace Potato.Core.Editor
         {
             serializedObject.Update();
 
-            base.OnInspectorGUI();
+            DrawDefaultInspector();
 
             EditorGUI.BeginDisabledGroup(true); // make fields read-only
             EditorGUILayout.IntField("Count", ((RuntimeSetBase)target).Count);

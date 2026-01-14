@@ -9,7 +9,10 @@ namespace Potato.Core
     [Serializable]
     public class BoolReference : DataReference<BoolVariable, bool>
     {
-        public BoolReference(bool value) : base(value) { }
+        public BoolReference(bool value) : base(value)
+        {
+        }
+
         public BoolReference(BoolVariable referenceData) : base(referenceData) { }
 
         public static implicit operator BoolReference(bool value) => new(value);

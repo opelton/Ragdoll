@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 587ffda4b4d3f364286f956c6fa5026d, type: 3}
+  m_Name: Scissors
+  m_EditorClassIdentifier: 
+  winsAgainst: {fileID: 11400000, guid: 3f954a67f1adf264db90c477e8e07fbb, type: 2}
+  losesAgainst: {fileID: 11400000, guid: c6edcc5167af0774fa88f6d330778463, type: 2}

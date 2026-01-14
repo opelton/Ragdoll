@@ -9,7 +9,7 @@ namespace Potato.Core.Editor
     {
         public override void OnInspectorGUI()
         {
-            base.OnInspectorGUI();
+            DrawDefaultInspector();
 
             // only want to fire while playing
             GUI.enabled = Application.isPlaying;
