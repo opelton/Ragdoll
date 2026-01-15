@@ -9,7 +9,7 @@ namespace Potat.Tests.PlayMode
     public class TestPlayModeTest
     { 
         [UnityTest]
-        public IEnumerator DerpTest()
+        public IEnumerator Foo()
         {
             Assert.AreEqual(true, true);
             yield return null;

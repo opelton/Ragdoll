@@ -3,11 +3,11 @@ using UnityEngine;
 
 namespace Potato.Core
 {
-    // todo -- event args? templated?
     // event that can hook up to listeners in-editor
     [CreateAssetMenu(menuName = "ScriptableObjects/GameEvent")]
     public class GameEvent : ScriptableObject
     {
+        [SerializeField] string _description;
         private List<GameEventListener> listeners = new();
 
         public void Invoke()
