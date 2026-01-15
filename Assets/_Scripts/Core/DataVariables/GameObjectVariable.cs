@@ -9,6 +9,7 @@ namespace Potato.Core
     [Serializable]
     public class GameObjectReference : DataReference<GameObjectVariable, GameObject>
     {
+        public GameObjectReference() : base() { }
         public GameObjectReference(GameObject value) : base(value) { }
         public GameObjectReference(GameObjectVariable referenceData) : base(referenceData) { }
 

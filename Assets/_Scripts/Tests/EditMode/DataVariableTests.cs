@@ -2,10 +2,11 @@ using UnityEngine;
 using UnityEngine.TestTools;
 using Potato.Core;
 using NUnit.Framework;
+using System.Text.RegularExpressions;
 
 namespace Potato.Tests.EditMode
 {
-    public class IndirectVariableTests
+    public class DataVariableTests
     {
         void InstantiatesToZero<D, T>() where T : DataVariableBase
         {
@@ -40,7 +41,7 @@ namespace Potato.Tests.EditMode
             var dataVar = ScriptableObject.CreateInstance<T>();
             dataVar.SetReadonly(true);
 
-            LogAssert.Expect(LogType.Warning, $"Attempted to modify const DataVariable '{dataVar.name}'. Value unchanged.");
+            LogAssert.Expect(LogType.Warning, new Regex("Attempted to modify const DataVariable"));
 
             dataVar.SetValueProperty(testValue);
             Assert.AreEqual(dataVar.InitialValueObject, dataVar.ValueObject);

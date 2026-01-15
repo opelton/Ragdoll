@@ -9,6 +9,7 @@ namespace Potato.Core
     [Serializable]
     public class StringReference : DataReference<StringVariable, string>
     {
+        public StringReference() : base() { }
         public StringReference(string value) : base(value) { }
         public StringReference(StringVariable referenceData) : base(referenceData) { }
 

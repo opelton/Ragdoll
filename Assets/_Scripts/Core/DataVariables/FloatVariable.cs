@@ -9,6 +9,7 @@ namespace Potato.Core
     [Serializable]
     public class FloatReference : DataReference<FloatVariable, float>
     {
+        public FloatReference() : base() { }
         public FloatReference(float value) : base(value) { }
         public FloatReference(FloatVariable referenceData) : base(referenceData) { }
 

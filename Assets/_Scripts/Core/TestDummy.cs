@@ -9,6 +9,7 @@ namespace Potato.Core
         [SerializeField] IntReference testInt = 42;
         [SerializeField] BoolReference testBool = false;
         [SerializeField] StringReference testString = "test";
+        [SerializeField] StringReference testString2 = new();
         [SerializeField] CardinalEnum testCardinalEnum;
         [SerializeField][LayerIndex] int testLayerIndex;
 

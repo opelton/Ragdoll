@@ -9,6 +9,7 @@ namespace Potato.Core
     [Serializable]
     public class TransformReference : DataReference<TransformVariable, Transform>
     {
+        public TransformReference() : base() { }
         public TransformReference(Transform value) : base(value) { }
         public TransformReference(TransformVariable referenceData) : base(referenceData) { }
 
