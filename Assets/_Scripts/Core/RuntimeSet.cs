@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Potato.Core
 {
-    // like DataVariables, but a set
+    // central registry / observable collection. Headcounts, decoupled event subscription, replaces FindObjectOfType
     public abstract class RuntimeSet<T> : RuntimeSetBase, IPreInit
     {
         protected readonly List<T> _items = new();
@@ -15,9 +15,20 @@ namespace Potato.Core
         public void Add(T item)
         {
             if (!_items.Contains(item))
+            {
                 _items.Add(item);
+
+                if(onAdded)
+                    onAdded.Invoke();
+            }
         }
 
-        public bool Remove(T item) => _items.Remove(item);
+        public bool Remove(T item)
+        {
+            if(onRemoved)
+                onRemoved.Invoke();
+
+            return _items.Remove(item);
+        }
     }
 }

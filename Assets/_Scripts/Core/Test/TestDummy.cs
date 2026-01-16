@@ -10,6 +10,7 @@ namespace Potato.Core
         [SerializeField] BoolReference testBool = false;
         [SerializeField] StringReference testString = "test";
         [SerializeField] StringReference testString2 = new();
+        [SerializeField] DataBagReference dataBag = new();
         [SerializeField] CardinalEnum testCardinalEnum;
         [SerializeField][LayerIndex] int testLayerIndex;
         [SerializeField] StartupMarker startupMarker;

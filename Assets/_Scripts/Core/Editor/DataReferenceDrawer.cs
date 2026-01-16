@@ -4,17 +4,18 @@ using UnityEngine;
 
 namespace Potato.Core.Editor
 {
+    // todo -- databag doesn't expand when clicking arrow
     [CustomPropertyDrawer(typeof(DataReference<,>), true)]
     public class DataReferenceDrawer : PropertyDrawer
     {
-        private readonly string[] popupOptions = { "Use Constant", "Use Variable" };
+        private readonly string[] popupOptions = { "Constant Variable", "Reference Variable" };
         private GUIStyle popupStyle;
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             // Get properties
-            SerializedProperty useConstant = property.FindPropertyRelative("UseConstant");
-            SerializedProperty constantValue = property.FindPropertyRelative("ConstantValue");
-            SerializedProperty variable = property.FindPropertyRelative("ReferenceData");
+            SerializedProperty useConstantProp = property.FindPropertyRelative("UseConstant");
+            SerializedProperty constantValueProp = property.FindPropertyRelative("ConstantValue");
+            SerializedProperty referenceValueProp = property.FindPropertyRelative("ReferenceData");
 
             label = EditorGUI.BeginProperty(position, label, property);
             position = EditorGUI.PrefixLabel(position, label);
@@ -30,18 +31,18 @@ namespace Potato.Core.Editor
 
             buttonRect.yMin += popupStyle.margin.top;
             buttonRect.width = popupStyle.fixedWidth + popupStyle.margin.right;
-            position.xMin = buttonRect.xMax;
+            position.xMin = buttonRect.xMax + 16;
 
             int indent = EditorGUI.indentLevel;
             EditorGUI.indentLevel = 0;
 
-            int result = EditorGUI.Popup(buttonRect, useConstant.boolValue ? 0 : 1, popupOptions, popupStyle);
+            int result = EditorGUI.Popup(buttonRect, useConstantProp.boolValue ? 0 : 1, popupOptions, popupStyle);
 
-            useConstant.boolValue = result == 0;
+            useConstantProp.boolValue = result == 0;
 
             EditorGUI.PropertyField(position,
-                useConstant.boolValue ? constantValue : variable,
-                GUIContent.none);
+                useConstantProp.boolValue ? constantValueProp : referenceValueProp,
+                GUIContent.none, true);
 
             if (EditorGUI.EndChangeCheck())
                 property.serializedObject.ApplyModifiedProperties();
