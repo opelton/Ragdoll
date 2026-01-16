@@ -11,40 +11,52 @@ namespace Potato.Tests.EditMode
         void InstantiatesToZero<D, T>() where T : DataVariableBase
         {
             var dataVar = ScriptableObject.CreateInstance<T>();
+
             Assert.AreEqual(default(D), dataVar.ValueObject);
             Assert.AreEqual(default(D), dataVar.InitialValueObject); 
+
+            Object.DestroyImmediate(dataVar); 
         }
 
         void SetValue<D, T>(D newValue) where T : DataVariableBase
         {
             var dataVar = ScriptableObject.CreateInstance<T>();
+
             dataVar.SetValue(newValue);
             dataVar.SetInitialValue(newValue);
+
             Assert.AreEqual(newValue, (D)dataVar.ValueObject);
             Assert.AreEqual(newValue, (D)dataVar.InitialValueObject);
+
+            Object.DestroyImmediate(dataVar); 
         }
 
         void ResetValue<D, T>(D testValue) where T : DataVariableBase
         {
             var dataVar = ScriptableObject.CreateInstance<T>();
+            
             dataVar.SetValue(default(D));
             dataVar.SetInitialValue(testValue);
 
             dataVar.ResetValue();
 
             Assert.AreEqual((D)dataVar.InitialValueObject, (D)dataVar.ValueObject);
+
+            Object.DestroyImmediate(dataVar); 
         }
 
         // issue a warning and prevent the value from changing
         void ConstGuard<D, T>(D testValue) where T : DataVariableBase
         {
             var dataVar = ScriptableObject.CreateInstance<T>();
+
             dataVar.SetReadonly(true);
 
             LogAssert.Expect(LogType.Warning, new Regex("Attempted to modify const DataVariable"));
-
             dataVar.SetValueProperty(testValue);
             Assert.AreEqual(dataVar.InitialValueObject, dataVar.ValueObject);
+
+            Object.DestroyImmediate(dataVar); 
         }
 
         // when setting const to true, auto-update the runtime value to the const one
@@ -56,6 +68,8 @@ namespace Potato.Tests.EditMode
 
             Assert.AreEqual(testValue, dataVar.ValueObject);
             Assert.AreEqual(testValue, dataVar.InitialValueObject);
+
+            Object.DestroyImmediate(dataVar); 
         }
 
         // blank initialization

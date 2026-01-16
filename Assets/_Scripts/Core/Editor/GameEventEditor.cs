@@ -10,17 +10,14 @@ namespace Potato.Core.Editor
         public override void OnInspectorGUI()
         {
             DrawDefaultInspector();
+            GameEvent e = (GameEvent)target;
 
-            // only want to fire while playing
-            GUI.enabled = Application.isPlaying;
-            GameEvent gameEvent = (GameEvent)target;
+            GUI.enabled = false;
+            EditorGUILayout.IntField("Number of Listeners", e.NumListeners);
+            GUI.enabled = true;
 
             if (GUILayout.Button("Invoke Event"))
-            {
-                gameEvent.Invoke();
-            }
-            // be kind, reenable the rest of the GUI
-            GUI.enabled = true;
+                e.Invoke();
         }
     }
 }

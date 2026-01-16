@@ -3,33 +3,43 @@ using UnityEngine;
 
 namespace Potato.Core
 {
-    // event that can hook up to listeners in-editor
+    // event that can hook up to _listeners in-editor
     [CreateAssetMenu(menuName = "ScriptableObjects/GameEvent")]
-    public class GameEvent : ScriptableObject
+    public class GameEvent : ScriptableObject, IPreInit
     {
-        [SerializeField] string _description;
-        private List<GameEventListener> listeners = new();
+#if UNITY_EDITOR
+        [SerializeField] internal bool _logInvocations = false;
+        [SerializeField] internal string _description;
+#endif
+        private List<GameEventListener> _listeners = new();
+        public int NumListeners => _listeners.Count;
 
-        public void Invoke()
+        public void PreInit() => _listeners.Clear();
+        //public void OnEnable() => _listeners.Clear();
+
+        public void Invoke(object sender = null)
         {
-            // iterate backwards in case a listener's callback includes removing itself from this list
-            for (int i = listeners.Count - 1; i >= 0; i--)
+#if UNITY_EDITOR
+            if (_logInvocations)
             {
-                listeners[i].OnEventRaised();
+                string invoker = sender == null ? "anonymous" : sender.ToString();
+                Debug.Log($"{name} raised by {invoker}");
             }
+#endif
+            // iterate backwards in case a listener's callback includes removing itself from this list
+            for (int i = _listeners.Count - 1; i >= 0; i--)
+                _listeners[i].OnEventRaised();
         }
 
         public void AddListener(GameEventListener listener)
         {
-            if (!listeners.Contains(listener))
-            {
-                listeners.Add(listener);
-            }
+            if (!_listeners.Contains(listener))
+                _listeners.Add(listener);
         }
 
-        public void RemoveListener(GameEventListener listener)
+        public bool RemoveListener(GameEventListener listener)
         {
-            listeners.Remove(listener);
+            return _listeners.Remove(listener);
         }
     }
 }

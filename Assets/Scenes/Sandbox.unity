@@ -2007,6 +2007,7 @@ GameObject:
   - component: {fileID: 1515147388}
   - component: {fileID: 1515147387}
   - component: {fileID: 1515147389}
+  - component: {fileID: 1515147390}
   m_Layer: 0
   m_Name: SOAP_Dummy
   m_TagString: Untagged
@@ -2091,7 +2092,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20f5ac4eef45eea4db9eec5bf3e87876, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  runtimeSet: {fileID: 11400000, guid: 85259335d5154e04a9d510ba502f80b4, type: 2}
+  runtimeSet: {fileID: 11400000, guid: 6195379632f6db04bad5802b8baf2db6, type: 2}
 --- !u!114 &1515147386
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2104,7 +2105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea5aa1fd1f1dffe41beab1cf6ed3a008, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  runtimeSet: {fileID: 11400000, guid: 20fc41315df93044287d86eeb1be8578, type: 2}
+  runtimeSet: {fileID: 11400000, guid: d0a9ba9ba67827646a87408fd8f290cb, type: 2}
 --- !u!114 &1515147387
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2117,7 +2118,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ebc50fced1fc2e45971553d135412f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  runtimeSet: {fileID: 11400000, guid: 1c8111aebc73ffd47ae39a4d9b893c61, type: 2}
+  runtimeSet: {fileID: 11400000, guid: e80a16ac7d9c0f845890d76bb3eacb9f, type: 2}
 --- !u!82 &1515147388
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2231,9 +2232,9 @@ MonoBehaviour:
     ConstantValue: 42
     ReferenceData: {fileID: 0}
   testInt:
-    UseConstant: 1
+    UseConstant: 0
     ConstantValue: 42
-    ReferenceData: {fileID: 0}
+    ReferenceData: {fileID: 11400000, guid: b2cff460721b7f642b9dda4c84022bb4, type: 2}
   testBool:
     UseConstant: 1
     ConstantValue: 0
@@ -2242,7 +2243,29 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: test
     ReferenceData: {fileID: 0}
+  testString2:
+    UseConstant: 1
+    ConstantValue: 
+    ReferenceData: {fileID: 0}
   testCardinalEnum: {fileID: 11400000, guid: d1f195168266cd04fbae6c4df47d3c75, type: 2}
+  testLayerIndex: 0
+  startupMarker: {fileID: 11400000, guid: 33b595d3f9135da4095fc85922c354d2, type: 2}
+--- !u!114 &1515147390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1515147378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e3ce58489b3ad34d82e05b3c35d493b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EventSource: {fileID: 11400000, guid: d1c7b7cd5723a6a4783303f67d2d1dbd, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1544478917
 GameObject:
   m_ObjectHideFlags: 0

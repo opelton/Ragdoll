@@ -9,7 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ff2d27ddb8dcb54eabcf17b62c54bf0, type: 3}
-  m_Name: TransformSet
+  m_Script: {fileID: 11500000, guid: 29d6ff5aaf212e240bca8dc55f75bbeb, type: 3}
+  m_Name: audiosourceRuntimeSet
   m_EditorClassIdentifier: 
-  Items: []

@@ -10,7 +10,6 @@ namespace Potato.Core
         public T InitialValue { get { return _initialValue; } }
         public T Value { get => _value; set => CheckReadonlyGuard(value); } // CheckReadonlyGuard refuses the change if _isReadonly
 
-        void OnEnable() => ResetValue();
         public void SetValue(T value) => _value = value;
         public void SetInitialValue(T initialValue) => _initialValue = initialValue;
         public override void ResetValue() => _value = _initialValue;

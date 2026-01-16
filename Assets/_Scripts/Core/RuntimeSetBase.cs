@@ -6,6 +6,5 @@ namespace Potato.Core
     public abstract class RuntimeSetBase : ScriptableObject
     {
         public abstract int Count { get; }
-        public abstract void DropSet();
     }
 }

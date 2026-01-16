@@ -16,14 +16,6 @@ namespace Potato.Core.Editor
             EditorGUI.BeginDisabledGroup(true); // make fields read-only
             EditorGUILayout.IntField("Count", ((RuntimeSetBase)target).Count);
             EditorGUI.EndDisabledGroup();
-
-            GUI.enabled = true; 
-            RuntimeSetBase rts = (RuntimeSetBase)target;
-
-            if (GUILayout.Button("Empty Set"))
-            {
-                rts.DropSet();
-            }
         }
     }
 }

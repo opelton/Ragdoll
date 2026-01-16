@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.TestTools;
 using Potato.Core;
 using NUnit.Framework;
 
@@ -34,6 +33,8 @@ namespace Potato.Tests.EditMode
             dataRef.SetReference(dataVar);
             Assert.AreEqual((D)dataVar.GetValue(), (D)dataRef.GetValue());
             Assert.AreEqual(testValue, (D)dataRef.GetValue());
+
+            Object.DestroyImmediate(dataVar); 
         }
 
         // changes should be mirrored
@@ -49,6 +50,8 @@ namespace Potato.Tests.EditMode
             Assert.AreEqual(initialTestValue, (D)dataRef.GetValue());
             dataVar.SetValue(endTestValue);
             Assert.AreEqual(endTestValue, (D)dataRef.GetValue());
+
+            Object.DestroyImmediate(dataVar); 
         }
 
         // multiple partners
@@ -84,6 +87,8 @@ namespace Potato.Tests.EditMode
             Assert.AreEqual(endTestValue, (D)alice.GetValue());
             Assert.AreEqual(endTestValue, (D)bob.GetValue());
             Assert.AreEqual(endTestValue, (D)sharedData.GetValue());
+
+            Object.DestroyImmediate(sharedData); 
         }
 
         void Value_Unlink<D, T, R>(D initialTestValue, D endTestValue)
@@ -110,6 +115,8 @@ namespace Potato.Tests.EditMode
             // alice should still be on her previous value, bob is on the new one
             Assert.AreEqual(initialTestValue, (D)alice.GetValue());
             Assert.AreEqual(endTestValue, (D)bob.GetValue());
+            
+            Object.DestroyImmediate(sharedData); 
         }
         
         // initialize
