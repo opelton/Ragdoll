@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Potato.Core
 {
@@ -9,26 +10,52 @@ namespace Potato.Core
         public IReadOnlyList<T> Items => _items;
         public override int Count { get => _items.Count; }
 
-        public void PreInit() => _items.Clear();
-        //void OnEnable() => _items.Clear();
+        public void PreInit() => ClearSet();
 
-        public void Add(T item)
+        public bool Add(T item)
         {
-            if (!_items.Contains(item))
+            if (item != null && !_items.Contains(item))
             {
                 _items.Add(item);
 
-                if(onAdded)
+                if (onAdded)
                     onAdded.Invoke();
+
+                return true;
             }
+            return false;
         }
 
         public bool Remove(T item)
         {
-            if(onRemoved)
+            if(item == null)
+                return false;
+
+            if (onRemoved)
                 onRemoved.Invoke();
 
             return _items.Remove(item);
         }
+
+        void Clear() => _items.Clear();
+
+#if UNITY_EDITOR
+        internal override bool AddMember(object obj)
+        {
+            if (obj == null)
+                return false;
+
+            return Add((T)obj);
+        }
+        internal override bool RemoveMember(object obj)
+        {
+            if (obj == null)
+                return false;
+
+            return Remove((T)obj);
+        }
+        internal override void ClearSet() => Clear();
+        internal override IReadOnlyList<object> GetItems() => Items.Cast<object>().ToList();
+#endif
     }
 }

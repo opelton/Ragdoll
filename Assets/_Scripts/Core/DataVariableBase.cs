@@ -10,7 +10,6 @@ namespace Potato.Core
         public virtual void SetReadonly(bool isReadonly, bool forceUpdateValue = true) => _isReadonly = isReadonly;
         public abstract void ResetValue();
         public void PreInit() => ResetValue();
-        // void OnEnable() => ResetValue();
 
 #if UNITY_EDITOR
         [SerializeField] protected string _description;

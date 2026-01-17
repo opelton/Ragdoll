@@ -15,7 +15,6 @@ namespace Potato.Core
         public int NumListeners => _listeners.Count;
 
         public void PreInit() => _listeners.Clear();
-        //public void OnEnable() => _listeners.Clear();
 
         public void Invoke(object sender = null)
         {

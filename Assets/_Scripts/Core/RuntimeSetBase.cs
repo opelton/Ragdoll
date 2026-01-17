@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace Potato.Core
 {
@@ -8,5 +9,12 @@ namespace Potato.Core
         [SerializeField] protected GameEvent onAdded;
         [SerializeField] protected GameEvent onRemoved;
         public abstract int Count { get; }
+
+#if UNITY_EDITOR
+        internal abstract bool AddMember(object obj);
+        internal abstract bool RemoveMember(object obj);
+        internal abstract void ClearSet();
+        internal abstract IReadOnlyList<object> GetItems();
+#endif
     }
 }
