@@ -5,10 +5,10 @@ namespace Potato.Core
     // adds and removes self from the runtime set
     public abstract class RuntimeSetMember<T> : RuntimeSetMemberBase
     {
-        [SerializeField] protected RuntimeSet<T> runtimeSet;
+        [SerializeField] internal RuntimeSet<T> runtimeSet;
 
-        // if T isn't a component type, make sure to override T Value get;
-        protected virtual T Value => gameObject.GetComponent<T>();
+        // remember to override T Value { get; } if T isn't a component
+        internal virtual T Value => gameObject.GetComponent<T>();
 
         protected virtual void OnEnable()
         {

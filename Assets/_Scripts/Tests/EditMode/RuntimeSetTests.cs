@@ -1,11 +1,9 @@
 using UnityEngine;
 using Potato.Core;
 using NUnit.Framework;
-using System.Linq;
 
 namespace Potato.Tests.EditMode
 {
-    // remove all, add all back
     // since this class uses GameEvents, these tests will also fail if GameEvents have a bug
     public class RuntimeSetTests
     {
@@ -36,6 +34,7 @@ namespace Potato.Tests.EditMode
             set.AddMember(null);
 
             Assert.AreEqual(0, set.Count);
+            Object.DestroyImmediate(set);
         }
 
         void Add<T, V>()
@@ -48,6 +47,7 @@ namespace Potato.Tests.EditMode
 
             Assert.IsNotNull(go);
             Assert.AreEqual(1, set.Count);
+            Object.DestroyImmediate(set);
         }
 
         void Add<T, V, C>()
@@ -61,6 +61,7 @@ namespace Potato.Tests.EditMode
 
             Assert.IsNotNull(go);
             Assert.AreEqual(1, set.Count);
+            Object.DestroyImmediate(set);
         }
 
         void AddRemove<T, V>()
@@ -74,6 +75,7 @@ namespace Potato.Tests.EditMode
 
             Assert.IsNotNull(go);
             Assert.AreEqual(0, set.Count);
+            Object.DestroyImmediate(set);
         }
 
         void AddRemove<T, V, C>()
@@ -88,6 +90,7 @@ namespace Potato.Tests.EditMode
 
             Assert.IsNotNull(go);
             Assert.AreEqual(0, set.Count);
+            Object.DestroyImmediate(set);
         }
 
         void DoubleAdd<T, V>()
@@ -101,6 +104,7 @@ namespace Potato.Tests.EditMode
 
             Assert.IsNotNull(go);
             Assert.AreEqual(1, set.Count);
+            Object.DestroyImmediate(set);
         }
 
         void DoubleAdd<T, V, C>()
@@ -115,6 +119,7 @@ namespace Potato.Tests.EditMode
 
             Assert.IsNotNull(go);
             Assert.AreEqual(1, set.Count);
+            Object.DestroyImmediate(set);
         }
 
         void AddTwo<T, V>()
@@ -128,6 +133,7 @@ namespace Potato.Tests.EditMode
             set.AddMember(bob);
 
             Assert.AreEqual(2, set.Count);
+            Object.DestroyImmediate(set);
         }
 
         void AddTwo<T, V, C>()
@@ -142,6 +148,7 @@ namespace Potato.Tests.EditMode
             set.AddMember(bob);
 
             Assert.AreEqual(2, set.Count);
+            Object.DestroyImmediate(set);
         }
 
         void DoubleRemove<T, V>()
@@ -156,6 +163,7 @@ namespace Potato.Tests.EditMode
 
             Assert.IsNotNull(go);
             Assert.AreEqual(0, set.Count);
+            Object.DestroyImmediate(set);
         }
 
         void DoubleRemove<T, V, C>()
@@ -171,6 +179,7 @@ namespace Potato.Tests.EditMode
 
             Assert.IsNotNull(go);
             Assert.AreEqual(0, set.Count);
+            Object.DestroyImmediate(set);
         }
 
         void DoubleRemove2<T, V>()
@@ -188,6 +197,7 @@ namespace Potato.Tests.EditMode
             Assert.IsNotNull(go);
             Assert.IsNotNull(go2);
             Assert.AreEqual(1, set.Count);
+            Object.DestroyImmediate(set);
         }
 
         void DoubleRemove2<T, V, C>()
@@ -206,6 +216,7 @@ namespace Potato.Tests.EditMode
             Assert.IsNotNull(go);
             Assert.IsNotNull(go2);
             Assert.AreEqual(1, set.Count);
+            Object.DestroyImmediate(set);
         }
 
         void AddRemoveReturn<T, V>()
@@ -220,6 +231,7 @@ namespace Potato.Tests.EditMode
 
             Assert.IsNotNull(go);
             Assert.AreEqual(1, set.Count);
+            Object.DestroyImmediate(set);
         }
 
         void AddRemoveReturn<T, V, C>()
@@ -235,6 +247,7 @@ namespace Potato.Tests.EditMode
 
             Assert.IsNotNull(go);
             Assert.AreEqual(1, set.Count);
+            Object.DestroyImmediate(set);
         }
 
         void MultipleAddsMultipleRemoves<T, V>()
@@ -257,6 +270,7 @@ namespace Potato.Tests.EditMode
                 set.RemoveMember(objs[i]);
 
             Assert.AreEqual(count - 3, set.Count);
+            Object.DestroyImmediate(set);
         }
 
         void MultipleAddsMultipleRemoves<T, V, C>()
@@ -280,6 +294,7 @@ namespace Potato.Tests.EditMode
                 set.RemoveMember(objs[i]);
 
             Assert.AreEqual(count - 3, set.Count);
+            Object.DestroyImmediate(set);
         }
 
         void ClearUnclear<T, V>()
@@ -304,6 +319,7 @@ namespace Potato.Tests.EditMode
             for(int i = 0; i < count; ++i)
                 set.AddMember(objs[i]);
             Assert.AreEqual(count, set.Count);
+            Object.DestroyImmediate(set);
         }
 
         void ClearUnclear<T, V, C>()
@@ -329,6 +345,7 @@ namespace Potato.Tests.EditMode
             for(int i = 0; i < count; ++i)
                 set.AddMember(objs[i]);
             Assert.AreEqual(count, set.Count);
+            Object.DestroyImmediate(set);
         }
 
         // blank init

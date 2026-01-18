@@ -4,6 +4,6 @@ namespace Potato.Core
 {
     public class GameObjectSetMember : RuntimeSetMember<GameObject>
     {
-        protected override GameObject Value => gameObject;
+        internal override GameObject Value => gameObject;
     }
 }
