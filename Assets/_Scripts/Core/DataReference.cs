@@ -3,10 +3,12 @@ using System;
 namespace Potato.Core
 {
     // treat another scriptable object as a variable in a script, inject it from the editor, keep things nicely separated
+    // todo -- runtime reference switching?
     [Serializable]
-    public abstract class DataReference<T, U> : DataReferenceBase where T : DataVariable<U>
+    public abstract class DataReference<T, U> : DataReferenceBase
+        where T : DataVariable<U>
     {
-        public U ConstantValue;
+        public U ConstantValue = default;
         public T ReferenceData;
 
         public DataReference() { }
