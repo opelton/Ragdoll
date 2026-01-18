@@ -19,7 +19,7 @@ namespace Potato.Core
                 _items.Add(item);
 
                 if (onAdded)
-                    onAdded.Invoke();
+                    onAdded.Invoke(this);
 
                 return true;
             }
@@ -32,7 +32,7 @@ namespace Potato.Core
                 return false;
 
             if (onRemoved)
-                onRemoved.Invoke();
+                onRemoved.Invoke(this);
 
             return _items.Remove(item);
         }

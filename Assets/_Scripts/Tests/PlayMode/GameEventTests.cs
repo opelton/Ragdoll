@@ -16,6 +16,28 @@ namespace Potato.Tests.PlayMode
             return go.AddComponent<GameEventListener>();
         }
 
+        T MakeListener<T, D>(string name = "Listener")
+            where T : GameEventListener<D>
+        {
+            GameObject go = new GameObject(name);
+            go.SetActive(false);
+            return go.AddComponent<T>();
+        }
+
+        void PayloadTest<L, E, D>(D testData)
+            where L : GameEventListener<D>
+            where E : GameEvent<D>
+        {
+            L listener = MakeListener<L, D>();
+            E evt = ScriptableObject.CreateInstance<E>();
+            D outData = default;
+            listener.EventSource = evt;
+            listener.Response.AddListener((D data) => { outData = data; });
+            listener.gameObject.SetActive(true);
+            evt.Invoke(testData, this);
+            Assert.AreEqual(testData, outData);
+        }
+
         [UnityTest]
         public IEnumerator InstantiatesCorrectly()
         {
@@ -61,7 +83,7 @@ namespace Potato.Tests.PlayMode
 
             listener.Response.AddListener(() => wasInvoked = true);
             listener.gameObject.SetActive(true);
-            testEvent.Invoke();
+            testEvent.Invoke(this);
 
             Assert.IsTrue(wasInvoked);
             Object.DestroyImmediate(testEvent);
@@ -80,7 +102,7 @@ namespace Potato.Tests.PlayMode
             listener.Response.AddListener(() => listener.UnregisterEvent());
             Assert.DoesNotThrow(() =>
             {
-                testEvent.Invoke();
+                testEvent.Invoke(this);
             });
             Object.DestroyImmediate(testEvent);
             yield return null;
@@ -97,7 +119,7 @@ namespace Potato.Tests.PlayMode
             bool wasInvoked = false;
             listener.Response.AddListener(() => wasInvoked = true);
             listener.UnregisterEvent();
-            testEvent.Invoke();
+            testEvent.Invoke(this);
 
             Assert.IsFalse(wasInvoked);
             Object.DestroyImmediate(testEvent);
@@ -119,8 +141,8 @@ namespace Potato.Tests.PlayMode
             });
             listener.gameObject.SetActive(true);
 
-            testEvent.Invoke();
-            testEvent.Invoke();
+            testEvent.Invoke(this);
+            testEvent.Invoke(this);
 
             Assert.AreEqual(1, invokeCount);
 
@@ -142,7 +164,7 @@ namespace Potato.Tests.PlayMode
             alice.gameObject.SetActive(true);
             bob.gameObject.SetActive(true);
 
-            testEvent.Invoke();
+            testEvent.Invoke(this);
 
             Assert.AreEqual(2, pokes);
             Object.DestroyImmediate(testEvent);
@@ -165,9 +187,9 @@ namespace Potato.Tests.PlayMode
             alice.gameObject.SetActive(true);
             bob.gameObject.SetActive(true);
 
-            testEvent.Invoke();
+            testEvent.Invoke(this);
             alice.UnregisterEvent();
-            testEvent.Invoke();
+            testEvent.Invoke(this);
 
 
             Assert.AreEqual(1, aliceCount);
@@ -175,5 +197,80 @@ namespace Potato.Tests.PlayMode
             Object.DestroyImmediate(testEvent);
             yield return null;
         }
+
+        [UnityTest]
+        public IEnumerator PayloadTest_Bool()
+        {
+            PayloadTest<BoolEventListener, BoolEvent, bool>(true);
+            yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator PayloadTest_Int()
+        {
+            PayloadTest<IntEventListener, IntEvent, int>(42);
+            yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator PayloadTest_Float()
+        {
+            PayloadTest<FloatEventListener, FloatEvent, float>(11f);
+            yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator PayloadTest_String()
+        {
+            PayloadTest<StringEventListener, StringEvent, string>("captain placeholder");
+            yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator PayloadTest_Vec2Int()
+        {
+            PayloadTest<Vec2IntEventListener, Vec2IntEvent, Vector2Int>(Vector2Int.down);
+            yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator PayloadTest_Vec2()
+        {
+            PayloadTest<Vec2EventListener, Vec2Event, Vector2>(Vector2.left);
+            yield return null;
+        }
+        
+        [UnityTest]
+        public IEnumerator PayloadTest_Vec3()
+        {
+            PayloadTest<Vec3EventListener, Vec3Event, Vector3>(Vector3.back);
+            yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator PayloadTest_Vec4()
+        {
+            PayloadTest<Vec4EventListener, Vec4Event, Vector4>(Vector4.one);
+            yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator PayloadTest_GameObject()
+        {
+            var obj = new GameObject("dummy");
+            PayloadTest<GameObjectEventListener, GameObjectEvent, GameObject>(obj);
+            yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator PayloadTest_Transform()
+        {
+            var obj = new GameObject("dummy");
+            PayloadTest<TransformEventListener, TransformEvent, Transform>(obj.transform);
+            yield return null;
+        }
+
+            
+
     }
 }
