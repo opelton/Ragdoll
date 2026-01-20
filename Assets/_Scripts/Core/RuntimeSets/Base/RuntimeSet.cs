@@ -1,11 +1,15 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace Potato.Core
 {
     // central registry / observable collection. Headcounts, decoupled event subscription, replaces FindObjectOfType
     public abstract class RuntimeSet<T> : RuntimeSetBase, IPreInit
     {
+        [SerializeField] protected GameEvent<T> onAdded;
+        [SerializeField] protected GameEvent<T> onRemoved;
+
         protected readonly List<T> _items = new();
         public IReadOnlyList<T> Items => _items;
         public override int Count { get => _items.Count; }
@@ -19,7 +23,7 @@ namespace Potato.Core
                 _items.Add(item);
 
                 if (onAdded)
-                    onAdded.Invoke(this);
+                    onAdded.Invoke(item, this);
 
                 return true;
             }
@@ -32,7 +36,7 @@ namespace Potato.Core
                 return false;
 
             if (onRemoved)
-                onRemoved.Invoke(this);
+                onRemoved.Invoke(item, this);
 
             return _items.Remove(item);
         }
