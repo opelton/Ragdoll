@@ -14,7 +14,7 @@ namespace Potato.Core
         public IReadOnlyList<T> Items => _items;
         public override int Count { get => _items.Count; }
 
-        public void PreInit() => ClearSet();
+        public void PreInit() => Clear();
 
         public bool Add(T item)
         {
