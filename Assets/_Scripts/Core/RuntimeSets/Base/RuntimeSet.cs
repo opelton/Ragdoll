@@ -7,8 +7,8 @@ namespace Potato.Core
     // central registry / observable collection. Headcounts, decoupled event subscription, replaces FindObjectOfType
     public abstract class RuntimeSet<T> : RuntimeSetBase, IPreInit
     {
-        [SerializeField] protected GameEvent<T> onAdded;
-        [SerializeField] protected GameEvent<T> onRemoved;
+        [SerializeField] internal GameEvent<T> onAdded;
+        [SerializeField] internal GameEvent<T> onRemoved;
 
         protected readonly List<T> _items = new();
         public IReadOnlyList<T> Items => _items;

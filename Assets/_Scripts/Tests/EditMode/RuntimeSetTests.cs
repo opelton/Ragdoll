@@ -7,7 +7,7 @@ namespace Potato.Tests.EditMode
     // since this class uses GameEvents, these tests will also fail if GameEvents have a bug
     public class RuntimeSetTests
     {
-        T CreateMember<T>() 
+        T CreateMember<T>()
             where T : RuntimeSetMemberBase
             => new GameObject().AddComponent<T>();
 
@@ -258,7 +258,7 @@ namespace Potato.Tests.EditMode
             object[] objs = new object[count];
             T set = ScriptableObject.CreateInstance<T>();
 
-            for(int i = 0; i < count; ++i)
+            for (int i = 0; i < count; ++i)
             {
                 objs[i] = CreateMember<V>().GetValue();
                 set.AddMember(objs[i]);
@@ -266,7 +266,7 @@ namespace Potato.Tests.EditMode
 
             Assert.AreEqual(count, set.Count);
 
-            for(int i = 0; i < 3; ++i)
+            for (int i = 0; i < 3; ++i)
                 set.RemoveMember(objs[i]);
 
             Assert.AreEqual(count - 3, set.Count);
@@ -282,7 +282,7 @@ namespace Potato.Tests.EditMode
             object[] objs = new object[count];
             T set = ScriptableObject.CreateInstance<T>();
 
-            for(int i = 0; i < count; ++i)
+            for (int i = 0; i < count; ++i)
             {
                 objs[i] = CreateMember<V, C>().GetValue();
                 set.AddMember(objs[i]);
@@ -290,7 +290,7 @@ namespace Potato.Tests.EditMode
 
             Assert.AreEqual(count, set.Count);
 
-            for(int i = 0; i < 3; ++i)
+            for (int i = 0; i < 3; ++i)
                 set.RemoveMember(objs[i]);
 
             Assert.AreEqual(count - 3, set.Count);
@@ -305,18 +305,18 @@ namespace Potato.Tests.EditMode
             object[] objs = new object[count];
             T set = ScriptableObject.CreateInstance<T>();
 
-            for(int i = 0; i < count; ++i)
+            for (int i = 0; i < count; ++i)
             {
                 objs[i] = CreateMember<V>().GetValue();
                 set.AddMember(objs[i]);
             }
             Assert.AreEqual(count, set.Count);
 
-            for(int i = 0; i < count; ++i)
+            for (int i = 0; i < count; ++i)
                 set.RemoveMember(objs[i]);
             Assert.AreEqual(0, set.Count);
 
-            for(int i = 0; i < count; ++i)
+            for (int i = 0; i < count; ++i)
                 set.AddMember(objs[i]);
             Assert.AreEqual(count, set.Count);
             Object.DestroyImmediate(set);
@@ -331,21 +331,98 @@ namespace Potato.Tests.EditMode
             object[] objs = new object[count];
             T set = ScriptableObject.CreateInstance<T>();
 
-            for(int i = 0; i < count; ++i)
+            for (int i = 0; i < count; ++i)
             {
                 objs[i] = CreateMember<V, C>().GetValue();
                 set.AddMember(objs[i]);
             }
             Assert.AreEqual(count, set.Count);
 
-            for(int i = 0; i < count; ++i)
+            for (int i = 0; i < count; ++i)
                 set.RemoveMember(objs[i]);
             Assert.AreEqual(0, set.Count);
 
-            for(int i = 0; i < count; ++i)
+            for (int i = 0; i < count; ++i)
                 set.AddMember(objs[i]);
             Assert.AreEqual(count, set.Count);
             Object.DestroyImmediate(set);
+        }
+
+        [Test]
+        public void OnAddedEvent()
+        {
+            bool wasInvoked = false;
+
+            var objSet = ScriptableObject.CreateInstance<GameObjectSet>();
+            var objEvent = ScriptableObject.CreateInstance<GameObjectEvent>();
+            var objListener = new GameObject().AddComponent<GameObjectEventListener>();
+
+            objSet.onAdded = objEvent;
+            objListener.Response.AddListener((obj) => wasInvoked = true);
+            objEvent.AddListener(objListener);
+
+            objSet.Add(new GameObject());
+
+            Assert.IsTrue(wasInvoked);
+        }
+
+        [Test]
+        public void OnAddedPayload()
+        {
+            GameObject payload = null;
+            var original = new GameObject("test");
+
+            var objSet = ScriptableObject.CreateInstance<GameObjectSet>();
+            var objEvent = ScriptableObject.CreateInstance<GameObjectEvent>();
+            var objListener = new GameObject().AddComponent<GameObjectEventListener>();
+
+            objSet.onAdded = objEvent;
+            objListener.Response.AddListener((obj) => payload = obj);
+            objEvent.AddListener(objListener);
+
+            objSet.Add(original);
+
+            Assert.AreEqual(original, payload);
+        }
+
+        [Test]
+        public void OnRemovedEvent()
+        {
+            bool wasInvoked = false;
+            var original = new GameObject("test");
+
+            var objSet = ScriptableObject.CreateInstance<GameObjectSet>();
+            var objEvent = ScriptableObject.CreateInstance<GameObjectEvent>();
+            var objListener = new GameObject().AddComponent<GameObjectEventListener>();
+
+            objSet.onRemoved = objEvent;
+            objListener.Response.AddListener((obj) => wasInvoked = true);
+            objEvent.AddListener(objListener);
+
+            objSet.Add(original);
+            objSet.Remove(original);
+
+            Assert.IsTrue(wasInvoked);
+        }
+
+        [Test]
+        public void OnRemovedPayload()
+        {
+            GameObject payload = null;
+            var original = new GameObject("test");
+
+            var objSet = ScriptableObject.CreateInstance<GameObjectSet>();
+            var objEvent = ScriptableObject.CreateInstance<GameObjectEvent>();
+            var objListener = new GameObject().AddComponent<GameObjectEventListener>();
+
+            objSet.onRemoved = objEvent;
+            objListener.Response.AddListener((obj) => payload = obj);
+            objEvent.AddListener(objListener);
+
+            objSet.Add(original);
+            objSet.Remove(original);
+
+            Assert.AreEqual(original, payload);
         }
 
         // blank init
