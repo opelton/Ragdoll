@@ -34,7 +34,7 @@ namespace Potato.Core.Editor
             GUI.enabled = true;
 
             if (GUILayout.Button("EditorInvoke Event"))
-                e.DummyInvoke(this);
+                e.TestInvoke(this);
         }
     }
 }

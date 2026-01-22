@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Potato.Core.Editor
 {
-    // todo -- databag doesn't expand when clicking arrow
+    // todo -- databag types don't expand when clicking arrow
     [CustomPropertyDrawer(typeof(DataReference<,>), true)]
     public class DataReferenceDrawer : PropertyDrawer
     {

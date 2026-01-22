@@ -13,9 +13,9 @@ namespace Potato.Core
 
 #if UNITY_EDITOR
         [SerializeField] protected string _description;
-        public abstract object GetValue();
-        public abstract void SetValue(object valueObj);
-        public abstract void SetInitialValue(object initialValueObj);
+        internal abstract object GetValue();
+        internal abstract void SetValue(object valueObj);
+        internal abstract void SetInitialValue(object initialValueObj);
         internal abstract object ValueObject { get; }
         internal abstract object InitialValueObject { get; }
         internal abstract void SetValueProperty(object valueObj);

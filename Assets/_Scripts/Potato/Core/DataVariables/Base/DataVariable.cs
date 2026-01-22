@@ -36,9 +36,9 @@ namespace Potato.Core
 
 
 #if UNITY_EDITOR
-        public override object GetValue() => Value;
-        public override void SetValue(object valueObj) => SetValue((T)valueObj);
-        public override void SetInitialValue(object initialValueObj) => SetInitialValue((T)initialValueObj);
+        internal override object GetValue() => Value;
+        internal override void SetValue(object valueObj) => SetValue((T)valueObj);
+        internal override void SetInitialValue(object initialValueObj) => SetInitialValue((T)initialValueObj);
         internal override object ValueObject { get => _value; }
         internal override object InitialValueObject { get => _initialValue; }
         internal override void SetValueProperty(object valueObj) => Value = (T)valueObj;

@@ -52,9 +52,9 @@ namespace Potato.Core
 
         // test payloads from editor
         [SerializeField]
-        [Tooltip("EDITOR ONLY -- dummy invoke uses this as payload")]
-        internal T _dummyValue;
-        internal override void DummyInvoke(object sender) => Invoke(_dummyValue, sender);
+        [Tooltip("EDITOR ONLY -- EditorInvoke Event uses this as its payload")]
+        internal T _testValue;
+        internal override void TestInvoke(object sender) => Invoke(_testValue, sender);
 #endif
         private List<GameEventListener<T>> _listeners = new();
 
@@ -93,7 +93,7 @@ namespace Potato.Core
         public abstract void PreInit();
         public abstract int NumListeners { get; }
 #if UNITY_EDITOR
-        internal abstract void DummyInvoke(object sender);
+        internal abstract void TestInvoke(object sender);
 #endif
     }
 }

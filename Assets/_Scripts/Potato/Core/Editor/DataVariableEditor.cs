@@ -13,7 +13,7 @@ namespace Potato.Core.Editor
 
             DataVariableBase data = (DataVariableBase)target;
 
-            if (GUILayout.Button("Reset Value"))
+            if (GUILayout.Button("Reset to InitialValue"))
             {
                 data.ResetValue();
             }
