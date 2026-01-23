@@ -7,8 +7,9 @@ namespace Potato.Core
     {
         [SerializeField] protected bool _isReadonly = false;
 
-        public virtual void SetReadonly(bool isReadonly, bool forceUpdateValue = true) => _isReadonly = isReadonly;
-        public abstract void ResetValue();
+        // for runtime readonly
+        public virtual void MakeReadonly() => _isReadonly = true;
+        internal abstract void ResetValue();
         public void PreInit() => ResetValue();
 
 #if UNITY_EDITOR
@@ -16,9 +17,8 @@ namespace Potato.Core
         internal abstract object GetValue();
         internal abstract void SetValue(object valueObj);
         internal abstract void SetInitialValue(object initialValueObj);
-        internal abstract object ValueObject { get; }
-        internal abstract object InitialValueObject { get; }
-        internal abstract void SetValueProperty(object valueObj);
+        internal abstract object ValueObject { get; set; }
+        internal abstract object InitialValueObject { get; set; }
 #endif
     }
 }

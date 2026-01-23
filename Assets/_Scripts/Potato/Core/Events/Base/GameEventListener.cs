@@ -8,49 +8,68 @@ namespace Potato.Core
     // subscribe to an event and assign its response in-editor
     public class GameEventListener : MonoBehaviour
     {
-        [SerializeField] internal GameEvent EventSource;
+        [SerializeField] GameEvent _eventSource;
+        internal GameEvent EventSource { get => _eventSource; set => SetEventSource(value); }
         [SerializeField] internal UnityEvent Response = new();
 
-        private void OnEnable()
-        {
-            if(EventSource != null)
-                EventSource.AddListener(this);
-            else
-                Debug.LogWarning($"GameEventListener {name} was enabled without a source!");
-        }
-
+        private void OnEnable() => RegisterEvent();
         private void OnDisable()=> UnregisterEvent();
         public void OnEventRaised() => Response.Invoke();
 
+        void RegisterEvent()
+        {
+            if(_eventSource != null)
+                _eventSource.AddListener(this);
+            else
+                Debug.LogWarning($"GameEventListener {name} has no EventSource!");
+        }
+
+        // same as EventSource = null;
         public bool UnregisterEvent()
         {
-            if(EventSource != null)
-                return EventSource.RemoveListener(this);
+            if(_eventSource != null)
+                return _eventSource.RemoveListener(this);
             return false;
+        }
+
+        void SetEventSource(GameEvent eventSource)
+        {
+            UnregisterEvent();
+            _eventSource = eventSource;
+            RegisterEvent();
         }
     }
 
     public abstract class GameEventListener<T> : MonoBehaviour
     {
-        [SerializeField] internal GameEvent<T> EventSource;
+        [SerializeField] GameEvent<T> _eventSource;
+        internal GameEvent<T> EventSource { get => _eventSource; set => SetEventSource(value); }
         [SerializeField] internal UnityEvent<T> Response = new();
 
-        private void OnEnable()
-        {
-            if(EventSource != null)
-                EventSource.AddListener(this);
-            else
-                Debug.LogWarning($"GameEventListener {name} was enabled without a source!");
-        }
-
+        private void OnEnable() => RegisterEvent();
         private void OnDisable()=> UnregisterEvent();
         public void OnEventRaised(T data) => Response.Invoke(data);
 
+        void RegisterEvent()
+        {
+            if(_eventSource != null)
+                _eventSource.AddListener(this);
+            else
+                Debug.LogWarning($"GameEventListener {name} has no EventSource!");
+        }
+
         public bool UnregisterEvent()
         {
-            if(EventSource != null)
-                return EventSource.RemoveListener(this);
+            if(_eventSource != null)
+                return _eventSource.RemoveListener(this);
             return false;
+        }
+
+        void SetEventSource(GameEvent<T> eventSource)
+        {
+            UnregisterEvent();
+            _eventSource = eventSource;
+            RegisterEvent();
         }
     }
 }

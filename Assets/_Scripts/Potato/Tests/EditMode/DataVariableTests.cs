@@ -49,12 +49,11 @@ namespace Potato.Tests.EditMode
         void ConstGuard<D, T>(D testValue) where T : DataVariableBase
         {
             var dataVar = ScriptableObject.CreateInstance<T>();
-
-            dataVar.SetReadonly(true);
+            dataVar.MakeReadonly();
 
             LogAssert.Expect(LogType.Warning, new Regex("Attempted to modify const DataVariable"));
-            dataVar.SetValueProperty(testValue);
-            Assert.AreEqual(dataVar.InitialValueObject, dataVar.ValueObject);
+            dataVar.SetValue(testValue);
+            Assert.AreEqual(dataVar.InitialValueObject, dataVar.GetValue());
 
             Object.DestroyImmediate(dataVar); 
         }
@@ -64,7 +63,7 @@ namespace Potato.Tests.EditMode
         {
             var dataVar = ScriptableObject.CreateInstance<T>();
             dataVar.SetInitialValue(testValue);
-            dataVar.SetReadonly(true);
+            dataVar.MakeReadonly();
 
             Assert.AreEqual(testValue, dataVar.ValueObject);
             Assert.AreEqual(testValue, dataVar.InitialValueObject);
@@ -103,5 +102,25 @@ namespace Potato.Tests.EditMode
         [Test] public void ConstDefaultingTest_FloatVariable() => ConstAppliesInitialValue<float, FloatVariable>(11f);
         [Test] public void ConstDefaultingTest_BoolVariable() => ConstAppliesInitialValue<bool, BoolVariable>(true);
         [Test] public void ConstDefaultingTest_StringVariable() => ConstAppliesInitialValue<string, StringVariable>("test!");
+
+        [Test]
+        public void OnValueChangedFires()
+        {
+            bool wasInvoked = false;
+            var dataVar = ScriptableObject.CreateInstance<IntVariable>();
+            var listener = new GameObject("listener").AddComponent<IntEventListener>();
+            var dataEvent = ScriptableObject.CreateInstance<IntEvent>();
+
+            dataVar.SetValue(5);
+            dataVar.SetInitialValue(5);
+            dataVar.onValueChanged = dataEvent;
+
+            listener.EventSource = dataEvent;
+            listener.Response.AddListener((value)=>wasInvoked = true);
+
+            dataVar.Value = 10;
+
+            Assert.IsTrue(wasInvoked);
+        }
     }
 }

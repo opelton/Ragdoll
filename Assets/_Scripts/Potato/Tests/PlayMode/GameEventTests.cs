@@ -51,7 +51,7 @@ namespace Potato.Tests.PlayMode
         {
             var listener = MakeListener();
 
-            LogAssert.Expect(LogType.Warning, new Regex("was enabled without a source!"));
+            LogAssert.Expect(LogType.Warning, new Regex("has no EventSource!"));
             listener.gameObject.SetActive(true);
 
             yield return null;

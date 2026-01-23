@@ -2,46 +2,64 @@ using UnityEngine;
 
 namespace Potato.Core
 {
+    // todo -- set/reset methods using readonly guard and triggering onchanged
     // holds the variable where it can be referenced in the editor
     public abstract class DataVariable<T> : DataVariableBase
     {
         [SerializeField] private T _initialValue = default;
         [SerializeField] private T _value;
-        public T InitialValue { get { return _initialValue; } }
-        public T Value { get => _value; set => CheckReadonlyGuard(value); } // CheckReadonlyGuard refuses the change if _isReadonly
+        [SerializeField] internal GameEvent<T> onValueChanged;
+        public T InitialValue { get => _initialValue; set => TrySetInitialValue(value); }
+        public T Value { get => _value; set => TrySetValue(value); } 
 
-        public void SetValue(T value) => _value = value;
-        public void SetInitialValue(T initialValue) => _initialValue = initialValue;
-        public override void ResetValue() => _value = _initialValue;
-        public override void SetReadonly(bool isReadonly, bool forceUpdateValue = true)
+        internal override void ResetValue() => SetValueAndNotify(_initialValue);
+        public override void MakeReadonly()
         {
-            base.SetReadonly(isReadonly);
-            if (_isReadonly && forceUpdateValue)
-                _value = _initialValue;
+            base.MakeReadonly();
+            _value = _initialValue;
         }
 
-        void CheckReadonlyGuard(T newValue)
+        // refuses the change if _isReadonly
+        void TrySetValue(T newValue)
         {
+            if (CheckReadonlyAndLogWarning())
+                SetValueAndNotify(newValue);
+        }
+
+        void TrySetInitialValue(T newInitialValue)
+        {
+            if (CheckReadonlyAndLogWarning())
+                _initialValue = newInitialValue;
+        }
+
+        bool CheckReadonlyAndLogWarning()
+        {
+#if UNITY_EDITOR
             if (_isReadonly)
             {
-#if UNITY_EDITOR
                 Debug.LogWarning(
                     $"Attempted to modify const DataVariable '{name}'. Value unchanged.",
                     this);
-#endif
-                return;
             }
+#endif
+            return !_isReadonly;
+        }
+
+        void SetValueAndNotify(T newValue)
+        {
             _value = newValue;
+
+            if(onValueChanged)
+                onValueChanged.Invoke(_value, this);
         }
 
 
 #if UNITY_EDITOR
         internal override object GetValue() => Value;
-        internal override void SetValue(object valueObj) => SetValue((T)valueObj);
-        internal override void SetInitialValue(object initialValueObj) => SetInitialValue((T)initialValueObj);
-        internal override object ValueObject { get => _value; }
-        internal override object InitialValueObject { get => _initialValue; }
-        internal override void SetValueProperty(object valueObj) => Value = (T)valueObj;
+        internal override void SetValue(object valueObj) => Value = (T)valueObj;
+        internal override void SetInitialValue(object initialValueObj) => InitialValue = (T)initialValueObj;
+        internal override object ValueObject { get => Value; set => Value = (T)value; }
+        internal override object InitialValueObject { get => InitialValue; set => InitialValue = (T)value; }
 #endif
     }
 }

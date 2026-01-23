@@ -35,10 +35,12 @@ namespace Potato.Core
             if(item == null)
                 return false;
 
-            if (onRemoved)
-                onRemoved.Invoke(item, this);
+            bool result = _items.Remove(item);
 
-            return _items.Remove(item);
+            if (result && onRemoved)
+                    onRemoved.Invoke(item, this);
+
+            return result;
         }
 
         void Clear() => _items.Clear();
