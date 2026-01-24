@@ -4,7 +4,7 @@ using UnityEditor;
 using System.Linq;
 using System.IO;
 
-namespace Potato.FPS.Tools
+namespace Potato.Tools
 {
     // https://gist.github.com/RemyUnity/856f85bfe3ec7a8d845406415b426f87
     public class CubemapTextureBuilder : EditorWindow
