@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Potato.Core
 {
     // central registry / observable collection. Headcounts, decoupled event subscription, replaces FindObjectOfType
-    public abstract class RuntimeSet<T> : RuntimeSetBase, IPreInit
+    public abstract class RuntimeSet<T> : RuntimeSetBase, IPreInitScriptableObject
     {
         [SerializeField] internal GameEvent<T> onAdded;
         [SerializeField] internal GameEvent<T> onRemoved;

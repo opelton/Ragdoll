@@ -4,5 +4,11 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/PersistentBridges.unity
+    guid: 8073b51a3707b83419b7a5a049d333f4
+  - enabled: 1
+    path: Assets/Scenes/Sandbox.unity
+    guid: 3f950a408a25cbc43a1045d14034965f
   m_configObjects: {}

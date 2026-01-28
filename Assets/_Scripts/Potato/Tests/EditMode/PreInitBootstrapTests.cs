@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace Potato.Tests.EditMode
 {
-    public class TestPreInitSO : NonPreInitSO, IPreInit { }
+    public class TestPreInitSO : NonPreInitSO, IPreInitScriptableObject { }
 
     public class NonPreInitSO : ScriptableObject
     {
@@ -24,7 +24,7 @@ namespace Potato.Tests.EditMode
         {
             TestPreInitSO test = ScriptableObject.CreateInstance<TestPreInitSO>();
 
-            PreInitBootstrap.PreInitializeAll();
+            PreInitScriptableObjectBootstrap.Run();
 
             Assert.IsTrue(test.WasInitialized);
 
@@ -38,7 +38,7 @@ namespace Potato.Tests.EditMode
 
             Assert.DoesNotThrow(() =>
             {
-                PreInitBootstrap.PreInitializeAll();
+                PreInitScriptableObjectBootstrap.Run();
             });
 
             Object.DestroyImmediate(test);
@@ -51,8 +51,8 @@ namespace Potato.Tests.EditMode
 
             Assert.DoesNotThrow(() =>
             {
-                PreInitBootstrap.PreInitializeAll();
-                PreInitBootstrap.PreInitializeAll();
+                PreInitScriptableObjectBootstrap.Run();
+                PreInitScriptableObjectBootstrap.Run();
             });
 
             Assert.IsTrue(test.WasInitialized);

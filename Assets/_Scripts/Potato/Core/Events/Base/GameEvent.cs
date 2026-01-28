@@ -7,7 +7,7 @@ namespace Potato.Core
 {
     // event that can hook up to _listeners in-editor
     [CreateAssetMenu(menuName = "ScriptableObjects/GameEvent")]
-    public class GameEvent : ScriptableObject, IPreInit
+    public class GameEvent : ScriptableObject, IPreInitScriptableObject
     {
 #if UNITY_EDITOR
         [SerializeField] internal bool _logInvocations = false;
@@ -88,7 +88,7 @@ namespace Potato.Core
         }
     }
 
-    public abstract class GameEventGenericBase : ScriptableObject, IPreInit
+    public abstract class GameEventGenericBase : ScriptableObject, IPreInitScriptableObject
     {
         public abstract void PreInit();
         public abstract int NumListeners { get; }

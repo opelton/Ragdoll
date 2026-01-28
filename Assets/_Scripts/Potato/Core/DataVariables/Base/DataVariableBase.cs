@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Potato.Core
 {
     // non-generic base class exposes members for unit testing and UI
-    public abstract class DataVariableBase : ScriptableObject, IPreInit
+    public abstract class DataVariableBase : ScriptableObject, IPreInitScriptableObject
     {
         [SerializeField] protected bool _isReadonly = false;
 
