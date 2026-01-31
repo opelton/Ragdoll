@@ -9,6 +9,7 @@ namespace Potato.Core
         public abstract int Count { get; }
 
 #if UNITY_EDITOR
+        [SerializeField] internal string _description;
         internal abstract bool AddMember(object obj);
         internal abstract bool RemoveMember(object obj);
         internal abstract void ClearSet();

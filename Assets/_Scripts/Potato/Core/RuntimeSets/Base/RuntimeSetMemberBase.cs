@@ -6,6 +6,7 @@ namespace Potato.Core
     public abstract class RuntimeSetMemberBase : MonoBehaviour
     {
 #if UNITY_EDITOR
+        [SerializeField] internal string _description;
         internal abstract object GetValue();
 #endif
     }

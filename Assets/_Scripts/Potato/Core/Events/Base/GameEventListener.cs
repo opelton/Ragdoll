@@ -8,6 +8,9 @@ namespace Potato.Core
     // subscribe to an event and assign its response in-editor
     public class GameEventListener : MonoBehaviour
     {
+#if UNITY_EDITOR
+        [SerializeField] internal string _description;
+#endif
         [SerializeField] GameEvent _eventSource;
         internal GameEvent EventSource { get => _eventSource; set => SetEventSource(value); }
         [SerializeField] internal UnityEvent Response = new();
@@ -42,6 +45,9 @@ namespace Potato.Core
 
     public abstract class GameEventListener<T> : MonoBehaviour
     {
+#if UNITY_EDITOR
+        [SerializeField] internal string _description;
+#endif
         [SerializeField] GameEvent<T> _eventSource;
         internal GameEvent<T> EventSource { get => _eventSource; set => SetEventSource(value); }
         [SerializeField] internal UnityEvent<T> Response = new();

@@ -31,7 +31,7 @@ namespace Potato.Core.Editor
 
             buttonRect.yMin += popupStyle.margin.top;
             buttonRect.width = popupStyle.fixedWidth + popupStyle.margin.right;
-            position.xMin = buttonRect.xMax + 16;
+            position.xMin = buttonRect.xMax + 4;
 
             int indent = EditorGUI.indentLevel;
             EditorGUI.indentLevel = 0;

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 
 using UnityEngine;
@@ -7,24 +8,32 @@ namespace Potato.Core
 {
     public class SceneManagementBridge : MonoBehaviour
     {
+        [Serializable]
+        public class TransitionRequest
+        {
+            public string currentScene;
+            public string nextScene;
+        }
+
         [Header("Out Events")]
         [SerializeField] StringEvent sceneLoadStartedEvent;
         [SerializeField] StringEvent sceneLoadFinishedEvent;
         [SerializeField] StringEvent sceneUnloadStartedEvent;
         [SerializeField] StringEvent sceneUnloadFinishedEvent;
-        [SerializeField] StringEvent sceneReloadStartedEvent;
-        [SerializeField] StringEvent sceneReloadFinishedEvent;
-        [SerializeField] StringEvent activeSceneChangedEvent;
 
         [Header("Out Variables")]
         [SerializeField] FloatReference sceneLoadAmount = 0;
+        [SerializeField] StringReference activeSceneReference;
 
         public void HandleLoadSceneCommand(string sceneName) => StartCoroutine(HandleLoadSceneAsync(sceneName));
         public void HandleUnloadSceneCommand(string sceneName) => StartCoroutine(HandleUnloadSceneAsync(sceneName));
         public void HandleReloadSceneCommand(string sceneName) => StartCoroutine(HandleReloadSceneAsync(sceneName));
+        public void HandleSceneTransitionCommand(TransitionRequest request) => StartCoroutine(HandleSceneTransitionAsync(request));
         public void HandleChangeActiveSceneCommand(string sceneName) => ChangeActiveScene(sceneName, true);
-        
 
+        void Start() => sceneLoadFinishedEvent.Invoke(gameObject.scene.name, this);
+        void OnDestroy() => sceneUnloadFinishedEvent.Invoke(gameObject.scene.name, this);
+        
         private IEnumerator HandleLoadSceneAsync(string sceneName)
         {
             sceneLoadStartedEvent.Invoke(sceneName, this);
@@ -70,25 +79,45 @@ namespace Potato.Core
 
         private IEnumerator HandleReloadSceneAsync(string sceneName)
         {
-            sceneReloadStartedEvent.Invoke(sceneName, this);
+            // unload current scene
+            sceneUnloadStartedEvent.Invoke(sceneName, this);
             ChangeActiveScene(gameObject.scene, false);
             yield return HandleUnloadSceneAsync(sceneName);
+            sceneUnloadFinishedEvent.Invoke(sceneName, this);
+
+            // load current scene
+            sceneLoadStartedEvent.Invoke(sceneName, this);
             yield return HandleLoadSceneAsync(sceneName);
             ChangeActiveScene(sceneName, false);
-            sceneReloadFinishedEvent.Invoke(sceneName, this);
+            sceneLoadFinishedEvent.Invoke(sceneName, this);
         }
 
-        private void ChangeActiveScene(string sceneName, bool echo) => ChangeActiveScene(SceneManager.GetSceneByName(sceneName), echo);
+        private IEnumerator HandleSceneTransitionAsync(TransitionRequest request)
+        {
+            // unload old scene
+            sceneUnloadStartedEvent.Invoke(request.currentScene, this);
+            yield return UnloadSceneAsync(request.currentScene);
+            sceneUnloadFinishedEvent.Invoke(request.currentScene, this);
 
-        private void ChangeActiveScene(Scene scene, bool echo)
+            // load new scene
+            sceneLoadStartedEvent.Invoke(request.nextScene, this);
+            yield return LoadSceneAsync(request.nextScene);
+            sceneLoadFinishedEvent.Invoke(request.nextScene, this);
+            ChangeActiveScene(request.nextScene, true);
+        }
+
+        private void ChangeActiveScene(string sceneName, bool update) => ChangeActiveScene(SceneManager.GetSceneByName(sceneName), update);
+
+        // don't update active scene when it's briefly flipped back and forth for reloads
+        private void ChangeActiveScene(Scene scene, bool update)
         {
             bool result = false;
 
             if(scene.IsValid())
                 result = SceneManager.SetActiveScene(scene);
 
-            if(echo && result)
-                activeSceneChangedEvent.Invoke(scene.name, this);
+            if(update && result)
+                activeSceneReference.Value = scene.name;
         }
     }
 }

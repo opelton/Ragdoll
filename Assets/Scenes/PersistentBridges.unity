@@ -132,6 +132,10 @@ GameObject:
   m_Component:
   - component: {fileID: 138615017}
   - component: {fileID: 138615016}
+  - component: {fileID: 138615018}
+  - component: {fileID: 138615021}
+  - component: {fileID: 138615020}
+  - component: {fileID: 138615019}
   m_Layer: 0
   m_Name: SettingsBridge
   m_TagString: Untagged
@@ -151,6 +155,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 853395344499c6841ae10ef0a2ee06ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MouseSensitivity:
+    UseConstant: 0
+    _description: 
+    ConstantValue: 0.6
+    ReferenceData: {fileID: 11400000, guid: 1ffaf07a6bfd40c4a8c910f934053c70, type: 2}
+  MainVolume:
+    UseConstant: 0
+    _description: 
+    ConstantValue: 0.6
+    ReferenceData: {fileID: 11400000, guid: 45b778e60b1d4604689158f3dbbffba5, type: 2}
+  MuteAudio:
+    UseConstant: 0
+    _description: 
+    ConstantValue: 0
+    ReferenceData: {fileID: 11400000, guid: cad05db1e129e1e4cbe151cfc24cb3ba, type: 2}
+  ShowFPS:
+    UseConstant: 0
+    _description: 
+    ConstantValue: 0
+    ReferenceData: {fileID: 11400000, guid: eb7cbc7a793ebf444b07a2f16c6a2f90, type: 2}
+  FullScreen:
+    UseConstant: 0
+    _description: 
+    ConstantValue: 0
+    ReferenceData: {fileID: 11400000, guid: d0748fe6755112941a8c123f2e1ab28d, type: 2}
+  Resolution:
+    UseConstant: 0
+    _description: 
+    ConstantValue: {x: 1280, y: 720}
+    ReferenceData: {fileID: 11400000, guid: 598f94abaca744849accc7a53a18572b, type: 2}
+  MainAudioMixer: {fileID: 24100000, guid: c2b4a70e81999a540a00e9726b4cfade, type: 2}
 --- !u!4 &138615017
 Transform:
   m_ObjectHideFlags: 0
@@ -166,6 +201,122 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &138615018
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 138615015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5989fe9ed7a98ed489ea6103147167b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _description: Volume changed
+  _eventSource: {fileID: 11400000, guid: 10f5f16605fc25e4a967089f955e60aa, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 138615016}
+        m_TargetAssemblyTypeName: Core.Potato.SettingsBridge, potato.core
+        m_MethodName: SetVolume
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &138615019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 138615015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acbb146b29d8c9943992089719c2dd4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _description: Resolution changed
+  _eventSource: {fileID: 11400000, guid: d68b51bf6d28c7e4b8bb0ca194d1d598, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 138615016}
+        m_TargetAssemblyTypeName: Core.Potato.SettingsBridge, potato.core
+        m_MethodName: SetResolution
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &138615020
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 138615015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2def2a1123972ce4c91b1aabe4e6fb77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _description: FullScreen changed
+  _eventSource: {fileID: 11400000, guid: 503a4a25fd10d7a45af128f7ad864520, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 138615016}
+        m_TargetAssemblyTypeName: Core.Potato.SettingsBridge, potato.core
+        m_MethodName: SetFullScreen
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &138615021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 138615015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2def2a1123972ce4c91b1aabe4e6fb77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _description: Mute changed
+  _eventSource: {fileID: 11400000, guid: b63e213c8ea5be24ca32414a7c3e1093, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 138615016}
+        m_TargetAssemblyTypeName: Core.Potato.SettingsBridge, potato.core
+        m_MethodName: SetMute
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1599095721
 GameObject:
   m_ObjectHideFlags: 0
@@ -176,6 +327,11 @@ GameObject:
   m_Component:
   - component: {fileID: 1599095723}
   - component: {fileID: 1599095722}
+  - component: {fileID: 1599095728}
+  - component: {fileID: 1599095727}
+  - component: {fileID: 1599095726}
+  - component: {fileID: 1599095725}
+  - component: {fileID: 1599095724}
   m_Layer: 0
   m_Name: SceneManagementBridge
   m_TagString: Untagged
@@ -195,15 +351,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28519358fe094f5409b5555074e0d749, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneLoadStartedEvent: {fileID: 0}
-  sceneLoadFinishedEvent: {fileID: 0}
-  sceneUnloadStartedEvent: {fileID: 0}
-  sceneUnloadFinishedEvent: {fileID: 0}
-  activeSceneChangedEvent: {fileID: 0}
+  sceneLoadStartedEvent: {fileID: 11400000, guid: c94e943d853184d44ad0b764d3ad300e, type: 2}
+  sceneLoadFinishedEvent: {fileID: 11400000, guid: 3aab127bcd92e5e438f533a59cb1178c, type: 2}
+  sceneUnloadStartedEvent: {fileID: 11400000, guid: 2e0b3203ffc02df4fbcdd05d1051f973, type: 2}
+  sceneUnloadFinishedEvent: {fileID: 11400000, guid: d6f26ad1c41b603449e165a19916045d, type: 2}
   sceneLoadAmount:
-    UseConstant: 1
+    UseConstant: 0
+    _description: 
     ConstantValue: 0
-    ReferenceData: {fileID: 0}
+    ReferenceData: {fileID: 11400000, guid: 8f20902c5fef5d844b99297e8f63b71f, type: 2}
+  activeSceneReference:
+    UseConstant: 0
+    _description: 
+    ConstantValue: 
+    ReferenceData: {fileID: 11400000, guid: 495858cce658f3b4eb37091434036529, type: 2}
 --- !u!4 &1599095723
 Transform:
   m_ObjectHideFlags: 0
@@ -219,6 +380,151 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1599095724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1599095721}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9462a516d711474eb8e4dfdb5c64102, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _description: Set Active Scene Command
+  _eventSource: {fileID: 11400000, guid: 7765ebcd04161bd498588ef648b38f9e, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1599095722}
+        m_TargetAssemblyTypeName: Potato.Core.SceneManagementBridge, potato.core
+        m_MethodName: HandleChangeActiveSceneCommand
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1599095725
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1599095721}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9462a516d711474eb8e4dfdb5c64102, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _description: Scene Reload Command
+  _eventSource: {fileID: 11400000, guid: 785fa714832f29546b6cb6c65c79f70f, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1599095722}
+        m_TargetAssemblyTypeName: Potato.Core.SceneManagementBridge, potato.core
+        m_MethodName: HandleReloadSceneCommand
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1599095726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1599095721}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9462a516d711474eb8e4dfdb5c64102, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _description: Scene Unload Command
+  _eventSource: {fileID: 11400000, guid: 3faf0bdd9b92b51458c0c07a74d2acaf, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1599095722}
+        m_TargetAssemblyTypeName: Potato.Core.SceneManagementBridge, potato.core
+        m_MethodName: HandleUnloadSceneCommand
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1599095727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1599095721}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9462a516d711474eb8e4dfdb5c64102, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _description: Scene Load Command
+  _eventSource: {fileID: 11400000, guid: 493ff1455aac95c4f957185980fc96c7, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1599095722}
+        m_TargetAssemblyTypeName: Potato.Core.SceneManagementBridge, potato.core
+        m_MethodName: HandleLoadSceneCommand
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1599095728
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1599095721}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19455084762c33d4ebd0cc8d1900c238, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _description: Scene Transition Command
+  _eventSource: {fileID: 11400000, guid: b9367fe6d3a82dc4cb98dff4d6e64fd6, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1599095722}
+        m_TargetAssemblyTypeName: Potato.Core.SceneManagementBridge, potato.core
+        m_MethodName: HandleSceneTransitionCommand
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &2030444101
 GameObject:
   m_ObjectHideFlags: 0

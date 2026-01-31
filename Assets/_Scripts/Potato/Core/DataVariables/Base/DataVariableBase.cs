@@ -13,7 +13,7 @@ namespace Potato.Core
         public void PreInit() => ResetValue();
 
 #if UNITY_EDITOR
-        [SerializeField] protected string _description;
+        [SerializeField] internal string _description;
         internal abstract object GetValue();
         internal abstract void SetValue(object valueObj);
         internal abstract void SetInitialValue(object initialValueObj);
