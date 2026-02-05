@@ -9,7 +9,9 @@ namespace Potato.Tests.EditMode
         void InstantiatesToZero<D, T>() where T : DataReferenceBase, new()
         {
             T dataRef = new();
-            Assert.IsTrue(dataRef.UseConstant);
+
+            // now start with UseConstant = false so there's fewer clicks to assign the reference in-editor
+            Assert.IsFalse(dataRef.UseConstant);
             Assert.AreEqual(default(D), dataRef.GetValue());
             Assert.IsNull(dataRef.GetReference());
         }

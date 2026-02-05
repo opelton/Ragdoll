@@ -1,8 +1,10 @@
 using System;
-using UnityEngine;
-using Potato.Core;
-using UnityEngine.Audio;
 using System.Collections.Generic;
+
+using UnityEngine;
+using UnityEngine.Audio;
+
+using Potato.Core;
 
 namespace Core.Potato
 {

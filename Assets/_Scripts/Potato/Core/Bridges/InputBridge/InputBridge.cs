@@ -1,16 +1,19 @@
-using Potato.Core;
 using UnityEngine;
+using Potato.Core;
 
 namespace Core.Potato
 {
-    public class InputBridge : MonoBehaviour
+    public class InputBridge : MonoBehaviour, IInputPollingProvider
     {
         [SerializeField] InputContext DefaultInputContext;
 
+        bool IInputPollingProvider.GetButtonDown(string buttonName) => Input.GetButtonDown(buttonName);
+        bool IInputPollingProvider.GetKeyDown(KeyCode key) => Input.GetKeyDown(key);
+        float IInputPollingProvider.GetAxis(string axisName) => Input.GetAxisRaw(axisName);
+
         void Update()
         {
-            // check all inputs the context cares about
-            // have the context process input
+            DefaultInputContext.UpdateInputState(this);
         }
     }
 }

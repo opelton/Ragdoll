@@ -1,0 +1,16 @@
+{
+    "name": "potato.game",
+    "rootNamespace": "",
+    "references": [
+        "GUID:94e2445ce4cb5fe41b6f42eb71bb22e8"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

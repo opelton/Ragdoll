@@ -8,8 +8,8 @@ namespace Potato.Core
     public abstract class DataReference<T, U> : DataReferenceBase
         where T : DataVariable<U>
     {
-        public U ConstantValue = default;
-        public T ReferenceData;
+        internal U ConstantValue = default;
+        internal T ReferenceData;
 
         public DataReference() { }
 
@@ -31,10 +31,18 @@ namespace Potato.Core
             ReferenceData = null;
         }
 
+        bool ShouldUseReferenceData => !UseConstant && ReferenceData != null;
+
         public U Value
         {
-            get { return UseConstant ? ConstantValue : ReferenceData.Value; }
-            set { if (UseConstant) ConstantValue = value; else ReferenceData.Value = value; }
+            get => ShouldUseReferenceData ? ReferenceData.Value : ConstantValue;
+            set
+            {
+                if (ShouldUseReferenceData)
+                    ReferenceData.Value = value;
+                else
+                    ConstantValue = value;
+            }
         }
 
 #if UNITY_EDITOR
