@@ -10,7 +10,7 @@ namespace Potato.Tests.EditMode
         {
             T dataRef = new();
 
-            // now start with UseConstant = false so there's fewer clicks to assign the reference in-editor
+            // unassigned references start with UseConstant = false so there's fewer clicks to assign the reference in-editor
             Assert.IsFalse(dataRef.UseConstant);
             Assert.AreEqual(default(D), dataRef.GetValue());
             Assert.IsNull(dataRef.GetReference());

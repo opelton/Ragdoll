@@ -3,20 +3,20 @@ using UnityEngine;
 
 namespace Potato.Game
 {
+    [CreateAssetMenu(menuName = "ScriptableObjects/Config/InputContext/MenuContext")]
     public class MenuInputContext : InputContext
     {
         [SerializeField] GameEvent uiSubmitInput;
         [SerializeField] GameEvent uiCancelInput;
         [SerializeField] Vector2IntReference uiMoveInput;
 
-        InputButton _submitEnter;
-        InputButton _submitSpacebar;
-        InputButton _cancelEsc;
-        InputAxisButtons _uiMove;
+        InputButton _submitEnter = new();
+        InputButton _submitSpacebar = new();
+        InputButton _cancelEsc = new();
+        InputAxisButtons _uiMove = new();
 
         public override void UpdateInputState(IInputPollingProvider provider)
         {
-
             _submitEnter.UpdateState(provider.GetKeyDown(KeyCode.Return));
             _submitSpacebar.UpdateState(provider.GetKeyDown(KeyCode.Space));
             _cancelEsc.UpdateState(provider.GetKeyDown(KeyCode.Escape));

@@ -554,7 +554,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b9eaea0266436b4cb424c1ab426db05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DefaultInputContext: {fileID: 0}
+  CurrentInputContext:
+    UseConstant: 0
+    _description: 
+    ConstantValue: {fileID: 0}
+    ReferenceData: {fileID: 11400000, guid: 20d3e6de7f0765b499d8a528df3d62d2, type: 2}
 --- !u!4 &2030444103
 Transform:
   m_ObjectHideFlags: 0

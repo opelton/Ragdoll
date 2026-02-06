@@ -12,7 +12,7 @@ namespace Potato.Core
         public string placeholder = "artie fufkin";
     }
 
-    [CreateAssetMenu(menuName = "ScriptableObjects/DataVariables/Foo")]
+    // [CreateAssetMenu(menuName = "ScriptableObjects/DataVariables/Foo")]
     public class DataBagVariableTest : DataVariable<Foo> { }
 
     [Serializable]

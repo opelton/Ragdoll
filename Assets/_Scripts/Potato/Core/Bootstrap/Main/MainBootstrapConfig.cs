@@ -7,7 +7,7 @@ namespace Potato.Core
     public class MainBootstrapConfig : ScriptableObject
     {
         // Asset must exist, and it must have this name
-        public static readonly string RelativePath = "Data/MainBootstrapConfig";
+        public static readonly string RelativePath = "BootstrapConfig/MainBootstrapConfig";
 
         // todo -- SO
         public string PersistentBridgeScene;
