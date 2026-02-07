@@ -37,7 +37,7 @@ namespace Potato.Core
         }
     }
 
-    public class InputAxisButtons
+    public class InputIntAxis
     {
         public Vector2Int Value { get; private set;} = Vector2Int.zero;
         public event Action<Vector2Int> OnAxisChanged;
@@ -50,6 +50,22 @@ namespace Potato.Core
             if(left)    newAxis.x -= 1;
             if(up)      newAxis.y += 1;
             if(down)    newAxis.y -= 1;
+
+            if(OnAxisChanged != null && Value != newAxis)
+                OnAxisChanged.Invoke(newAxis);
+            
+            Value = newAxis;
+        }
+    }
+
+    public class InputFloatAxis
+    {
+        public Vector2 Value { get; private set;} = Vector2.zero;
+        public event Action<Vector2> OnAxisChanged;
+
+        public void UpdateState(float horizontal, float vertical)
+        {
+            Vector2 newAxis = new (horizontal, vertical);
 
             if(OnAxisChanged != null && Value != newAxis)
                 OnAxisChanged.Invoke(newAxis);

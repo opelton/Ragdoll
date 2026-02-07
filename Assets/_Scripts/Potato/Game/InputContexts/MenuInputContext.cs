@@ -6,28 +6,23 @@ namespace Potato.Game
     [CreateAssetMenu(menuName = "ScriptableObjects/Config/InputContext/MenuContext")]
     public class MenuInputContext : InputContext
     {
+        [Header("Input Out Data")]
+        [SerializeField] Vector2IntReference uiMoveInput;
+
+        [Header("Input Out Events")]
         [SerializeField] GameEvent uiSubmitInput;
         [SerializeField] GameEvent uiCancelInput;
-        [SerializeField] Vector2IntReference uiMoveInput;
 
         InputButton _submitEnter = new();
         InputButton _submitSpacebar = new();
         InputButton _cancelEsc = new();
-        InputAxisButtons _uiMove = new();
+        InputIntAxis _uiMove = new();
 
         public override void UpdateInputState(IInputPollingProvider provider)
         {
             _submitEnter.UpdateState(provider.GetKeyDown(KeyCode.Return));
             _submitSpacebar.UpdateState(provider.GetKeyDown(KeyCode.Space));
             _cancelEsc.UpdateState(provider.GetKeyDown(KeyCode.Escape));
-
-            // confirm
-            if(_submitEnter.ButtonPressed || _submitSpacebar.ButtonPressed)
-                uiSubmitInput.Invoke(this);
-
-            // cancel
-            if(_cancelEsc.ButtonPressed)
-                uiCancelInput.Invoke(this);
 
             // ui cursor move
             _uiMove.UpdateState(
@@ -37,6 +32,14 @@ namespace Potato.Game
                 provider.GetKeyDown(KeyCode.DownArrow) || provider.GetKeyDown(KeyCode.S));
 
             uiMoveInput.Value = _uiMove.Value;
+
+            // confirm
+            if(_submitEnter.ButtonPressed || _submitSpacebar.ButtonPressed)
+                uiSubmitInput.Invoke(this);
+
+            // cancel
+            if(_cancelEsc.ButtonPressed)
+                uiCancelInput.Invoke(this);
         }
         
     }

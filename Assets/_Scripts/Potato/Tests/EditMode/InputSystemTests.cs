@@ -76,16 +76,35 @@ namespace Potato.Tests.EditMode
         }
 
         [Test]
-        public void AxisInputButtonInit()
+        public void NoCallbackOnButtonHold()
         {
-            InputAxisButtons axis = new();
+            bool wasFired = false;
+            InputButton button = new();
+
+            // set past and prev state so the button is in "hold" state
+            button.UpdateState(true);
+            button.UpdateState(true);
+
+            button.OnButtonPressed += () => wasFired = true;
+
+            // no events should fire while hold state continuing
+            button.UpdateState(true);
+            button.UpdateState(true);
+
+            Assert.IsFalse(wasFired);
+        }
+
+        [Test]
+        public void IntAxisInputButtonInit()
+        {
+            InputIntAxis axis = new();
             Assert.AreEqual(Vector2Int.zero, axis.Value);
         }
 
         [Test]
-        public void AxisNoCrashOnNullEvents()
+        public void IntAxisNoCrashOnNullEvents()
         {
-            InputAxisButtons axis = new();
+            InputIntAxis axis = new();
 
             // shouldn't crash when pushing buttons without callbacks
             Assert.DoesNotThrow(() =>
@@ -96,19 +115,19 @@ namespace Potato.Tests.EditMode
         }
 
         [Test]
-        public void AxisPollingTest()
+        public void IntAxisPollingTest()
         {
-            InputAxisButtons axis = new();
+            InputIntAxis axis = new();
             axis.UpdateState(true, false, true, false);
 
             Assert.AreEqual(new Vector2Int(-1, 1), axis.Value);
         }
 
         [Test]
-        public void AxisCallbackFires()
+        public void IntAxisCallbackFires()
         {
             bool wasFired = false;
-            InputAxisButtons axis = new();
+            InputIntAxis axis = new();
             axis.OnAxisChanged += value => wasFired = true;
             axis.UpdateState(false, false, true, false);
 
@@ -116,14 +135,89 @@ namespace Potato.Tests.EditMode
         }
 
         [Test]
-        public void AxisCallbackPayload()
+        public void IntAxisCallbackPayload()
         {
             Vector2Int outValue = Vector2Int.zero;
-            InputAxisButtons axis = new();
+            InputIntAxis axis = new();
             axis.OnAxisChanged += value => outValue = value;
             axis.UpdateState(false, false, true, false);
 
             Assert.AreEqual(Vector2Int.up, outValue);
+        }
+
+        [Test]
+        public void IntAxisNoCallbackWithoutChange()
+        {
+            bool wasFired = false;
+            InputIntAxis axis = new();
+            axis.UpdateState(false, false, true, false);
+            axis.OnAxisChanged += value => wasFired = true;
+            axis.UpdateState(false, false, true, false);
+
+            Assert.IsFalse(wasFired);
+        }
+
+        [Test]
+        public void FloatAxisInputButtonInit()
+        {
+            InputFloatAxis axis = new();
+            Assert.AreEqual(Vector2.zero, axis.Value);
+        }
+
+        [Test]
+        public void FloatAxisNoCrashOnNullEvents()
+        {
+            InputFloatAxis axis = new();
+
+            // shouldn't crash when pushing buttons without callbacks
+            Assert.DoesNotThrow(() =>
+            {
+                axis.UpdateState(0f, 0f);
+                axis.UpdateState(1f, 1f);
+            });
+        }
+
+        [Test]
+        public void FloatAxisPollingTest()
+        {
+            InputFloatAxis axis = new();
+            axis.UpdateState(1f, -1f);
+
+            Assert.AreEqual(new Vector2(1f, -1f), axis.Value);
+        }
+
+        [Test]
+        public void FloatAxisCallbackFires()
+        {
+            bool wasFired = false;
+            InputFloatAxis axis = new();
+            axis.OnAxisChanged += value => wasFired = true;
+            axis.UpdateState(1f, -1f);
+
+            Assert.IsTrue(wasFired);
+        }
+
+        [Test]
+        public void FloatAxisCallbackPayload()
+        {
+            Vector2 outValue = Vector2.zero;
+            InputFloatAxis axis = new();
+            axis.OnAxisChanged += value => outValue = value;
+            axis.UpdateState(1f, -1f);
+
+            Assert.AreEqual(new Vector2(1f, -1f), outValue);
+        }
+
+        [Test]
+        public void FloatAxisNoCallbackWithoutChange()
+        {
+            bool wasFired = false;
+            InputFloatAxis axis = new();
+            axis.UpdateState(1f, -1f);
+            axis.OnAxisChanged += value => wasFired = true;
+            axis.UpdateState(1f, -1f);
+
+            Assert.IsFalse(wasFired);
         }
     }
 }
