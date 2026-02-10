@@ -56,6 +56,11 @@ namespace Potato.Core
             
             Value = newAxis;
         }
+
+        public void ResetState()
+        {
+            Value = Vector2Int.zero;
+        }
     }
 
     public class InputFloatAxis
@@ -71,6 +76,11 @@ namespace Potato.Core
                 OnAxisChanged.Invoke(newAxis);
             
             Value = newAxis;
+        }
+
+        public void ResetState()
+        {
+            Value = Vector2.zero;
         }
     }
 }

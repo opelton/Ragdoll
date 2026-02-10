@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Notify_InputContextChanged
   m_EditorClassIdentifier: 
   _logInvocations: 0
-  _description: 
+  _description: causes the unity bridge to change context
   _testValue: {fileID: 0}

@@ -41,6 +41,15 @@ namespace Potato.Game
             if(_cancelEsc.ButtonPressed)
                 uiCancelInput.Invoke(this);
         }
-        
+
+        public override void ResetInputStates()
+        {
+            uiMoveInput.Value = Vector2Int.zero;
+            
+            _submitEnter.ResetState();
+            _submitSpacebar.ResetState();
+            _cancelEsc.ResetState();
+            _uiMove.ResetState();
+        }        
     }
 }

@@ -62,6 +62,20 @@ namespace Potato.Game
 
             if(_use.ButtonPressed)          useButtonDown.Invoke(this);
             else if(_use.ButtonReleased)    useButtonUp.Invoke(this);
-        }  
+        }
+
+        public override void ResetInputStates()
+        {
+            playerMoveInput.Value = Vector2.zero;
+            playerLookInput.Value = Vector2.zero;
+
+            _move.ResetState();
+            _look.ResetState();
+            _fire1.ResetState();
+            _fire2.ResetState();
+            _sprint.ResetState();
+            _jump.ResetState();
+            _use.ResetState();
+        }
     }
 }
