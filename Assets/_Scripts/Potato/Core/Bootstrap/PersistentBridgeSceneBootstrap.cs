@@ -42,6 +42,7 @@ namespace Potato.Core
 
             // need to set this manually because SceneManagementBridge can't handle loading its own scene
             config.ActiveSceneName.Value = activeSceneName;
+            Debug.Log($"Active scene bootstrapped: {config.ActiveSceneName.Value}");
         }
     }
 }
