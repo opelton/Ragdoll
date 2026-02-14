@@ -9,36 +9,39 @@ namespace Potato.Core
         public static void Run()
         {
             var config = Resources.Load<MainBootstrapConfig>(MainBootstrapConfig.RelativePath);
-            if(config == null)
+            if (config == null)
             {
                 Debug.LogError("Main Bootstrap Config not found!");
                 return;
             }
-            string sceneName = config.PersistentBridgeScene;
 
-            if(IsSceneLoaded(sceneName))
+            // check which scenes are already loaded, and if one of them is the persistent bridge scene
+            string sceneName = config.PersistentBridgeScene;
+            bool persistentBridgeIsLoaded = false;
+            string activeSceneName = string.Empty;
+            for (int i = 0; i < SceneManager.sceneCount; ++i)
+            {
+                string name = SceneManager.GetSceneAt(i).name;
+
+                if (name == sceneName)
+                    persistentBridgeIsLoaded = true;
+                else
+                    activeSceneName = name;
+            }
+
+            // only one persist bridge scene allowed
+            if (!persistentBridgeIsLoaded)
+            {
+                // non-async because I absolutely want the scene loaded by next frame, a startup hitch is acceptable
+                SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
+            }
+            else
             {
                 Debug.LogWarning($"PersistentBridgeScene:{sceneName} already loaded!");
-                return;
             }
-            
-            // LoadScene using LoadSceneMode.Single would unload this scene
-            // GameFlowManager should NEVER single-load, always explicitly unload unwanted scenes and then load the next additively
-            // Remember to set active scene to the gameplay scene so new gameplay objects and etc target the correct scene
 
-            // non-async because I absolutely want the scene loaded by next frame, a startup hitch is acceptable
-            SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
-        }
-
-        // TODO -- SO-based presence-checking
-        private static bool IsSceneLoaded(string sceneName)
-        {
-            for(int i = 0; i < SceneManager.sceneCount; ++i)
-            {
-                if(SceneManager.GetSceneAt(i).name == sceneName)
-                    return true;
-            }
-            return false;
+            // need to set this manually because SceneManagementBridge can't handle loading its own scene
+            config.ActiveSceneName.Value = activeSceneName;
         }
     }
 }

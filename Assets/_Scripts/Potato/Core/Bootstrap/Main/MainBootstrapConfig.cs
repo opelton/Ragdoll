@@ -11,5 +11,7 @@ namespace Potato.Core
 
         // todo -- SO
         public string PersistentBridgeScene;
+
+        public StringReference ActiveSceneName;
     }
 }

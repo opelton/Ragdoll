@@ -3,7 +3,7 @@ using Potato.Core;
 
 namespace Potato.Game
 {
-    [CreateAssetMenu(menuName = "ScriptableObjects/Systems/Input")]
+    [CreateAssetMenu(menuName = "ScriptableObjects/Config/Systems/Input")]
     public class InputSystem : ScriptableObject
     {
         [Header("Input contexts")]

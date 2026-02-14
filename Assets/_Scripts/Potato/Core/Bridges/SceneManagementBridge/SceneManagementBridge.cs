@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 
 using UnityEngine;
@@ -8,13 +7,6 @@ namespace Potato.Core
 {
     public class SceneManagementBridge : MonoBehaviour
     {
-        [Serializable]
-        public class TransitionRequest
-        {
-            public string currentScene;
-            public string nextScene;
-        }
-
         [Header("Out Events")]
         [SerializeField] StringEvent sceneLoadStartedEvent;
         [SerializeField] StringEvent sceneLoadFinishedEvent;
@@ -27,11 +19,11 @@ namespace Potato.Core
 
         public void HandleLoadSceneCommand(string sceneName) => StartCoroutine(HandleLoadSceneAsync(sceneName));
         public void HandleUnloadSceneCommand(string sceneName) => StartCoroutine(HandleUnloadSceneAsync(sceneName));
-        public void HandleReloadSceneCommand(string sceneName) => StartCoroutine(HandleReloadSceneAsync(sceneName));
-        public void HandleSceneTransitionCommand(TransitionRequest request) => StartCoroutine(HandleSceneTransitionAsync(request));
+        public void HandleReloadSceneCommand() => StartCoroutine(HandleReloadSceneAsync());
+        public void HandleSceneTransitionCommand(string sceneName) => StartCoroutine(HandleSceneTransitionAsync(sceneName));
         public void HandleChangeActiveSceneCommand(string sceneName) => ChangeActiveScene(sceneName, true);
 
-        void Start() => sceneLoadFinishedEvent.Invoke(gameObject.scene.name, this);
+        void OnEnable() => sceneLoadFinishedEvent.Invoke(gameObject.scene.name, this);
         void OnDestroy() => sceneUnloadFinishedEvent.Invoke(gameObject.scene.name, this);
         
         private IEnumerator HandleLoadSceneAsync(string sceneName)
@@ -48,13 +40,15 @@ namespace Potato.Core
             op.allowSceneActivation = false;
 
             // activation counts for the last 10% of progress, so isDone would never be true with scene activation disallowed
-            while(op.progress <= .9f)
+            while(op.progress < .9f)
             {
                 sceneLoadAmount.Value = op.progress;
                 yield return null;
             }
+            
             sceneLoadAmount.Value = 0;
             op.allowSceneActivation = true;
+            yield return op;
         }
 
         private IEnumerator HandleUnloadSceneAsync(string sceneName)
@@ -75,48 +69,53 @@ namespace Potato.Core
 
             while (op.isDone)
                 yield return null;
+
+            yield return op;
         }
 
-        private IEnumerator HandleReloadSceneAsync(string sceneName)
+        private IEnumerator HandleReloadSceneAsync()
         {
             // unload current scene
-            sceneUnloadStartedEvent.Invoke(sceneName, this);
+            sceneUnloadStartedEvent.Invoke(activeSceneReference.Value, this);
             ChangeActiveScene(gameObject.scene, false);
-            yield return HandleUnloadSceneAsync(sceneName);
-            sceneUnloadFinishedEvent.Invoke(sceneName, this);
+            yield return HandleUnloadSceneAsync(activeSceneReference.Value);
+            sceneUnloadFinishedEvent.Invoke(activeSceneReference.Value, this);
 
             // load current scene
-            sceneLoadStartedEvent.Invoke(sceneName, this);
-            yield return HandleLoadSceneAsync(sceneName);
-            ChangeActiveScene(sceneName, false);
-            sceneLoadFinishedEvent.Invoke(sceneName, this);
+            sceneLoadStartedEvent.Invoke(activeSceneReference.Value, this);
+            yield return HandleLoadSceneAsync(activeSceneReference.Value);
+            ChangeActiveScene(activeSceneReference.Value, false);
+            sceneLoadFinishedEvent.Invoke(activeSceneReference.Value, this);
         }
 
-        private IEnumerator HandleSceneTransitionAsync(TransitionRequest request)
+        private IEnumerator HandleSceneTransitionAsync(string sceneName)
         {
             // unload old scene
-            sceneUnloadStartedEvent.Invoke(request.currentScene, this);
-            yield return UnloadSceneAsync(request.currentScene);
-            sceneUnloadFinishedEvent.Invoke(request.currentScene, this);
+            sceneUnloadStartedEvent.Invoke(activeSceneReference.Value, this);
+            yield return UnloadSceneAsync(activeSceneReference.Value);
+            sceneUnloadFinishedEvent.Invoke(activeSceneReference.Value, this);
 
             // load new scene
-            sceneLoadStartedEvent.Invoke(request.nextScene, this);
-            yield return LoadSceneAsync(request.nextScene);
-            sceneLoadFinishedEvent.Invoke(request.nextScene, this);
-            ChangeActiveScene(request.nextScene, true);
+            sceneLoadStartedEvent.Invoke(sceneName, this);
+            yield return LoadSceneAsync(sceneName);
+            sceneLoadFinishedEvent.Invoke(sceneName, this);
+            ChangeActiveScene(sceneName, true);
         }
 
-        private void ChangeActiveScene(string sceneName, bool update) => ChangeActiveScene(SceneManager.GetSceneByName(sceneName), update);
+        private void ChangeActiveScene(string sceneName, bool notify) => ChangeActiveScene(SceneManager.GetSceneByName(sceneName), notify);
 
         // don't update active scene when it's briefly flipped back and forth for reloads
-        private void ChangeActiveScene(Scene scene, bool update)
+        private void ChangeActiveScene(Scene scene, bool notify)
         {
             bool result = false;
 
             if(scene.IsValid())
                 result = SceneManager.SetActiveScene(scene);
+            else
+                Debug.Log($"scene {scene.name} is invalid!");
 
-            if(update && result)
+            // update the public reference if scene was correctly set
+            if(notify && (result || SceneManager.GetActiveScene().name == scene.name))
                 activeSceneReference.Value = scene.name;
         }
     }

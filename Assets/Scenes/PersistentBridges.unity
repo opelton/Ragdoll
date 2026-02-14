@@ -327,11 +327,11 @@ GameObject:
   m_Component:
   - component: {fileID: 1599095723}
   - component: {fileID: 1599095722}
-  - component: {fileID: 1599095728}
   - component: {fileID: 1599095727}
   - component: {fileID: 1599095726}
-  - component: {fileID: 1599095725}
   - component: {fileID: 1599095724}
+  - component: {fileID: 1599095729}
+  - component: {fileID: 1599095728}
   m_Layer: 0
   m_Name: SceneManagementBridge
   m_TagString: Untagged
@@ -409,35 +409,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &1599095725
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1599095721}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9462a516d711474eb8e4dfdb5c64102, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _description: Scene Reload Command
-  _eventSource: {fileID: 11400000, guid: 785fa714832f29546b6cb6c65c79f70f, type: 2}
-  Response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1599095722}
-        m_TargetAssemblyTypeName: Potato.Core.SceneManagementBridge, potato.core
-        m_MethodName: HandleReloadSceneCommand
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!114 &1599095726
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -505,11 +476,40 @@ MonoBehaviour:
   m_GameObject: {fileID: 1599095721}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 19455084762c33d4ebd0cc8d1900c238, type: 3}
+  m_Script: {fileID: 11500000, guid: 4e3ce58489b3ad34d82e05b3c35d493b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _description: Scene Transition Command
-  _eventSource: {fileID: 11400000, guid: b9367fe6d3a82dc4cb98dff4d6e64fd6, type: 2}
+  _description: reloads current scene
+  _eventSource: {fileID: 11400000, guid: 785fa714832f29546b6cb6c65c79f70f, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1599095722}
+        m_TargetAssemblyTypeName: Potato.Core.SceneManagementBridge, potato.core
+        m_MethodName: HandleReloadSceneCommand
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1599095729
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1599095721}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9462a516d711474eb8e4dfdb5c64102, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _description: unload current scene, load new scene and set it as active
+  _eventSource: {fileID: 11400000, guid: cd2e0b650097d2843af3263b83e1e059, type: 2}
   Response:
     m_PersistentCalls:
       m_Calls:

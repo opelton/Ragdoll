@@ -1,11 +1,16 @@
 using System.Collections;
+using Potato.Core;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Potato.Game
+namespace Potato.Game.UI
 {
-    public class SplashScreen : MonoBehaviour
+    public class SplashScreenSequence : MonoBehaviour
     {
+        [Header("Out Events")]
+        [SerializeField] GameEvent NotifySplashSequenceFinished;
+
+        [Header("Splash Sequence")]
         [SerializeField] Image fullscreenFade;
         [SerializeField] Color fullscreenFadeColor = Color.black;
         [SerializeField] RawImage logoTarget;
@@ -16,17 +21,7 @@ namespace Potato.Game
 
         private Coroutine _splashCoroutine;
 
-        void Start()
-        {
-            _splashCoroutine = StartCoroutine(PlaySplashSequence());
-        }
-
-        void Update()
-        {
-            // todo use input system
-            if(Input.anyKeyDown)
-                CancelSplashSequence();
-        }
+        void Start() => _splashCoroutine = StartCoroutine(PlaySplashSequence());
 
         IEnumerator PlaySplashSequence()
         {
@@ -49,6 +44,9 @@ namespace Potato.Game
 
                 yield return new WaitForSecondsRealtime(downTime);
             }
+
+            _splashCoroutine = null;
+            NotifySplashSequenceFinished.Invoke(this);
         }
 
         IEnumerator LerpFullscreenFade(float from, float to, float duration)
@@ -69,11 +67,17 @@ namespace Potato.Game
             fullscreenFade.color = c;
         }
 
-        void CancelSplashSequence()
+        public void CancelSplashSequence()
         {
-            StopCoroutine(_splashCoroutine);
-            logoTarget.texture = null;
-            fullscreenFade.color = Color.clear;
+            if (_splashCoroutine != null)
+            {
+                StopCoroutine(_splashCoroutine);
+                logoTarget.texture = null;
+                fullscreenFade.color = Color.clear;
+                
+                _splashCoroutine = null;
+                NotifySplashSequenceFinished.Invoke(this);
+            }
         }
     }
 }
