@@ -1,4 +1,9 @@
 using UnityEngine;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 using Potato.Core;
 
 namespace Potato.Game
@@ -22,5 +27,13 @@ namespace Potato.Game
         public void SceneTransition_MainMenu() => sceneTransitionCommand.Invoke(mainMenu, this);
         public void SceneTransition_Play() => sceneTransitionCommand.Invoke(play, this);
         public void ReloadCurrentScene() => reloadSceneCommand.Invoke(this);
+        public void QuitToDesktop()
+        {
+#if UNITY_EDITOR
+            EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
+        }
     }
 }

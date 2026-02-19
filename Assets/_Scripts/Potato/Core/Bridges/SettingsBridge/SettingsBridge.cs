@@ -19,7 +19,7 @@ namespace Core.Potato
         public Vector2Int Resolution;
     }
 
-    // todo -- aspect ratio? fov?
+    // todo -- aspect ratio? fov? 
     public class SettingsBridge : MonoBehaviour
     {
         static readonly string SettingsKey = "MainSettings";
