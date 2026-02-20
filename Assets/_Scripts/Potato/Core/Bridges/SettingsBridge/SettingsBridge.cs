@@ -4,9 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 
-using Potato.Core;
-
-namespace Core.Potato
+namespace Potato.Core
 {
     [Serializable]
     public class SettingsData
@@ -30,37 +28,34 @@ namespace Core.Potato
         [SerializeField] BoolReference MuteAudio = false;
         [SerializeField] BoolReference ShowFPS = false;
         [SerializeField] BoolReference FullScreen = false;
-#if !UNITY_WEBGL
-        // webGL browser play is basically just fullscreen on/off, don't even offer resolution control
         [SerializeField] Vector2IntReference Resolution = new Vector2Int(1280, 720);
-#endif
 
         [Header("Audio")]
         [SerializeField] AudioMixer MainAudioMixer;
 
         void Start()
         {
+            SettingsData data;
             if (PlayerPrefs.HasKey(SettingsKey))
             {
                 string settingsJson = PlayerPrefs.GetString(SettingsKey);
-                SettingsData data = JsonUtility.FromJson<SettingsData>(settingsJson);
-                ApplySettingsData(data);
+                data = JsonUtility.FromJson<SettingsData>(settingsJson);
             }
             else
             {
-                InitializeFromSystem();
+                data = SystemToSettingsData();
             }
+
+            // webGL can't fullscreen on init, must be triggered by runtime user input
+#if UNITY_WEBGL
+            data.FullScreen = false;
+#endif
+            ApplySettingsData(data);
         }
 
-        void InitializeFromSystem()
+        void OnApplicationQuit()
         {
-            // hardcode the settings that are basically made-up and don't actually have a unity input
-            MouseSensitivity.Value = .6f;
-            MainVolume.Value = TryGetCurrentVolume();
-            MuteAudio.Value = false;
-            ShowFPS.Value = false;
-            FullScreen.Value = Screen.fullScreen;
-            Resolution.Value = new Vector2Int(Screen.currentResolution.width, Screen.currentResolution.width);
+            HandleSaveSettingsCommand();
         }
 
         public void HandleSaveSettingsCommand()
@@ -68,6 +63,20 @@ namespace Core.Potato
             SettingsData data = ToSettingsData();
             PlayerPrefs.SetString(SettingsKey, JsonUtility.ToJson(data));
             PlayerPrefs.Save();
+        }
+
+        SettingsData SystemToSettingsData()
+        {
+            // hardcode the settings that are basically made-up and don't actually have a unity input
+            return new SettingsData
+            {
+                MouseSensitivity = .6f,
+                MainVolume = TryGetCurrentVolume(),
+                MuteAudio = false,
+                ShowFPS = false,
+                FullScreen = Screen.fullScreen,
+                Resolution = new Vector2Int(Screen.currentResolution.width, Screen.currentResolution.height)
+            };
         }
 
         SettingsData ToSettingsData()
@@ -119,7 +128,14 @@ namespace Core.Potato
                 SetVolume(MainVolume.Value);
         }
 
-        public void SetFullScreen(bool fullScreen) => Screen.fullScreen = fullScreen;
+        public void SetFullScreen(bool fullScreen)
+        {
+#if UNITY_WEBGL
+            unityInstance.SetFullScreen(fullScreen ? 1 : 0); 
+#else
+            Screen.fullScreen = fullScreen;
+#endif
+        }
 
         public void SetResolution(Vector2Int resolution) => Screen.SetResolution(resolution.x, resolution.y, FullScreen.Value);
 
@@ -133,7 +149,7 @@ namespace Core.Potato
             return Mathf.Abs(CurrentAspectRatio() - aspect) < deltaF;
         }
 
-        public static List<Vector2Int> GetValidScreenResolutions()
+        public static Vector2Int[] GetValidScreenResolutions()
         {
             List<Vector2Int> validResolutions = new();
             Vector2Int prevRes = Vector2Int.zero;
@@ -148,7 +164,7 @@ namespace Core.Potato
                 }
             }
 
-            return validResolutions;
+            return validResolutions.ToArray();
         }
     }
 }

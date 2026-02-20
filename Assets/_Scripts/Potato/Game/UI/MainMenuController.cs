@@ -1,6 +1,4 @@
-using Potato.Core;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Potato.Game.UI
 {
