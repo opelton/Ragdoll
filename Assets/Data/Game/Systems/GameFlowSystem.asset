@@ -21,4 +21,4 @@ MonoBehaviour:
   sceneTransitionCommand: {fileID: 11400000, guid: cd2e0b650097d2843af3263b83e1e059, type: 2}
   splash: SplashScreen
   mainMenu: MainMenu
-  play: Sandbox
+  play: NewSandbox

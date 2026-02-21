@@ -22,6 +22,11 @@ MonoBehaviour:
     _description: 
     ConstantValue: {x: 0, y: 0}
     ReferenceData: {fileID: 11400000, guid: 79b42736cba36b148ae7d8119e11ee04, type: 2}
+  rawPlayerLookInput:
+    UseConstant: 0
+    _description: 
+    ConstantValue: {x: 0, y: 0}
+    ReferenceData: {fileID: 11400000, guid: dee879c9aabf88e47afbcf5d5e9ff8e4, type: 2}
   fire1ButtonDown: {fileID: 11400000, guid: b7576179a798cc0448fbdf4aa67cc603, type: 2}
   fire1ButtonUp: {fileID: 11400000, guid: 79c6c7870cc735e4197ceadc3229e0c4, type: 2}
   fire2ButtonDown: {fileID: 11400000, guid: 902194d3276646047a9aec4fbba237e9, type: 2}
@@ -32,3 +37,13 @@ MonoBehaviour:
   jumpButtonUp: {fileID: 11400000, guid: 9f5c0d44f9a3c8443930d7d192332e03, type: 2}
   useButtonDown: {fileID: 11400000, guid: 08c7ff0c593d1ec47b3a3a75e5ed0b50, type: 2}
   useButtonUp: {fileID: 11400000, guid: e85d4fbfc41fbc2408b764fd00c7d536, type: 2}
+  lookSensitivity:
+    UseConstant: 0
+    _description: 
+    ConstantValue: 0
+    ReferenceData: {fileID: 11400000, guid: 1ffaf07a6bfd40c4a8c910f934053c70, type: 2}
+  lookSensitivityModifierWebGL:
+    UseConstant: 0
+    _description: 
+    ConstantValue: 0
+    ReferenceData: {fileID: 11400000, guid: ebbf4f26b591cca449d92cb50b179a6b, type: 2}

@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: efc0a950b548b1946aad1d72cf1eb00e, type: 3}
-  m_Name: Notify_InputContextChanged
+  m_Script: {fileID: 11500000, guid: 7e43e49004cd9874eb5f44c970a1c52a, type: 3}
+  m_Name: Notify_PlayerRawLookInputChanged
   m_EditorClassIdentifier: 
   _logInvocations: 0
-  _description: causes the unity bridge to change context
-  _testValue: {fileID: 11400000, guid: 2433e9f93d87eb140be58e4592374aff, type: 2}
+  _description: 
+  _testValue: {x: 0, y: 0}

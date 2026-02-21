@@ -9,6 +9,7 @@ namespace Potato.Game
         [Header("Input Out Data")]
         [SerializeField] Vector2Reference playerMoveInput;
         [SerializeField] Vector2Reference playerLookInput;
+        [SerializeField] Vector2Reference rawPlayerLookInput;
 
         [Header("Input Out Events")]
         [SerializeField] GameEvent fire1ButtonDown;
@@ -22,6 +23,10 @@ namespace Potato.Game
         [SerializeField] GameEvent useButtonDown;
         [SerializeField] GameEvent useButtonUp;
 
+        [Header("Settings Data")]
+        [SerializeField] FloatReference lookSensitivity;
+        [SerializeField] FloatReference lookSensitivityModifierWebGL;
+
         InputFloatAxis _move = new();
         InputFloatAxis _look = new();
         InputButton _fire1 = new();
@@ -32,7 +37,6 @@ namespace Potato.Game
 
         public override void UpdateInputState(IInputPollingProvider provider)
         {
-            // updating these will automatically dispatch onUpdate events
             _move.UpdateState(
                 provider.GetAxis(InputStringConstants.KeyboardAxis_X),
                 provider.GetAxis(InputStringConstants.KeyboardAxis_Y));
@@ -46,6 +50,16 @@ namespace Potato.Game
             _sprint.UpdateState(provider.GetKeyDown(KeyCode.LeftShift));
             _jump.UpdateState(provider.GetKeyDown(KeyCode.Space));
             _use.UpdateState(provider.GetKeyDown(KeyCode.E));
+
+            // dispatch move/look updates, apply relevant settings
+            playerMoveInput.Value = _move.Value;
+            rawPlayerLookInput.Value = _look.Value;
+
+#if UNITY_WEBGL
+            playerLookInput.Value = _look.Value * lookSensitivity.Value * lookSensitivityModifierWebGL.Value;
+#else
+            playerLookInput.Value = _look.Value * lookSensitivity.Value;
+#endif
 
             // instead of setting up proper lifecycle management of  event subscriptions, I'm going to be lazy and poll all these buttons
             if(_fire1.ButtonPressed)        fire1ButtonDown.Invoke(this);
@@ -68,6 +82,7 @@ namespace Potato.Game
         {
             playerMoveInput.Value = Vector2.zero;
             playerLookInput.Value = Vector2.zero;
+            rawPlayerLookInput.Value = Vector2.zero;
 
             _move.ResetState();
             _look.ResetState();

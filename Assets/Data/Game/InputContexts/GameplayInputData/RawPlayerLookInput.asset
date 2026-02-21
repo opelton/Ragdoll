@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 99fead8e0c4d1fb4eb325250723e5273, type: 3}
-  m_Name: PlayerLookInput
+  m_Name: RawPlayerLookInput
   m_EditorClassIdentifier: 
   _isReadonly: 0
-  _description: mouse with settings applied
+  _description: mouse movement without settings applied
   _initialValue: {x: 0, y: 0}
   _value: {x: 0, y: 0}
-  onValueChanged: {fileID: 11400000, guid: 7aeeb0f042629cb4eb7c7f9e4b3be455, type: 2}
+  onValueChanged: {fileID: 11400000, guid: e2063bc3b87ca43469191ef23197f4ac, type: 2}
