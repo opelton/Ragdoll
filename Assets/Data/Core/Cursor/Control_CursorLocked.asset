@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f592ff29d10463840a7d417983c6fca7, type: 3}
-  m_Name: FullScreen
+  m_Name: Control_CursorLocked
   m_EditorClassIdentifier: 
   _isReadonly: 0
-  _description: 
+  _description: lock for fps, unlock for menu
   _initialValue: 0
   _value: 0
-  onValueChanged: {fileID: 11400000, guid: 503a4a25fd10d7a45af128f7ad864520, type: 2}
+  onValueChanged: {fileID: 11400000, guid: 9ec4b4c589df49245a60124ad7c164e7, type: 2}

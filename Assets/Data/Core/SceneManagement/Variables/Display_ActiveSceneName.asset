@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4a23c6f0d5fdcc34bb670799df859e4b, type: 3}
-  m_Name: MasterVolume
+  m_Script: {fileID: 11500000, guid: da0b5e8b025aac4419883964fe122411, type: 3}
+  m_Name: Display_ActiveSceneName
   m_EditorClassIdentifier: 
   _isReadonly: 0
-  _description: clamped [0, 1]
-  _initialValue: 0.6
-  _value: 0.6
-  onValueChanged: {fileID: 11400000, guid: 10f5f16605fc25e4a967089f955e60aa, type: 2}
+  _description: Typically the gameplay/mainMenu scene
+  _initialValue: 
+  _value: 
+  onValueChanged: {fileID: 11400000, guid: ff0bd0a7a094f76409c4589c7981c953, type: 2}

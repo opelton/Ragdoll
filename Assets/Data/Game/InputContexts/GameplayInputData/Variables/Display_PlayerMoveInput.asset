@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b32bf7d084fbe18498c1aac1a3431ba1, type: 3}
-  m_Name: ScreenResolution
+  m_Script: {fileID: 11500000, guid: 99fead8e0c4d1fb4eb325250723e5273, type: 3}
+  m_Name: Display_PlayerMoveInput
   m_EditorClassIdentifier: 
   _isReadonly: 0
-  _description: 
-  _initialValue: {x: 1280, y: 720}
-  _value: {x: 1280, y: 720}
-  onValueChanged: {fileID: 11400000, guid: d68b51bf6d28c7e4b8bb0ca194d1d598, type: 2}
+  _description: WASD
+  _initialValue: {x: 0, y: 0}
+  _value: {x: 0, y: 0}
+  onValueChanged: {fileID: 11400000, guid: 34c6bc2178aa13144981a0ef55c4bb7d, type: 2}

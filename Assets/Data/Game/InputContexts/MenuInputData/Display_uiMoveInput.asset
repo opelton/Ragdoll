@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f592ff29d10463840a7d417983c6fca7, type: 3}
-  m_Name: MuteVolume
+  m_Script: {fileID: 11500000, guid: b32bf7d084fbe18498c1aac1a3431ba1, type: 3}
+  m_Name: Display_uiMoveInput
   m_EditorClassIdentifier: 
   _isReadonly: 0
   _description: 
-  _initialValue: 0
-  _value: 0
-  onValueChanged: {fileID: 11400000, guid: b63e213c8ea5be24ca32414a7c3e1093, type: 2}
+  _initialValue: {x: 0, y: 0}
+  _value: {x: 0, y: 0}
+  onValueChanged: {fileID: 11400000, guid: c63c4648d6630604a911fc368b3c99d9, type: 2}

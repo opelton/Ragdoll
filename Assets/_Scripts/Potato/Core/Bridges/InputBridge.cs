@@ -1,7 +1,6 @@
 using UnityEngine;
-using Potato.Core;
 
-namespace Core.Potato
+namespace Potato.Core
 {
     // todo -- input context should persist values through scene changes, but reset them when context changes
     public class InputBridge : MonoBehaviour, IInputPollingProvider

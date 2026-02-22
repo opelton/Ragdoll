@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 99fead8e0c4d1fb4eb325250723e5273, type: 3}
-  m_Name: PlayerMoveInput
+  m_Script: {fileID: 11500000, guid: f592ff29d10463840a7d417983c6fca7, type: 3}
+  m_Name: Control_ShowFPSWidget
   m_EditorClassIdentifier: 
   _isReadonly: 0
-  _description: WASD
-  _initialValue: {x: 0, y: 0}
-  _value: {x: 0, y: 0}
-  onValueChanged: {fileID: 11400000, guid: 34c6bc2178aa13144981a0ef55c4bb7d, type: 2}
+  _description: 
+  _initialValue: 0
+  _value: 0
+  onValueChanged: {fileID: 11400000, guid: 80e26a54c30f09e4889587ce78b72c34, type: 2}

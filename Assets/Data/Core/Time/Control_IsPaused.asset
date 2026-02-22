@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 99fead8e0c4d1fb4eb325250723e5273, type: 3}
-  m_Name: PlayerLookInput
+  m_Script: {fileID: 11500000, guid: f592ff29d10463840a7d417983c6fca7, type: 3}
+  m_Name: Control_IsPaused
   m_EditorClassIdentifier: 
   _isReadonly: 0
-  _description: mouse with settings applied
-  _initialValue: {x: 0, y: 0}
-  _value: {x: 0, y: 0}
-  onValueChanged: {fileID: 11400000, guid: 7aeeb0f042629cb4eb7c7f9e4b3be455, type: 2}
+  _description: controls timescale 0 or 1
+  _initialValue: 0
+  _value: 0
+  onValueChanged: {fileID: 11400000, guid: 6a2727d2a3215fb4abd9027ed5ba221a, type: 2}
