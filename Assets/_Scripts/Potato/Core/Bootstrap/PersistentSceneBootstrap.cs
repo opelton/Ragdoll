@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 namespace Potato.Core
 {
     // this can't use our own scene management because it isn't available yet
-    public static class PersistentBridgeSceneBootstrap
+    public static class PersistentSceneBootstrap
     {
         public static void Run()
         {
@@ -18,6 +18,7 @@ namespace Potato.Core
             // check which scenes are already loaded, and if one of them is the persistent bridge scene
             string sceneName = config.PersistentBridgeScene;
             bool persistentBridgeIsLoaded = false;
+            bool persistentUiIsLoaded = false;
             string activeSceneName = string.Empty;
             for (int i = 0; i < SceneManager.sceneCount; ++i)
             {
@@ -25,6 +26,8 @@ namespace Potato.Core
 
                 if (name == sceneName)
                     persistentBridgeIsLoaded = true;
+                else if (name == config.PersistentUiScene)
+                    persistentUiIsLoaded = true;
                 else
                     activeSceneName = name;
             }
@@ -37,12 +40,22 @@ namespace Potato.Core
             }
             else
             {
-                Debug.LogWarning($"PersistentBridgeScene:{sceneName} already loaded!");
+                Debug.LogWarning($"PersistentScene:{sceneName} already loaded!");
             }
 
-            // need to set this manually because SceneManagementBridge can't handle loading its own scene
+            // only one persist ui scene allowed
+            if (!persistentUiIsLoaded)
+            {
+                SceneManager.LoadScene(config.PersistentUiScene, LoadSceneMode.Additive);
+            }
+            else
+            {
+                Debug.LogWarning($"PersistentUiScene:{sceneName} already loaded!");
+            }
+            // Debug.Log($"Active scene bootstrapped: {activeSceneName}");
+
+            // normally the scene manager would set this
             config.ActiveSceneName.Value = activeSceneName;
-            Debug.Log($"Active scene bootstrapped: {config.ActiveSceneName.Value}");
         }
     }
 }

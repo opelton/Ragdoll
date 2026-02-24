@@ -6,11 +6,11 @@ namespace Potato.Core
     [CreateAssetMenu(menuName = "ScriptableObjects/Config/MainBootstrapConfig"), Tooltip("One of these must exist in Resources/Data, and it must be named MainBootstrapConfig")]
     public class MainBootstrapConfig : ScriptableObject
     {
-        // Asset must exist, and it must have this name
+        // asset must be in /Resources/BootstrapConfig/, and it must be named MainBootstrapConfig
         public static readonly string RelativePath = "BootstrapConfig/MainBootstrapConfig";
 
-        // todo -- SO
         public string PersistentBridgeScene;
+        public string PersistentUiScene;
 
         public StringReference ActiveSceneName;
     }

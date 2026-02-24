@@ -11,7 +11,7 @@ namespace Potato.Core
             PreInitScriptableObjectBootstrap.Run();
 
             // ensure bridge scene is additively loaded
-            PersistentBridgeSceneBootstrap.Run();
+            PersistentSceneBootstrap.Run();
         }
     }
 }

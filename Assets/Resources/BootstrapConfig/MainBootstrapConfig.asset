@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: MainBootstrapConfig
   m_EditorClassIdentifier: 
   PersistentBridgeScene: PersistentBridges
+  PersistentUiScene: PersistentUI
   ActiveSceneName:
     UseConstant: 0
     _description: 

@@ -10,10 +10,10 @@ using Potato.Core;
 
 namespace Potato.Tests.PlayMode
 {
-    public class BridgeBootstrapperTests
+    public class PersistentSceneBootstrapperTests
     {
         MainBootstrapConfig bootstrapConfig;
-        public BridgeBootstrapperTests()
+        public PersistentSceneBootstrapperTests()
         {
             bootstrapConfig = Resources.Load<MainBootstrapConfig>(MainBootstrapConfig.RelativePath);
         }
@@ -43,11 +43,28 @@ namespace Potato.Tests.PlayMode
         }
 
         [UnityTest]
+        public IEnumerator PersistentUiLoaded()
+        {
+            bool isLoaded = false;
+            for(int i = 0; i < SceneManager.sceneCount; ++i)
+            {
+                if(SceneManager.GetSceneAt(i).name == bootstrapConfig.PersistentUiScene)
+                {
+                    isLoaded = true;
+                    break;
+                }
+            }
+
+            Assert.IsTrue(isLoaded);
+            yield return null;
+        }
+
+        [UnityTest]
         public IEnumerator DuplicationSafe()
         {
             int sceneCount = 0;
             LogAssert.Expect(LogType.Warning, new Regex("already loaded!"));
-            PersistentBridgeSceneBootstrap.Run();
+            PersistentSceneBootstrap.Run();
             for(int i = 0; i < SceneManager.sceneCount; ++i)
             {
                 if(SceneManager.GetSceneAt(i).name == bootstrapConfig.PersistentBridgeScene)
