@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 
-namespace Potato.Core
+using Potato.Core;
+
+namespace Potato.Game
 {
     [Serializable]
     public class SettingsData

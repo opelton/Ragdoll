@@ -2,8 +2,9 @@ using System.Collections;
 
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Potato.Core;
 
-namespace Potato.Core
+namespace Potato.Game
 {
     public class SceneManagementBridge : MonoBehaviour
     {

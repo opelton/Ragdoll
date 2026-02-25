@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Potato.Core
+namespace Potato.Game
 {
     public interface IInputPollingProvider
     {

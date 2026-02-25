@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b066e1825168c064b9c2b57367cc3fee, type: 3}
-  m_Name: Notify_CursorLockChanged
+  m_Script: {fileID: 11500000, guid: d01f83f8920fa964b974e41d723bdc9f, type: 3}
+  m_Name: Notify_GameStateChanged
   m_EditorClassIdentifier: 
   _logInvocations: 0
   _description: 
-  _testValue: 0
+  _testValue: {fileID: 0}

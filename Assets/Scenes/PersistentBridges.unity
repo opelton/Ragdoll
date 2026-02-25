@@ -327,7 +327,7 @@ GameObject:
   m_Component:
   - component: {fileID: 530588746}
   - component: {fileID: 530588745}
-  - component: {fileID: 530588744}
+  - component: {fileID: 530588747}
   m_Layer: 0
   m_Name: CursorBridge
   m_TagString: Untagged
@@ -335,35 +335,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &530588744
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 530588743}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2def2a1123972ce4c91b1aabe4e6fb77, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _description: locks and hides cursor
-  _eventSource: {fileID: 11400000, guid: 9ec4b4c589df49245a60124ad7c164e7, type: 2}
-  Response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 530588745}
-        m_TargetAssemblyTypeName: Potato.Core.CursorBridge, potato.core
-        m_MethodName: SetCursorLockState
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!114 &530588745
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -376,11 +347,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6a4f8daa04ea434685e3f6f3a5e6583, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cursorLockState:
+  currentGameStateRef:
     UseConstant: 0
     _description: 
-    ConstantValue: 0
-    ReferenceData: {fileID: 11400000, guid: d81fa478cc01c53409755f2e3a1e975b, type: 2}
+    ConstantValue: {fileID: 0}
+    ReferenceData: {fileID: 11400000, guid: f3bc093275bec99419711eb342efa8ca, type: 2}
 --- !u!4 &530588746
 Transform:
   m_ObjectHideFlags: 0
@@ -396,6 +367,35 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &530588747
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 530588743}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec46447c201f4d84183400d1a5ba1810, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _description: 
+  _eventSource: {fileID: 11400000, guid: a3265377b141ce047965de864368d86c, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 530588745}
+        m_TargetAssemblyTypeName: Potato.Game.CursorBridge, potato.game
+        m_MethodName: OnGameStateChanged
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &560058494
 GameObject:
   m_ObjectHideFlags: 0
@@ -713,7 +713,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b9eaea0266436b4cb424c1ab426db05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _currentInputContext: {fileID: 11400000, guid: ab22110764e90804bb17c46d647ac2a8, type: 2}
+  currentGameStateRef:
+    UseConstant: 0
+    _description: 
+    ConstantValue: {fileID: 0}
+    ReferenceData: {fileID: 11400000, guid: f3bc093275bec99419711eb342efa8ca, type: 2}
 --- !u!4 &2030444103
 Transform:
   m_ObjectHideFlags: 0
@@ -738,17 +742,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 2030444101}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bff3eba78a7011246bb73f4e4bb249fc, type: 3}
+  m_Script: {fileID: 11500000, guid: ec46447c201f4d84183400d1a5ba1810, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _description: triggers change of active input context
-  _eventSource: {fileID: 11400000, guid: ab3a4f7f5fdcde64aa48cb639050c621, type: 2}
+  _description: 
+  _eventSource: {fileID: 11400000, guid: a3265377b141ce047965de864368d86c, type: 2}
   Response:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2030444102}
-        m_TargetAssemblyTypeName: Core.Potato.InputBridge, potato.core
-        m_MethodName: HandleInputContextChanged
+        m_TargetAssemblyTypeName: Potato.Game.InputBridge, potato.game
+        m_MethodName: HandleGameStateChanged
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

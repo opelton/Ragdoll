@@ -1,7 +1,8 @@
 using System;
 using UnityEngine;
+using Potato.Core;
 
-namespace Potato.Core
+namespace Potato.Game
 {
     [CreateAssetMenu(menuName = "ScriptableObjects/DataVariables/InputContext")]
     public class InputContextVariable : DataVariable<InputContext> { }

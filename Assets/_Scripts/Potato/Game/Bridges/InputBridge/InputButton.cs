@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Potato.Core
+namespace Potato.Game
 {
     public class InputButton
     {

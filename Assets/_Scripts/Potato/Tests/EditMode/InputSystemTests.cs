@@ -1,5 +1,5 @@
 using NUnit.Framework;
-using Potato.Core;
+using Potato.Game;
 using UnityEngine;
 
 namespace Potato.Tests.EditMode
