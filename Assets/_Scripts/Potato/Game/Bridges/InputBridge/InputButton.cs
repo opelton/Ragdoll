@@ -57,6 +57,20 @@ namespace Potato.Game
             Value = newAxis;
         }
 
+        public void UpdateState(float horizontal, float vertical, float deadzone = .2f)
+        {
+            Vector2Int newAxis = Vector2Int.zero;
+            if(horizontal > deadzone)       newAxis.x = 1;
+            else if(horizontal < -deadzone) newAxis.x = -1;
+            if(vertical > deadzone)         newAxis.y = 1;
+            else if(vertical < -deadzone)   newAxis.y = -1;
+
+            if(OnAxisChanged != null && Value != newAxis)
+                OnAxisChanged.Invoke(newAxis);
+            
+            Value = newAxis;
+        }
+
         public void ResetState()
         {
             Value = Vector2Int.zero;

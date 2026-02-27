@@ -15,4 +15,5 @@ MonoBehaviour:
   _description: 
   cursorLocked: 1
   context: {fileID: 11400000, guid: 2433e9f93d87eb140be58e4592374aff, type: 2}
+  pauseContext: {fileID: 11400000, guid: ab22110764e90804bb17c46d647ac2a8, type: 2}
   settingsPanelMode: 1

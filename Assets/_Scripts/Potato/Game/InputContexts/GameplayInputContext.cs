@@ -41,19 +41,19 @@ namespace Potato.Game
         public override void UpdateInputState(IInputPollingProvider provider)
         {
             _move.UpdateState(
-                provider.GetAxis(InputStringConstants.KeyboardAxis_X),
-                provider.GetAxis(InputStringConstants.KeyboardAxis_Y));
+                provider.GetAxis(InputConstants.KBM.MoveAxis_X),
+                provider.GetAxis(InputConstants.KBM.MoveAxis_Y));
             
             _look.UpdateState(
-                provider.GetAxis(InputStringConstants.MouseAxis_X),
-                provider.GetAxis(InputStringConstants.MouseAxis_Y));
+                provider.GetAxis(InputConstants.KBM.LookAxis_X),
+                provider.GetAxis(InputConstants.KBM.LookAxis_Y));
 
-            _fire1.UpdateState(provider.GetKeyDown(KeyCode.Mouse0));
-            _fire2.UpdateState(provider.GetKeyDown(KeyCode.Mouse1));
-            _sprint.UpdateState(provider.GetKeyDown(KeyCode.LeftShift));
-            _jump.UpdateState(provider.GetKeyDown(KeyCode.Space));
-            _use.UpdateState(provider.GetKeyDown(KeyCode.E));
-            _quit.UpdateState(provider.GetKeyDown(KeyCode.Tab));
+            _fire1.UpdateState(provider.GetKeyDown(InputConstants.KBM.Game_Fire1));
+            _fire2.UpdateState(provider.GetKeyDown(InputConstants.KBM.Game_Fire2));
+            _sprint.UpdateState(provider.GetKeyDown(InputConstants.KBM.Game_Sprint));
+            _jump.UpdateState(provider.GetKeyDown(InputConstants.KBM.Game_Jump));
+            _use.UpdateState(provider.GetKeyDown(InputConstants.KBM.Game_Use));
+            _quit.UpdateState(provider.GetKeyDown(InputConstants.KBM.Game_Quit));
 
             // dispatch move/look updates, apply relevant settings
             playerMoveInput.Value = _move.Value;

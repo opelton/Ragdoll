@@ -792,6 +792,7 @@ GameObject:
   - component: {fileID: 2030444103}
   - component: {fileID: 2030444102}
   - component: {fileID: 2030444104}
+  - component: {fileID: 2030444105}
   m_Layer: 0
   m_Name: InputBridge
   m_TagString: Untagged
@@ -855,8 +856,37 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2030444102}
         m_TargetAssemblyTypeName: Potato.Game.InputBridge, potato.game
-        m_MethodName: HandleGameStateChanged
-        m_Mode: 0
+        m_MethodName: ClearStaleButtonStates
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &2030444105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2030444101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2def2a1123972ce4c91b1aabe4e6fb77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _description: 
+  _eventSource: {fileID: 11400000, guid: 6a2727d2a3215fb4abd9027ed5ba221a, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2030444102}
+        m_TargetAssemblyTypeName: Potato.Game.InputBridge, potato.game
+        m_MethodName: ClearStaleButtonStates
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

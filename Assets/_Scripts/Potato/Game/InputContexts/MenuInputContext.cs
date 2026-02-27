@@ -20,16 +20,14 @@ namespace Potato.Game
 
         public override void UpdateInputState(IInputPollingProvider provider)
         {
-            _submitEnter.UpdateState(provider.GetKeyDown(KeyCode.Return));
-            _submitSpacebar.UpdateState(provider.GetKeyDown(KeyCode.Space));
-            _cancelEsc.UpdateState(provider.GetKeyDown(KeyCode.Tab));
+            _submitEnter.UpdateState(provider.GetKeyDown(InputConstants.KBM.Menu_Submit_Return));
+            _submitSpacebar.UpdateState(provider.GetKeyDown(InputConstants.KBM.Menu_Submit_Space));
+            _cancelEsc.UpdateState(provider.GetKeyDown(InputConstants.KBM.Menu_Cancel));
 
             // ui cursor move
             _uiMove.UpdateState(
-                provider.GetKeyDown(KeyCode.LeftArrow) || provider.GetKeyDown(KeyCode.A),
-                provider.GetKeyDown(KeyCode.RightArrow) || provider.GetKeyDown(KeyCode.D),
-                provider.GetKeyDown(KeyCode.UpArrow) || provider.GetKeyDown(KeyCode.W),
-                provider.GetKeyDown(KeyCode.DownArrow) || provider.GetKeyDown(KeyCode.S));
+                provider.GetAxis(InputConstants.KBM.MoveAxis_X),
+                provider.GetAxis(InputConstants.KBM.MoveAxis_Y));
 
             uiMoveInput.Value = _uiMove.Value;
 

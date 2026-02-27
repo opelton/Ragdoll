@@ -23,12 +23,10 @@ namespace Potato.Game
                 currentGameStateRef.Value.Context.UpdateInputState(this);
         }
 
-        void ClearStaleButtonStates()
+        public void ClearStaleButtonStates()
         {
             currentGameStateRef.Value.PauseContext.ResetInputStates();
             currentGameStateRef.Value.Context.ResetInputStates();
         }
-
-        public void HandleGameStateChanged(GameState _) => ClearStaleButtonStates();
     }
 }

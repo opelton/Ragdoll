@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8154d18e547afab4a890a6e19a3c3b6d, type: 3}
   m_Name: Notify_uiCancel
   m_EditorClassIdentifier: 
-  _logInvocations: 1
+  _logInvocations: 0
   _description: 
