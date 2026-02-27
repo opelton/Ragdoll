@@ -9,10 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c639a022c3d49244a2429b50570fca2, type: 3}
-  m_Name: GameplayState
+  m_Script: {fileID: 11500000, guid: f592ff29d10463840a7d417983c6fca7, type: 3}
+  m_Name: Control_LoadingVisibility
   m_EditorClassIdentifier: 
+  _isReadonly: 0
   _description: 
-  cursorLocked: 1
-  context: {fileID: 11400000, guid: 2433e9f93d87eb140be58e4592374aff, type: 2}
-  settingsPanelMode: 1
+  _initialValue: 0
+  _value: 0
+  onValueChanged: {fileID: 11400000, guid: c4ac028a94d7c724488240886564481a, type: 2}

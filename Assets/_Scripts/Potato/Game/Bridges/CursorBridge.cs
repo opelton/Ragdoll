@@ -15,5 +15,7 @@ namespace Potato.Game
         }
 
         public void OnGameStateChanged(GameState newGameState) => SetCursorLockState(newGameState.CursorLocked);
+
+        public void OnPauseStateChanged(bool isPaused) => SetCursorLockState(!isPaused);
     }
 }

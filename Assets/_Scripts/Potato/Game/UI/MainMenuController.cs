@@ -1,25 +1,31 @@
+using Potato.Core;
 using UnityEngine;
 
 namespace Potato.Game.UI
 {
     public class MainMenuController : MonoBehaviour
     {
+        [Header("UI Elements")]
         [SerializeField] private GameObject titleText;
         [SerializeField] private GameObject mainButtons;
-        [SerializeField] private GameObject settingsPanel;
+
+        [Header("Data")]
+        [SerializeField] private BoolReference showSettingsRef;
 
         void Start()
         {
-            titleText.SetActive(true);
-            mainButtons.SetActive(true);
-            settingsPanel.SetActive(false);
+            showSettingsRef.Value = false;
         }
 
         public void ToggleSettingsPanel()
         {
-            titleText.SetActive(!titleText.activeSelf);
-            mainButtons.SetActive(!mainButtons.activeSelf);
-            settingsPanel.SetActive(!settingsPanel.activeSelf);
+            showSettingsRef.Value = !showSettingsRef.Value;
+        }
+
+        public void OnSettingsVisibilityChanged(bool settingsVisible)
+        {
+            titleText.SetActive(!settingsVisible);
+            mainButtons.SetActive(!settingsVisible);
         }
     }
 }

@@ -22,6 +22,8 @@ namespace Potato.Game
         [SerializeField] GameEvent jumpButtonUp;
         [SerializeField] GameEvent useButtonDown;
         [SerializeField] GameEvent useButtonUp;
+        [SerializeField] GameEvent quitButtonDown;
+        [SerializeField] GameEvent quitButtonUp;
 
         [Header("Settings Data")]
         [SerializeField] FloatReference lookSensitivity;
@@ -34,6 +36,7 @@ namespace Potato.Game
         InputButton _sprint = new();
         InputButton _jump = new();
         InputButton _use = new();
+        InputButton _quit = new();
 
         public override void UpdateInputState(IInputPollingProvider provider)
         {
@@ -50,6 +53,7 @@ namespace Potato.Game
             _sprint.UpdateState(provider.GetKeyDown(KeyCode.LeftShift));
             _jump.UpdateState(provider.GetKeyDown(KeyCode.Space));
             _use.UpdateState(provider.GetKeyDown(KeyCode.E));
+            _quit.UpdateState(provider.GetKeyDown(KeyCode.Tab));
 
             // dispatch move/look updates, apply relevant settings
             playerMoveInput.Value = _move.Value;
@@ -61,7 +65,7 @@ namespace Potato.Game
             playerLookInput.Value = _look.Value * lookSensitivity.Value;
 #endif
 
-            // instead of setting up proper lifecycle management of  event subscriptions, I'm going to be lazy and poll all these buttons
+            // instead of setting up proper lifecycle management of event subscriptions, I'm going to be lazy and poll all these buttons
             if(_fire1.ButtonPressed)        fire1ButtonDown.Invoke(this);
             else if(_fire1.ButtonReleased)  fire1ButtonUp.Invoke(this);
 
@@ -76,6 +80,9 @@ namespace Potato.Game
 
             if(_use.ButtonPressed)          useButtonDown.Invoke(this);
             else if(_use.ButtonReleased)    useButtonUp.Invoke(this);
+
+            if(_quit.ButtonPressed)         quitButtonDown.Invoke(this);
+            else if(_quit.ButtonReleased)   quitButtonUp.Invoke(this);
         }
 
         public override void ResetInputStates()
@@ -91,6 +98,7 @@ namespace Potato.Game
             _sprint.ResetState();
             _jump.ResetState();
             _use.ResetState();
+            _quit.ResetState();
         }
     }
 }

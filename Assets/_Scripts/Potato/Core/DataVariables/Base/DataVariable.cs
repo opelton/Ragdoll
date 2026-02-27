@@ -20,7 +20,7 @@ namespace Potato.Core
         }
 
         // refuses the change if _isReadonly
-        void TrySetValue(T newValue)
+        public void TrySetValue(T newValue)
         {
             if (CheckReadonlyAndLogWarning())
                 SetValueAndNotify(newValue);

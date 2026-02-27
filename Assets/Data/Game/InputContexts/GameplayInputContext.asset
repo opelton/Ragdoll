@@ -37,6 +37,8 @@ MonoBehaviour:
   jumpButtonUp: {fileID: 11400000, guid: 9f5c0d44f9a3c8443930d7d192332e03, type: 2}
   useButtonDown: {fileID: 11400000, guid: 08c7ff0c593d1ec47b3a3a75e5ed0b50, type: 2}
   useButtonUp: {fileID: 11400000, guid: e85d4fbfc41fbc2408b764fd00c7d536, type: 2}
+  quitButtonDown: {fileID: 11400000, guid: a16f04b5c6ff30044a421806af497bfd, type: 2}
+  quitButtonUp: {fileID: 11400000, guid: 2eb00f24d612ea2469286caf03afb452, type: 2}
   lookSensitivity:
     UseConstant: 0
     _description: 
