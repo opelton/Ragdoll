@@ -816,6 +816,11 @@ MonoBehaviour:
     _description: 
     ConstantValue: {fileID: 0}
     ReferenceData: {fileID: 11400000, guid: f3bc093275bec99419711eb342efa8ca, type: 2}
+  isPausedRef:
+    UseConstant: 0
+    _description: 
+    ConstantValue: 0
+    ReferenceData: {fileID: 11400000, guid: 9e7795fabc707884bad17237177a4234, type: 2}
 --- !u!4 &2030444103
 Transform:
   m_ObjectHideFlags: 0

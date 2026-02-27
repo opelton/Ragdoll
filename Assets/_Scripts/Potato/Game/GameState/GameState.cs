@@ -8,11 +8,13 @@ namespace Potato.Game
     {
         [SerializeField] private bool cursorLocked;
         [SerializeField] private InputContext context;
+        [SerializeField] private InputContext pauseContext;
         // hacky way to include a quit button in the same panel that appears on the main menu
         [SerializeField] private bool settingsPanelMode;
 
         public bool CursorLocked => cursorLocked;
         public InputContext Context => context;
+        public InputContext PauseContext => pauseContext;
         public bool SettingsPanelMode => settingsPanelMode;
     }
 }

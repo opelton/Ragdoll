@@ -22,7 +22,7 @@ namespace Potato.Game
         {
             _submitEnter.UpdateState(provider.GetKeyDown(KeyCode.Return));
             _submitSpacebar.UpdateState(provider.GetKeyDown(KeyCode.Space));
-            _cancelEsc.UpdateState(provider.GetKeyDown(KeyCode.Escape));
+            _cancelEsc.UpdateState(provider.GetKeyDown(KeyCode.Tab));
 
             // ui cursor move
             _uiMove.UpdateState(

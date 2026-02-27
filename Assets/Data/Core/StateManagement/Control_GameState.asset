@@ -15,5 +15,5 @@ MonoBehaviour:
   _isReadonly: 0
   _description: 
   _initialValue: {fileID: 11400000, guid: c46df214afd9f75498957d0fed649b04, type: 2}
-  _value: {fileID: 11400000, guid: c46df214afd9f75498957d0fed649b04, type: 2}
+  _value: {fileID: 11400000, guid: 3b10525250371cf44806063d6ed41fe7, type: 2}
   onValueChanged: {fileID: 11400000, guid: a3265377b141ce047965de864368d86c, type: 2}

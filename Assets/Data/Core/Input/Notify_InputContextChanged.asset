@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efc0a950b548b1946aad1d72cf1eb00e, type: 3}
   m_Name: Notify_InputContextChanged
   m_EditorClassIdentifier: 
-  _logInvocations: 0
+  _logInvocations: 1
   _description: causes the unity bridge to change context
   _testValue: {fileID: 11400000, guid: 2433e9f93d87eb140be58e4592374aff, type: 2}

@@ -1,3 +1,4 @@
+using Potato.Core;
 using UnityEngine;
 
 namespace Potato.Game
@@ -6,14 +7,28 @@ namespace Potato.Game
     public class InputBridge : MonoBehaviour, IInputPollingProvider
     {
         [SerializeField] private GameStateReference currentGameStateRef;
+        [SerializeField] private BoolReference isPausedRef;
 
         bool IInputPollingProvider.GetButtonDown(string buttonName) => Input.GetButtonDown(buttonName);
         bool IInputPollingProvider.GetKeyDown(KeyCode key) => Input.GetKeyDown(key);
         float IInputPollingProvider.GetAxis(string axisName) => Input.GetAxisRaw(axisName);
 
-        void Update() => currentGameStateRef.Value.Context.UpdateInputState(this);
+        void Start() => ClearStaleButtonStates();
 
-        // clear stale inputs to prevent unintended onButtonUp events
-        public void HandleGameStateChanged(GameState newState) => newState.Context.ResetInputStates();
+        void Update()
+        {
+            if(isPausedRef.Value)
+                currentGameStateRef.Value.PauseContext.UpdateInputState(this);
+            else
+                currentGameStateRef.Value.Context.UpdateInputState(this);
+        }
+
+        void ClearStaleButtonStates()
+        {
+            currentGameStateRef.Value.PauseContext.ResetInputStates();
+            currentGameStateRef.Value.Context.ResetInputStates();
+        }
+
+        public void HandleGameStateChanged(GameState _) => ClearStaleButtonStates();
     }
 }
