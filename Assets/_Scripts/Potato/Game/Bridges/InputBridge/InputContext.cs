@@ -12,6 +12,6 @@ namespace Potato.Game
     public abstract class InputContext : ScriptableObject
     {
         public abstract void UpdateInputState(IInputPollingProvider provider);
-        public abstract void ResetInputStates();
+        public abstract void ResetInputStates(IInputPollingProvider provider);
     }
 }

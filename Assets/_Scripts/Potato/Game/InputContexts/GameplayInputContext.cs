@@ -40,6 +40,12 @@ namespace Potato.Game
 
         public override void UpdateInputState(IInputPollingProvider provider)
         {
+            UpdateInputStates(provider);
+            DispatchInputUpdates();
+        }
+
+        void UpdateInputStates(IInputPollingProvider provider)
+        {
             _move.UpdateState(
                 provider.GetAxis(InputConstants.KBM.MoveAxis_X),
                 provider.GetAxis(InputConstants.KBM.MoveAxis_Y));
@@ -64,7 +70,10 @@ namespace Potato.Game
 #else
             playerLookInput.Value = _look.Value * lookSensitivity.Value;
 #endif
+        }
 
+        void DispatchInputUpdates()
+        {
             // instead of setting up proper lifecycle management of event subscriptions, I'm going to be lazy and poll all these buttons
             if(_fire1.ButtonPressed)        fire1ButtonDown.Invoke(this);
             else if(_fire1.ButtonReleased)  fire1ButtonUp.Invoke(this);
@@ -85,20 +94,6 @@ namespace Potato.Game
             else if(_quit.ButtonReleased)   quitButtonUp.Invoke(this);
         }
 
-        public override void ResetInputStates()
-        {
-            playerMoveInput.Value = Vector2.zero;
-            playerLookInput.Value = Vector2.zero;
-            rawPlayerLookInput.Value = Vector2.zero;
-
-            _move.ResetState();
-            _look.ResetState();
-            _fire1.ResetState();
-            _fire2.ResetState();
-            _sprint.ResetState();
-            _jump.ResetState();
-            _use.ResetState();
-            _quit.ResetState();
-        }
+        public override void ResetInputStates(IInputPollingProvider provider) => UpdateInputStates(provider);
     }
 }

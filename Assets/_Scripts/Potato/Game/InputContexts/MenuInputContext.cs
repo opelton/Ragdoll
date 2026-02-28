@@ -20,6 +20,19 @@ namespace Potato.Game
 
         public override void UpdateInputState(IInputPollingProvider provider)
         {
+            UpdateButtons(provider);
+
+            // confirm event
+            if(_submitEnter.ButtonPressed || _submitSpacebar.ButtonPressed)
+                uiSubmitInput.Invoke(this);
+
+            // cancel event
+            if(_cancelEsc.ButtonPressed)
+                uiCancelInput.Invoke(this);
+        }
+
+        void UpdateButtons(IInputPollingProvider provider)
+        {
             _submitEnter.UpdateState(provider.GetKeyDown(InputConstants.KBM.Menu_Submit_Return));
             _submitSpacebar.UpdateState(provider.GetKeyDown(InputConstants.KBM.Menu_Submit_Space));
             _cancelEsc.UpdateState(provider.GetKeyDown(InputConstants.KBM.Menu_Cancel));
@@ -30,24 +43,8 @@ namespace Potato.Game
                 provider.GetAxis(InputConstants.KBM.MoveAxis_Y));
 
             uiMoveInput.Value = _uiMove.Value;
-
-            // confirm
-            if(_submitEnter.ButtonPressed || _submitSpacebar.ButtonPressed)
-                uiSubmitInput.Invoke(this);
-
-            // cancel
-            if(_cancelEsc.ButtonPressed)
-                uiCancelInput.Invoke(this);
         }
 
-        public override void ResetInputStates()
-        {
-            uiMoveInput.Value = Vector2Int.zero;
-            
-            _submitEnter.ResetState();
-            _submitSpacebar.ResetState();
-            _cancelEsc.ResetState();
-            _uiMove.ResetState();
-        }        
+        public override void ResetInputStates(IInputPollingProvider provider) => UpdateButtons(provider);
     }
 }

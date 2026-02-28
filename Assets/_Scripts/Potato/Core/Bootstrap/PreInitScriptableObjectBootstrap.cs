@@ -11,7 +11,7 @@ namespace Potato.Core
         public static void Run()
         {
             var preInitObjs = FindAllPreInitializableScriptableObjects();
-            Debug.Log($"{preInitObjs.Count()} ScriptableObjects were pre-initialized");
+            // Debug.Log($"{preInitObjs.Count()} ScriptableObjects were pre-initialized");
 
             foreach (var obj in preInitObjs)
                 obj.PreInit();

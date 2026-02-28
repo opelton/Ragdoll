@@ -9,8 +9,8 @@ namespace Potato.Game
         [SerializeField] private GameStateReference currentGameStateRef;
         [SerializeField] private BoolReference isPausedRef;
 
-        bool IInputPollingProvider.GetButtonDown(string buttonName) => Input.GetButtonDown(buttonName);
-        bool IInputPollingProvider.GetKeyDown(KeyCode key) => Input.GetKeyDown(key);
+        bool IInputPollingProvider.GetButtonDown(string buttonName) => Input.GetButton(buttonName);
+        bool IInputPollingProvider.GetKeyDown(KeyCode key) => Input.GetKey(key);
         float IInputPollingProvider.GetAxis(string axisName) => Input.GetAxisRaw(axisName);
 
         void Start() => ClearStaleButtonStates();
@@ -25,8 +25,8 @@ namespace Potato.Game
 
         public void ClearStaleButtonStates()
         {
-            currentGameStateRef.Value.PauseContext.ResetInputStates();
-            currentGameStateRef.Value.Context.ResetInputStates();
+            currentGameStateRef.Value.PauseContext.ResetInputStates(this);
+            currentGameStateRef.Value.Context.ResetInputStates(this);
         }
     }
 }
