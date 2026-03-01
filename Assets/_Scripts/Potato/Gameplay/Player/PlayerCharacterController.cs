@@ -1,4 +1,5 @@
 using Potato.Core;
+using Potato.Game;
 using UnityEngine;
 
 namespace Potato.Gameplay
@@ -13,8 +14,10 @@ namespace Potato.Gameplay
         [SerializeField] private Camera playerCamera;
 
         [Header("Input Data")]
-        [SerializeField] private Vector2Reference moveInput;
-        [SerializeField] private Vector2Reference lookInput;
+        [SerializeField] private InputFloatAxis moveInput;
+        [SerializeField] private InputFloatAxis lookInput;
+        [SerializeField] private InputButton sprintInput;
+        [SerializeField] private InputButton jumpInput;
 
         [Header("Gravity")]
         [SerializeField] private float gravityDownForce = 20f;
@@ -37,11 +40,6 @@ namespace Potato.Gameplay
         private bool _isGrounded = false;
         private Vector3 _groundNormal = Vector3.up;
         private float _lastJumpTime = 0f;
-
-        // inputs
-        private bool _sprintInput = false;
-        private bool _jumpInput = false;
-
 
         // --
         public bool IsGrounded => _isGrounded;
@@ -76,7 +74,7 @@ namespace Potato.Gameplay
             //     isSprinting = SetCrouchingState(false, false);
             // }
 
-            float speedModifier = _sprintInput ? sprintSpeedModifier : 1f;
+            float speedModifier = sprintInput.ButtonDown ? sprintSpeedModifier : 1f;
             Vector3 worldspaceMoveInput = transform.TransformVector(moveInput.Value.x, 0f, moveInput.Value.y);
 
             if (_isGrounded)
@@ -90,7 +88,7 @@ namespace Potato.Gameplay
 
                 _velocity = Vector3.Lerp(_velocity, targetVelocity, groundTurningSharpness * dt);
 
-                if (_isGrounded && _jumpInput)
+                if (_isGrounded && jumpInput.ButtonDown)
                 {
                     // force the crouch state to false
                     //if (SetCrouchingState(false, false))
@@ -228,8 +226,5 @@ namespace Potato.Gameplay
             Vector3 directionRight = Vector3.Cross(direction, transform.up);
             return Vector3.Cross(slopeNormal, directionRight).normalized;
         }
-
-        public void SetSprintInput(bool inputDown) => _sprintInput = inputDown;
-        public void SetJumpInput(bool inputDown) => _jumpInput = inputDown;
     }
 }

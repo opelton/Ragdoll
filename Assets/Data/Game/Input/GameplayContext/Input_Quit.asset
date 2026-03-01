@@ -9,11 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 99fead8e0c4d1fb4eb325250723e5273, type: 3}
-  m_Name: Display_PlayerMoveInput
+  m_Script: {fileID: 11500000, guid: f24141819c478324b86623cb5fd08268, type: 3}
+  m_Name: Input_Quit
   m_EditorClassIdentifier: 
-  _isReadonly: 0
-  _description: WASD
-  _initialValue: {x: 0, y: 0}
-  _value: {x: 0, y: 0}
-  onValueChanged: {fileID: 11400000, guid: 34c6bc2178aa13144981a0ef55c4bb7d, type: 2}
+  _description: 
+  onButtonPressed: {fileID: 11400000, guid: a16f04b5c6ff30044a421806af497bfd, type: 2}
+  onButtonReleased: {fileID: 11400000, guid: 2eb00f24d612ea2469286caf03afb452, type: 2}

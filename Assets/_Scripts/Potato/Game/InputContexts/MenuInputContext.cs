@@ -6,45 +6,37 @@ namespace Potato.Game
     [CreateAssetMenu(menuName = "ScriptableObjects/Config/InputContext/MenuContext")]
     public class MenuInputContext : InputContext
     {
-        [Header("Input Out Data")]
-        [SerializeField] Vector2IntReference uiMoveInput;
+        [Header("Axis Input")]
+        [SerializeField] InputIntAxis uiMoveInput;
 
-        [Header("Input Out Events")]
-        [SerializeField] GameEvent uiSubmitInput;
-        [SerializeField] GameEvent uiCancelInput;
-
-        InputButton _submitEnter = new();
-        InputButton _submitSpacebar = new();
-        InputButton _cancelEsc = new();
-        InputIntAxis _uiMove = new();
+        [Header("ButtonInputs")]
+        [SerializeField] InputButton uiSubmitInput;
+        [SerializeField] InputButton uiCancelInput;
 
         public override void UpdateInputState(IInputPollingProvider provider)
         {
-            UpdateButtons(provider);
-
-            // confirm event
-            if(_submitEnter.ButtonPressed || _submitSpacebar.ButtonPressed)
-                uiSubmitInput.Invoke(this);
-
-            // cancel event
-            if(_cancelEsc.ButtonPressed)
-                uiCancelInput.Invoke(this);
-        }
-
-        void UpdateButtons(IInputPollingProvider provider)
-        {
-            _submitEnter.UpdateState(provider.GetKeyDown(InputConstants.KBM.Menu_Submit_Return));
-            _submitSpacebar.UpdateState(provider.GetKeyDown(InputConstants.KBM.Menu_Submit_Space));
-            _cancelEsc.UpdateState(provider.GetKeyDown(InputConstants.KBM.Menu_Cancel));
-
-            // ui cursor move
-            _uiMove.UpdateState(
+            uiMoveInput.UpdateState(
                 provider.GetAxis(InputConstants.KBM.MoveAxis_X),
                 provider.GetAxis(InputConstants.KBM.MoveAxis_Y));
 
-            uiMoveInput.Value = _uiMove.Value;
+            uiSubmitInput.UpdateState(
+                provider.GetKeyDown(InputConstants.KBM.Menu_Submit_Return)
+                || provider.GetKeyDown(InputConstants.KBM.Menu_Submit_Space));
+
+            uiCancelInput.UpdateState(provider.GetKeyDown(InputConstants.KBM.Menu_Cancel));
         }
 
-        public override void ResetInputStates(IInputPollingProvider provider) => UpdateButtons(provider);
+        public override void ResetInputStates(IInputPollingProvider provider)
+        {
+            uiMoveInput.ResetState(
+                provider.GetAxis(InputConstants.KBM.MoveAxis_X),
+                provider.GetAxis(InputConstants.KBM.MoveAxis_Y));
+
+            uiSubmitInput.ResetState(
+                provider.GetKeyDown(InputConstants.KBM.Menu_Submit_Return)
+                || provider.GetKeyDown(InputConstants.KBM.Menu_Submit_Space));
+
+            uiCancelInput.ResetState(provider.GetKeyDown(InputConstants.KBM.Menu_Cancel));
+        }
     }
 }

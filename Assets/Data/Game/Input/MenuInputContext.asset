@@ -12,10 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e402c591dbf5ce545a75bfdb69092c8d, type: 3}
   m_Name: MenuInputContext
   m_EditorClassIdentifier: 
-  uiMoveInput:
-    UseConstant: 0
-    _description: 
-    ConstantValue: {x: 0, y: 0}
-    ReferenceData: {fileID: 11400000, guid: a8f7bd4faae4fa447b49622756010d30, type: 2}
-  uiSubmitInput: {fileID: 11400000, guid: 6d3757023caffea429e13f50533671b2, type: 2}
-  uiCancelInput: {fileID: 11400000, guid: 26464b80c0f7f8a4fb66999289be6a39, type: 2}
+  uiMoveInput: {fileID: 11400000, guid: c8146141137f37c4d8a8f73ae392ece4, type: 2}
+  uiSubmitInput: {fileID: 11400000, guid: 35631369f219ba14896e1caf1bb7405b, type: 2}
+  uiCancelInput: {fileID: 11400000, guid: 05eaa29ee3d4aea4282cd6cb6d80455a, type: 2}

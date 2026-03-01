@@ -1,15 +1,24 @@
 using NUnit.Framework;
 using Potato.Game;
 using UnityEngine;
+using Potato.Core;
 
 namespace Potato.Tests.EditMode
 {
     public class InputSystemTests
     {
+        T MakeListener<T>(string name = "Listener")
+            where T : Component
+        {
+            GameObject go = new(name);
+            go.SetActive(false);
+            return go.AddComponent<T>();
+        }
+        
         [Test]
         public void InputButtonInit()
         {
-            InputButton button = new();
+            InputButton button = ScriptableObject.CreateInstance<InputButton>();
 
             // tests that _isDown and _wasDown are both false
             Assert.IsFalse(button.ButtonDown);      // ButtonDown:      _isDown == true
@@ -19,7 +28,7 @@ namespace Potato.Tests.EditMode
         [Test]
         public void NoCrashOnNullEvents()
         {
-            InputButton button = new();
+            InputButton button = ScriptableObject.CreateInstance<InputButton>();
 
             // shouldn't crash when pushing buttons without callbacks
             Assert.DoesNotThrow(() =>
@@ -33,7 +42,7 @@ namespace Potato.Tests.EditMode
         [Test]
         public void PollingTest_Down()
         {
-            InputButton button = new();
+            InputButton button = ScriptableObject.CreateInstance<InputButton>();
             button.UpdateState(true);
 
             // ButtonDown: _isDown
@@ -43,7 +52,7 @@ namespace Potato.Tests.EditMode
         [Test]
         public void PollingTest_Pressed()
         {
-            InputButton button = new();
+            InputButton button = ScriptableObject.CreateInstance<InputButton>();
 
             button.UpdateState(false);
             button.UpdateState(true);
@@ -55,7 +64,7 @@ namespace Potato.Tests.EditMode
         [Test]
         public void PollingTest_Released()
         {
-            InputButton button = new();
+            InputButton button = ScriptableObject.CreateInstance<InputButton>();
 
             button.UpdateState(true);
             button.UpdateState(false);
@@ -67,31 +76,63 @@ namespace Potato.Tests.EditMode
         [Test]
         public void CallbackFires()
         {
-            bool wasFired = false;
-            InputButton button = new();
-            button.OnButtonPressed += () => wasFired = true;
-            button.UpdateState(true);
+            var listener = MakeListener<GameEventListener>();
+            var dummyEvent = ScriptableObject.CreateInstance<GameEvent>();
 
-            Assert.IsTrue(wasFired);
+            bool wasInvoked = false;
+            listener.EventSource = dummyEvent;
+            listener.Response.AddListener(() => wasInvoked = true);
+            listener.gameObject.SetActive(true);
+
+            InputButton button = ScriptableObject.CreateInstance<InputButton>();
+            button.onButtonPressed = dummyEvent;
+
+            button.UpdateState(true);
+            Assert.IsTrue(wasInvoked);
+        }
+
+        [Test]
+        public void NoCallbackOnButtonReset()
+        {
+            var listener = MakeListener<GameEventListener>();
+            var dummyEvent = ScriptableObject.CreateInstance<GameEvent>();
+
+            bool wasInvoked = false;
+            listener.EventSource = dummyEvent;
+            listener.Response.AddListener(() => wasInvoked = true);
+            listener.gameObject.SetActive(true);
+
+            InputButton button = ScriptableObject.CreateInstance<InputButton>();
+            button.onButtonPressed = dummyEvent;
+
+            // reset state sets button state without triggering callbacks
+            button.ResetState(true);
+            Assert.IsFalse(wasInvoked);
+            Assert.IsTrue(button.ButtonDown);
         }
 
         [Test]
         public void NoCallbackOnButtonHold()
         {
-            bool wasFired = false;
-            InputButton button = new();
+            var listener = MakeListener<GameEventListener>();
+            var dummyEvent = ScriptableObject.CreateInstance<GameEvent>();
 
-            // set past and prev state so the button is in "hold" state
+            bool wasInvoked = false;
+            listener.EventSource = dummyEvent;
+            listener.Response.AddListener(() => wasInvoked = true);
+            listener.gameObject.SetActive(true);
+
+            InputButton button = ScriptableObject.CreateInstance<InputButton>();
+            button.onButtonPressed = dummyEvent;
+
+            // start in the down state
+            button.ResetState(true);
+
+            // ncontinuing to hold should not invoke ButtonPressed
             button.UpdateState(true);
             button.UpdateState(true);
 
-            button.OnButtonPressed += () => wasFired = true;
-
-            // no events should fire while hold state continuing
-            button.UpdateState(true);
-            button.UpdateState(true);
-
-            Assert.IsFalse(wasFired);
+            Assert.IsFalse(wasInvoked);
         }
 
         [Test]
@@ -126,20 +167,34 @@ namespace Potato.Tests.EditMode
         [Test]
         public void IntAxisCallbackFires()
         {
-            bool wasFired = false;
-            InputIntAxis axis = new();
-            axis.OnAxisChanged += value => wasFired = true;
+            var listener = MakeListener<Vec2IntEventListener>();
+            var dummyEvent = ScriptableObject.CreateInstance<Vec2IntEvent>();
+
+            bool wasInvoked = false;
+            listener.EventSource = dummyEvent;
+            listener.Response.AddListener(_ => wasInvoked = true);
+            listener.gameObject.SetActive(true);
+
+            InputIntAxis axis = ScriptableObject.CreateInstance<InputIntAxis>();
+            axis.onAxisChanged = dummyEvent;
             axis.UpdateState(false, false, true, false);
 
-            Assert.IsTrue(wasFired);
+            Assert.IsTrue(wasInvoked);
         }
 
         [Test]
         public void IntAxisCallbackPayload()
         {
             Vector2Int outValue = Vector2Int.zero;
-            InputIntAxis axis = new();
-            axis.OnAxisChanged += value => outValue = value;
+            var listener = MakeListener<Vec2IntEventListener>();
+            var dummyEvent = ScriptableObject.CreateInstance<Vec2IntEvent>();
+
+            listener.EventSource = dummyEvent;
+            listener.Response.AddListener(value => outValue = value);
+            listener.gameObject.SetActive(true);
+
+            InputIntAxis axis = ScriptableObject.CreateInstance<InputIntAxis>();
+            axis.onAxisChanged = dummyEvent;
             axis.UpdateState(false, false, true, false);
 
             Assert.AreEqual(Vector2Int.up, outValue);
@@ -148,26 +203,35 @@ namespace Potato.Tests.EditMode
         [Test]
         public void IntAxisNoCallbackWithoutChange()
         {
-            bool wasFired = false;
-            InputIntAxis axis = new();
+            var listener = MakeListener<Vec2IntEventListener>();
+            var dummyEvent = ScriptableObject.CreateInstance<Vec2IntEvent>();
+
+            int count = 0;
+            listener.EventSource = dummyEvent;
+            listener.Response.AddListener(_ => ++count);
+            listener.gameObject.SetActive(true);
+
+            InputIntAxis axis = ScriptableObject.CreateInstance<InputIntAxis>();
+            axis.onAxisChanged = dummyEvent;
+
+            // both inputs the same, only one callback should happen
             axis.UpdateState(false, false, true, false);
-            axis.OnAxisChanged += value => wasFired = true;
             axis.UpdateState(false, false, true, false);
 
-            Assert.IsFalse(wasFired);
+            Assert.AreEqual(1, count);
         }
 
         [Test]
         public void FloatAxisInputButtonInit()
         {
-            InputFloatAxis axis = new();
+            InputFloatAxis axis = ScriptableObject.CreateInstance<InputFloatAxis>();
             Assert.AreEqual(Vector2.zero, axis.Value);
         }
 
         [Test]
         public void FloatAxisNoCrashOnNullEvents()
         {
-            InputFloatAxis axis = new();
+            InputFloatAxis axis = ScriptableObject.CreateInstance<InputFloatAxis>();
 
             // shouldn't crash when pushing buttons without callbacks
             Assert.DoesNotThrow(() =>
@@ -180,7 +244,7 @@ namespace Potato.Tests.EditMode
         [Test]
         public void FloatAxisPollingTest()
         {
-            InputFloatAxis axis = new();
+            InputFloatAxis axis = ScriptableObject.CreateInstance<InputFloatAxis>();
             axis.UpdateState(1f, -1f);
 
             Assert.AreEqual(new Vector2(1f, -1f), axis.Value);
@@ -189,20 +253,34 @@ namespace Potato.Tests.EditMode
         [Test]
         public void FloatAxisCallbackFires()
         {
-            bool wasFired = false;
-            InputFloatAxis axis = new();
-            axis.OnAxisChanged += value => wasFired = true;
+            var listener = MakeListener<Vec2EventListener>();
+            var dummyEvent = ScriptableObject.CreateInstance<Vec2Event>();
+
+            bool wasInvoked = false;
+            listener.EventSource = dummyEvent;
+            listener.Response.AddListener(_ => wasInvoked = true);
+            listener.gameObject.SetActive(true);
+
+            InputFloatAxis axis = ScriptableObject.CreateInstance<InputFloatAxis>();
+            axis.onAxisChanged = dummyEvent;
             axis.UpdateState(1f, -1f);
 
-            Assert.IsTrue(wasFired);
+            Assert.IsTrue(wasInvoked);
         }
 
         [Test]
         public void FloatAxisCallbackPayload()
         {
+            var listener = MakeListener<Vec2EventListener>();
+            var dummyEvent = ScriptableObject.CreateInstance<Vec2Event>();
+
             Vector2 outValue = Vector2.zero;
-            InputFloatAxis axis = new();
-            axis.OnAxisChanged += value => outValue = value;
+            listener.EventSource = dummyEvent;
+            listener.Response.AddListener(value => outValue = value);
+            listener.gameObject.SetActive(true);
+
+            InputFloatAxis axis = ScriptableObject.CreateInstance<InputFloatAxis>();
+            axis.onAxisChanged = dummyEvent;
             axis.UpdateState(1f, -1f);
 
             Assert.AreEqual(new Vector2(1f, -1f), outValue);
@@ -211,13 +289,22 @@ namespace Potato.Tests.EditMode
         [Test]
         public void FloatAxisNoCallbackWithoutChange()
         {
-            bool wasFired = false;
-            InputFloatAxis axis = new();
-            axis.UpdateState(1f, -1f);
-            axis.OnAxisChanged += value => wasFired = true;
-            axis.UpdateState(1f, -1f);
+            var listener = MakeListener<Vec2EventListener>();
+            var dummyEvent = ScriptableObject.CreateInstance<Vec2Event>();
 
-            Assert.IsFalse(wasFired);
+            int count = 0;
+            listener.EventSource = dummyEvent;
+            listener.Response.AddListener(_ => ++count);
+            listener.gameObject.SetActive(true);
+
+            InputFloatAxis axis = ScriptableObject.CreateInstance<InputFloatAxis>();
+            axis.onAxisChanged = dummyEvent;
+
+            // both inputs the same, only one callback should happen
+            axis.UpdateState(1f, 0f);
+            axis.UpdateState(1f, 0f);
+
+            Assert.AreEqual(1, count);
         }
     }
 }
