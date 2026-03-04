@@ -158,11 +158,17 @@ MonoBehaviour:
   lookInput: {fileID: 11400000, guid: 075cf99767d5472478095234510951a8, type: 2}
   sprintInput: {fileID: 11400000, guid: a6c8c83cf44537d47bf79f48e20b82f1, type: 2}
   jumpInput: {fileID: 11400000, guid: 6aaceb75758a0e944b2ae961885020c2, type: 2}
+  crouchInput: {fileID: 11400000, guid: f0a7c79542659da4fac2d1fc24aa6a8c, type: 2}
   gravityDownForce: 20
   groundCheckLayers:
     serializedVersion: 2
     m_Bits: 257
   groundCheckDistance: 0.05
+  crouchingSharpness: 10
+  crouchingHeight: 0.9
+  standingHeight: 1.8
+  cameraHeightRatio: 0.9
+  crouchSpeedModifier: 0.5
   sprintSpeedModifier: 1.5
   maxGroundSpeed: 13
   groundTurningSharpness: 15
@@ -170,6 +176,7 @@ MonoBehaviour:
   airAcceleration: 25
   turnSpeed: 1000
   jumpForce: 9
+  footstepFrequency: 1
 --- !u!143 &8731338
 CharacterController:
   m_ObjectHideFlags: 0

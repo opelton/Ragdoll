@@ -18,6 +18,7 @@ MonoBehaviour:
   fire1Button: {fileID: 11400000, guid: 0b3c55cacbbd1c14c84865d5434afddb, type: 2}
   fire2Button: {fileID: 11400000, guid: cf733a378bf69cf419b04a883baa8f4f, type: 2}
   sprintButton: {fileID: 11400000, guid: a6c8c83cf44537d47bf79f48e20b82f1, type: 2}
+  crouchButton: {fileID: 11400000, guid: f0a7c79542659da4fac2d1fc24aa6a8c, type: 2}
   jumpButton: {fileID: 11400000, guid: 6aaceb75758a0e944b2ae961885020c2, type: 2}
   useButton: {fileID: 11400000, guid: 6b5c9fb1fd7f9fc4c8841011f914ab26, type: 2}
   quitButton: {fileID: 11400000, guid: cafe902d47a33a042b0649607058f142, type: 2}

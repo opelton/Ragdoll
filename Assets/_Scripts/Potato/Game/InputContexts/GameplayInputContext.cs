@@ -6,6 +6,7 @@ namespace Potato.Game
     [CreateAssetMenu(menuName = "ScriptableObjects/Config/InputContext/GameplayContext")]
     public class GameplayInputContext : InputContext
     {
+        // todo -- automate more of this
         [Header("Axis Inputs")]
         [SerializeField] InputFloatAxis playerMoveInput;
         [SerializeField] InputFloatAxis playerLookInput;
@@ -15,6 +16,7 @@ namespace Potato.Game
         [SerializeField] InputButton fire1Button;
         [SerializeField] InputButton fire2Button;
         [SerializeField] InputButton sprintButton;
+        [SerializeField] InputButton crouchButton;
         [SerializeField] InputButton jumpButton;
         [SerializeField] InputButton useButton;
         [SerializeField] InputButton quitButton;
@@ -45,6 +47,7 @@ namespace Potato.Game
             fire2Button.UpdateState(provider.GetKeyDown(InputConstants.KBM.Game_Fire2));
             sprintButton.UpdateState(provider.GetKeyDown(InputConstants.KBM.Game_Sprint));
             jumpButton.UpdateState(provider.GetKeyDown(InputConstants.KBM.Game_Jump));
+            crouchButton.UpdateState(provider.GetKeyDown(InputConstants.KBM.Game_Crouch));
             useButton.UpdateState(provider.GetKeyDown(InputConstants.KBM.Game_Use));
             quitButton.UpdateState(provider.GetKeyDown(InputConstants.KBM.Game_Quit));
         }
@@ -71,6 +74,7 @@ namespace Potato.Game
             fire2Button.ResetState(provider.GetKeyDown(InputConstants.KBM.Game_Fire2));
             sprintButton.ResetState(provider.GetKeyDown(InputConstants.KBM.Game_Sprint));
             jumpButton.ResetState(provider.GetKeyDown(InputConstants.KBM.Game_Jump));
+            crouchButton.ResetState(provider.GetKeyDown(InputConstants.KBM.Game_Crouch));
             useButton.ResetState(provider.GetKeyDown(InputConstants.KBM.Game_Use));
             quitButton.ResetState(provider.GetKeyDown(InputConstants.KBM.Game_Quit));
         }
