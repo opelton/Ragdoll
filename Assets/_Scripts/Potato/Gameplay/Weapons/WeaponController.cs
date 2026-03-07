@@ -5,143 +5,81 @@ using UnityEngine.Events;
 
 namespace Potato.Gameplay
 {
-    public enum WeaponShootType
-    {
-        Manual,
-        Automatic,
-        Charge,
-    }
+    public enum WeaponShootType { Manual, Automatic, Charge }
 
     [Serializable]
     public struct CrosshairData
     {
-        [Tooltip("The image that will be used for this weapon's crosshair")]
         public Sprite CrosshairSprite;
-
-        [Tooltip("The size of the crosshair image")]
         public int CrosshairSize;
-
-        [Tooltip("The color of the crosshair image")]
         public Color CrosshairColor;
     }
 
+    [RequireComponent(typeof(AudioSource))]
     public class WeaponController : MonoBehaviour
     {
-        [Header("Information")]
-        [Tooltip("The name that will be displayed in the UI for this weapon")]
-        public string WeaponName;
-
-        [Tooltip("The image that will be displayed in the UI for this weapon")]
-        public Sprite WeaponIcon;
-
-        [Tooltip("Default data for the crosshair")]
-        public CrosshairData CrosshairDataDefault;
-
-        [Tooltip("Data for the crosshair when targeting an enemy")]
-        public CrosshairData CrosshairDataTargetInSight;
-
-        [Header("Internal References")]
-        [Tooltip("The root object for the weapon, this is what will be deactivated when the weapon isn't active")]
-        public GameObject WeaponRoot;
-
-        [Tooltip("Tip of the weapon, where the projectiles are shot")]
-        public Transform WeaponMuzzle;
-
-        [Header("Shoot Parameters")]
-        [Tooltip("The type of weapon wil affect how it shoots")]
-        public WeaponShootType ShootType;
-
-        [Tooltip("The projectile prefab")] public ProjectileBase ProjectilePrefab;
-
-        [Tooltip("Minimum duration between two shots")]
-        public float DelayBetweenShots = 0.5f;
-
-        [Tooltip("Angle for the cone in which the bullets will be shot randomly (0 means no spread at all)")]
-        public float BulletSpreadAngle = 0f;
-
-        [Tooltip("Amount of bullets per shot")]
-        public int BulletsPerShot = 1;
-
-        [Tooltip("Force that will push back the weapon after each shot")]
-        [Range(0f, 2f)]
-        public float RecoilForce = 1;
-
-        [Tooltip("Ratio of the default FOV that this weapon applies while aiming")]
-        [Range(0f, 1f)]
-        public float AimZoomRatio = 1f;
-
-        [Tooltip("Translation to apply to weapon arm when aiming with this weapon")]
-        public Vector3 AimOffset;
-
-        [Header("Ammo Parameters")]
-        [Tooltip("Should the player manually reload")]
-        public bool AutomaticReload = true;
-        [Tooltip("Has physical clip on the weapon and ammo shells are ejected when firing")]
-        public bool HasPhysicalBullets = false;
-        [Tooltip("Number of bullets in a clip")]
-        public int ClipSize = 30;
-        [Tooltip("Bullet Shell Casing")]
-        public GameObject ShellCasing;
-        [Tooltip("Weapon Ejection Port for physical ammo")]
-        public Transform EjectionPort;
-        [Tooltip("Force applied on the shell")]
-        [Range(0.0f, 5.0f)] public float ShellCasingEjectionForce = 2.0f;
-        [Tooltip("Maximum number of shell that can be spawned before reuse")]
-        [Range(1, 30)] public int ShellPoolSize = 1;
-        [Tooltip("Amount of ammo reloaded per second")]
-        public float AmmoReloadRate = 1f;
-
-        [Tooltip("Delay after the last shot before starting to reload")]
-        public float AmmoReloadDelay = 2f;
-
-        [Tooltip("Maximum amount of ammo in the gun")]
-        public int MaxAmmo = 8;
-
-        [Header("Charging parameters (charging weapons only)")]
-        [Tooltip("Trigger a shot when maximum charge is reached")]
-        public bool AutomaticReleaseOnCharged;
-
-        [Tooltip("Duration to reach maximum charge")]
-        public float MaxChargeDuration = 2f;
-
-        [Tooltip("Initial ammo used when starting to charge")]
-        public float AmmoUsedOnStartCharge = 1f;
-
-        [Tooltip("Additional ammo used when charge reaches its maximum")]
-        public float AmmoUsageRateWhileCharging = 1f;
-
-        [Header("Audio & Visual")]
-        [Tooltip("Optional weapon animator for OnShoot animations")]
-        public Animator WeaponAnimator;
-
-        [Tooltip("Prefab of the muzzle flash")]
-        public GameObject MuzzleFlashPrefab;
-
-        [Tooltip("Unparent the muzzle flash instance on spawn")]
-        public bool UnparentMuzzleFlash;
-
-        [Tooltip("sound played when shooting")]
-        public AudioClip ShootSfx;
-
-        [Tooltip("Sound played when changing to this weapon")]
-        public AudioClip ChangeWeaponSfx;
-
-        [Tooltip("Continuous Shooting Sound")] public bool UseContinuousShootSound = false;
-        public AudioClip ContinuousShootStartSfx;
-        public AudioClip ContinuousShootLoopSfx;
-        public AudioClip ContinuousShootEndSfx;
-        AudioSource m_ContinuousShootAudioSource = null;
-        bool m_WantsToShoot = false;
+        [SerializeField] private ProjectileBase projectilePrefab;
+        [SerializeField] private GameObject weaponRoot;
+        [SerializeField] private Transform weaponMuzzle;
 
         public UnityAction OnShoot;
         public event Action OnShootProcessed;
 
-        int m_CarriedPhysicalBullets;
-        float m_CurrentAmmo;
-        float m_LastTimeShot = Mathf.NegativeInfinity;
-        public float LastChargeTriggerTimestamp { get; private set; }
-        Vector3 m_LastMuzzlePosition;
+        [Header("WeaponInfo")]
+        public string WeaponDisplayName;
+        public Sprite WeaponIcon;
+        public CrosshairData CrosshairData_Default;
+        public CrosshairData CrosshairData_TargetingEnemy;
 
+        [Header("Shoot Parameters")]
+        [SerializeField] private WeaponShootType shootType;
+        [SerializeField] private float shotCooldown = 0.5f;
+        [SerializeField] private float bulletSpreadAngle = 0f;
+        [SerializeField] private int bulletsPerShot = 1;
+        [SerializeField] [Range(0f, 2f)] private float recoilForce = 1;
+        [SerializeField] [Range(0f, 1f)] private float aimZoomRatio = 1f;
+
+        [Tooltip("Translation to apply to weapon arm when aiming with this weapon")]
+        [SerializeField] private Vector3 aimOffset;
+
+        [Header("Ammo Parameters")]
+        [SerializeField] private bool automaticReload = true;
+        [SerializeField] private bool usesPhysicalBullets = false;
+        [SerializeField] private int magazineSize = 30;
+        [SerializeField] private GameObject shellCasing;
+        [SerializeField] private Transform ejectionPort;
+        [SerializeField] [Range(0.0f, 5.0f)] private float shellCasingEjectionForce = 2.0f;
+        [SerializeField] [Range(1, 30)] private int shellPoolSize = 1;
+        [SerializeField] private float ammoReloadPerSecond = 1f;
+        [SerializeField] private float shotReloadDelay = 2f;
+        [SerializeField] private int maxAmmo = 8;
+
+        [Header("Charging parameters (charging weapons only)")]
+        [SerializeField] private bool chargeShotAutoRelease;
+        [SerializeField] private float maxChargeTime = 2f;
+        [SerializeField] private float chargeStartCost = 1f;
+        [SerializeField] private float chargeDrainRate = 1f;
+
+        [Header("Audio & Visual")]
+        [SerializeField] private Animator weaponAnimator;
+        [SerializeField] private GameObject muzzleFlashPrefab;
+        [SerializeField] private bool unparentMuzzleFlash;
+        [SerializeField] private AudioClip shootSfx;
+        [SerializeField] private AudioClip changeWeaponSfx;
+        [SerializeField] private bool useContinuousShotSounds = false;
+        [SerializeField] private AudioClip continuousShotSfx_Start;
+        [SerializeField] private AudioClip continuousShotSfx_Loop;
+        [SerializeField] private AudioClip continuousShotSfx_End;
+
+
+        private AudioSource _continuousShootAudioSource = null;
+        private bool _wantsToShoot = false;
+        private int _carriedPhysicalBullets;
+        private float _currentAmmo;
+        private float _lastShotTime = Mathf.NegativeInfinity;
+        private Vector3 _lastMuzzlePosition;
+
+        public float LastChargeTriggerTimestamp { get; private set; }
         public GameObject Owner { get; set; }
         public GameObject SourcePrefab { get; set; }
         public bool IsCharging { get; private set; }
@@ -150,65 +88,71 @@ namespace Potato.Gameplay
         public bool IsCooling { get; private set; }
         public float CurrentCharge { get; private set; }
         public Vector3 MuzzleWorldVelocity { get; private set; }
+        public float RecoilForce => recoilForce;
+        public Vector3 AimOffset => aimOffset;
+        public float AimZoomRatio => aimZoomRatio;
+        public bool AutomaticReload => automaticReload;
 
         public float GetAmmoNeededToShoot() =>
-            (ShootType != WeaponShootType.Charge ? 1f : Mathf.Max(1f, AmmoUsedOnStartCharge)) /
-            (MaxAmmo * BulletsPerShot);
+            (shootType != WeaponShootType.Charge ? 1f : Mathf.Max(1f, chargeStartCost)) /
+            (maxAmmo * bulletsPerShot);
 
-        public int GetCarriedPhysicalBullets() => m_CarriedPhysicalBullets;
-        public int GetCurrentAmmo() => Mathf.FloorToInt(m_CurrentAmmo);
+        public int GetCarriedPhysicalBullets() => _carriedPhysicalBullets;
+        public int GetCurrentAmmo() => Mathf.FloorToInt(_currentAmmo);
 
-        AudioSource m_ShootAudioSource;
+        AudioSource _shootAudioSource;
 
         public bool IsReloading { get; private set; }
 
         const string k_AnimAttackParameter = "Attack";
 
-        private Queue<Rigidbody> m_PhysicalAmmoPool;
+        private Queue<Rigidbody> _physicalAmmoPool;
 
         void Awake()
         {
-            m_CurrentAmmo = MaxAmmo;
-            m_CarriedPhysicalBullets = HasPhysicalBullets ? ClipSize : 0;
-            m_LastMuzzlePosition = WeaponMuzzle.position;
+            _currentAmmo = maxAmmo;
+            _carriedPhysicalBullets = usesPhysicalBullets ? magazineSize : 0;
+            _lastMuzzlePosition = weaponMuzzle.position;
 
-            // if (UseContinuousShootSound)
+            _shootAudioSource = GetComponent<AudioSource>();
+
+            // if (useContinuousShotSounds)
             // {
-            //     m_ContinuousShootAudioSource = gameObject.AddComponent<AudioSource>();
-            //     m_ContinuousShootAudioSource.playOnAwake = false;
-            //     m_ContinuousShootAudioSource.clip = ContinuousShootLoopSfx;
-            //     m_ContinuousShootAudioSource.outputAudioMixerGroup =
+            //     _continuousShootAudioSource = gameObject.AddComponent<AudioSource>();
+            //     _continuousShootAudioSource.playOnAwake = false;
+            //     _continuousShootAudioSource.clip = continuousShotSfx_Loop;
+            //     _continuousShootAudioSource.outputAudioMixerGroup =
             //         AudioUtility.GetAudioGroup(AudioUtility.AudioGroups.WeaponShoot);
-            //     m_ContinuousShootAudioSource.loop = true;
+            //     _continuousShootAudioSource.loop = true;
             // }
 
-            if (HasPhysicalBullets)
+            if (usesPhysicalBullets)
             {
-                m_PhysicalAmmoPool = new Queue<Rigidbody>(ShellPoolSize);
+                _physicalAmmoPool = new Queue<Rigidbody>(shellPoolSize);
 
-                for (int i = 0; i < ShellPoolSize; i++)
+                for (int i = 0; i < shellPoolSize; i++)
                 {
-                    GameObject shell = Instantiate(ShellCasing, transform);
+                    GameObject shell = Instantiate(shellCasing, transform);
                     shell.SetActive(false);
-                    m_PhysicalAmmoPool.Enqueue(shell.GetComponent<Rigidbody>());
+                    _physicalAmmoPool.Enqueue(shell.GetComponent<Rigidbody>());
                 }
             }
         }
 
-        public void AddCarriablePhysicalBullets(int count) => m_CarriedPhysicalBullets = Mathf.Max(m_CarriedPhysicalBullets + count, MaxAmmo);
+        public void AddCarriablePhysicalBullets(int count) => _carriedPhysicalBullets = Mathf.Max(_carriedPhysicalBullets + count, maxAmmo);
 
         void ShootShell()
         {
-            Rigidbody nextShell = m_PhysicalAmmoPool.Dequeue();
+            Rigidbody nextShell = _physicalAmmoPool.Dequeue();
 
-            nextShell.transform.position = EjectionPort.transform.position;
-            nextShell.transform.rotation = EjectionPort.transform.rotation;
+            nextShell.transform.position = ejectionPort.transform.position;
+            nextShell.transform.rotation = ejectionPort.transform.rotation;
             nextShell.gameObject.SetActive(true);
             nextShell.transform.SetParent(null);
             nextShell.collisionDetectionMode = CollisionDetectionMode.Continuous;
-            nextShell.AddForce(nextShell.transform.up * ShellCasingEjectionForce, ForceMode.Impulse);
+            nextShell.AddForce(nextShell.transform.up * shellCasingEjectionForce, ForceMode.Impulse);
 
-            m_PhysicalAmmoPool.Enqueue(nextShell);
+            _physicalAmmoPool.Enqueue(nextShell);
         }
 
         void PlaySFX(AudioClip sfx)
@@ -219,9 +163,9 @@ namespace Potato.Gameplay
 
         void Reload()
         {
-            if (m_CarriedPhysicalBullets > 0)
+            if (_carriedPhysicalBullets > 0)
             {
-                m_CurrentAmmo = Mathf.Min(m_CarriedPhysicalBullets, ClipSize);
+                _currentAmmo = Mathf.Min(_carriedPhysicalBullets, magazineSize);
             }
 
             IsReloading = false;
@@ -229,7 +173,7 @@ namespace Potato.Gameplay
 
         public void StartReloadAnimation()
         {
-            if (m_CurrentAmmo < m_CarriedPhysicalBullets)
+            if (_currentAmmo < _carriedPhysicalBullets)
             {
                 GetComponent<Animator>().SetTrigger("Reload");
                 IsReloading = true;
@@ -244,20 +188,20 @@ namespace Potato.Gameplay
 
             if (Time.deltaTime > 0)
             {
-                MuzzleWorldVelocity = (WeaponMuzzle.position - m_LastMuzzlePosition) / Time.deltaTime;
-                m_LastMuzzlePosition = WeaponMuzzle.position;
+                MuzzleWorldVelocity = (weaponMuzzle.position - _lastMuzzlePosition) / Time.deltaTime;
+                _lastMuzzlePosition = weaponMuzzle.position;
             }
         }
 
         void UpdateAmmo()
         {
-            if (AutomaticReload && m_LastTimeShot + AmmoReloadDelay < Time.time && m_CurrentAmmo < MaxAmmo && !IsCharging)
+            if (automaticReload && _lastShotTime + shotReloadDelay < Time.time && _currentAmmo < maxAmmo && !IsCharging)
             {
                 // reloads weapon over time
-                m_CurrentAmmo += AmmoReloadRate * Time.deltaTime;
+                _currentAmmo += ammoReloadPerSecond * Time.deltaTime;
 
                 // limits ammo to max value
-                m_CurrentAmmo = Mathf.Clamp(m_CurrentAmmo, 0, MaxAmmo);
+                _currentAmmo = Mathf.Clamp(_currentAmmo, 0, maxAmmo);
 
                 IsCooling = true;
             }
@@ -266,13 +210,13 @@ namespace Potato.Gameplay
                 IsCooling = false;
             }
 
-            if (MaxAmmo == Mathf.Infinity)
+            if (maxAmmo == Mathf.Infinity)
             {
                 CurrentAmmoRatio = 1f;
             }
             else
             {
-                CurrentAmmoRatio = m_CurrentAmmo / MaxAmmo;
+                CurrentAmmoRatio = _currentAmmo / maxAmmo;
             }
         }
 
@@ -286,20 +230,20 @@ namespace Potato.Gameplay
 
                     // Calculate how much charge ratio to add this frame
                     float chargeAdded = 0f;
-                    if (MaxChargeDuration <= 0f)
+                    if (maxChargeTime <= 0f)
                     {
                         chargeAdded = chargeLeft;
                     }
                     else
                     {
-                        chargeAdded = (1f / MaxChargeDuration) * Time.deltaTime;
+                        chargeAdded = (1f / maxChargeTime) * Time.deltaTime;
                     }
 
                     chargeAdded = Mathf.Clamp(chargeAdded, 0f, chargeLeft);
 
                     // See if we can actually add this charge
-                    float ammoThisChargeWouldRequire = chargeAdded * AmmoUsageRateWhileCharging;
-                    if (ammoThisChargeWouldRequire <= m_CurrentAmmo)
+                    float ammoThisChargeWouldRequire = chargeAdded * chargeDrainRate;
+                    if (ammoThisChargeWouldRequire <= _currentAmmo)
                     {
                         // Use ammo based on charge added
                         UseAmmo(ammoThisChargeWouldRequire);
@@ -313,32 +257,32 @@ namespace Potato.Gameplay
 
         void UpdateContinuousShootSound()
         {
-            if (UseContinuousShootSound)
+            if (useContinuousShotSounds)
             {
-                if (m_WantsToShoot && m_CurrentAmmo >= 1f)
+                if (_wantsToShoot && _currentAmmo >= 1f)
                 {
-                    if (!m_ContinuousShootAudioSource.isPlaying)
+                    if (!_continuousShootAudioSource.isPlaying)
                     {
-                        m_ShootAudioSource.PlayOneShot(ShootSfx);
-                        m_ShootAudioSource.PlayOneShot(ContinuousShootStartSfx);
-                        m_ContinuousShootAudioSource.Play();
+                        _shootAudioSource.PlayOneShot(shootSfx);
+                        _shootAudioSource.PlayOneShot(continuousShotSfx_Start);
+                        _continuousShootAudioSource.Play();
                     }
                 }
-                else if (m_ContinuousShootAudioSource.isPlaying)
+                else if (_continuousShootAudioSource.isPlaying)
                 {
-                    m_ShootAudioSource.PlayOneShot(ContinuousShootEndSfx);
-                    m_ContinuousShootAudioSource.Stop();
+                    _shootAudioSource.PlayOneShot(continuousShotSfx_End);
+                    _continuousShootAudioSource.Stop();
                 }
             }
         }
 
         public void ShowWeapon(bool show)
         {
-            WeaponRoot.SetActive(show);
+            weaponRoot.SetActive(show);
 
-            if (show && ChangeWeaponSfx)
+            if (show && changeWeaponSfx)
             {
-                m_ShootAudioSource.PlayOneShot(ChangeWeaponSfx);
+                _shootAudioSource.PlayOneShot(changeWeaponSfx);
             }
 
             IsWeaponActive = show;
@@ -346,16 +290,16 @@ namespace Potato.Gameplay
 
         public void UseAmmo(float amount)
         {
-            m_CurrentAmmo = Mathf.Clamp(m_CurrentAmmo - amount, 0f, MaxAmmo);
-            m_CarriedPhysicalBullets -= Mathf.RoundToInt(amount);
-            m_CarriedPhysicalBullets = Mathf.Clamp(m_CarriedPhysicalBullets, 0, MaxAmmo);
-            m_LastTimeShot = Time.time;
+            _currentAmmo = Mathf.Clamp(_currentAmmo - amount, 0f, maxAmmo);
+            _carriedPhysicalBullets -= Mathf.RoundToInt(amount);
+            _carriedPhysicalBullets = Mathf.Clamp(_carriedPhysicalBullets, 0, maxAmmo);
+            _lastShotTime = Time.time;
         }
 
         public bool HandleShootInputs(bool inputDown, bool inputHeld, bool inputUp)
         {
-            m_WantsToShoot = inputDown || inputHeld;
-            switch (ShootType)
+            _wantsToShoot = inputDown || inputHeld;
+            switch (shootType)
             {
                 case WeaponShootType.Manual:
                     if (inputDown)
@@ -380,7 +324,7 @@ namespace Potato.Gameplay
                     }
 
                     // Check if we released charge or if the weapon shoot autmatically when it's fully charged
-                    if (inputUp || (AutomaticReleaseOnCharged && CurrentCharge >= 1f))
+                    if (inputUp || (chargeShotAutoRelease && CurrentCharge >= 1f))
                     {
                         return TryReleaseCharge();
                     }
@@ -394,11 +338,11 @@ namespace Potato.Gameplay
 
         bool TryShoot()
         {
-            if (m_CurrentAmmo >= 1f
-                && m_LastTimeShot + DelayBetweenShots < Time.time)
+            if (_currentAmmo >= 1f
+                && _lastShotTime + shotCooldown < Time.time)
             {
                 HandleShoot();
-                m_CurrentAmmo -= 1f;
+                _currentAmmo -= 1f;
 
                 return true;
             }
@@ -409,11 +353,11 @@ namespace Potato.Gameplay
         bool TryBeginCharge()
         {
             if (!IsCharging
-                && m_CurrentAmmo >= AmmoUsedOnStartCharge
-                && Mathf.FloorToInt((m_CurrentAmmo - AmmoUsedOnStartCharge) * BulletsPerShot) > 0
-                && m_LastTimeShot + DelayBetweenShots < Time.time)
+                && _currentAmmo >= chargeStartCost
+                && Mathf.FloorToInt((_currentAmmo - chargeStartCost) * bulletsPerShot) > 0
+                && _lastShotTime + shotCooldown < Time.time)
             {
-                UseAmmo(AmmoUsedOnStartCharge);
+                UseAmmo(chargeStartCost);
 
                 LastChargeTriggerTimestamp = Time.time;
                 IsCharging = true;
@@ -441,26 +385,26 @@ namespace Potato.Gameplay
 
         void HandleShoot()
         {
-            int bulletsPerShotFinal = ShootType == WeaponShootType.Charge
-                ? Mathf.CeilToInt(CurrentCharge * BulletsPerShot)
-                : BulletsPerShot;
+            int bulletsPerShotFinal = shootType == WeaponShootType.Charge
+                ? Mathf.CeilToInt(CurrentCharge * bulletsPerShot)
+                : bulletsPerShot;
 
             // spawn all bullets with random direction
             for (int i = 0; i < bulletsPerShotFinal; i++)
             {
-                Vector3 shotDirection = GetShotDirectionWithinSpread(WeaponMuzzle);
-                ProjectileBase newProjectile = Instantiate(ProjectilePrefab, WeaponMuzzle.position,
+                Vector3 shotDirection = GetShotDirectionWithinSpread(weaponMuzzle);
+                ProjectileBase newProjectile = Instantiate(projectilePrefab, weaponMuzzle.position,
                     Quaternion.LookRotation(shotDirection));
                 newProjectile.Shoot(this);
             }
 
             // muzzle flash
-            if (MuzzleFlashPrefab != null)
+            if (muzzleFlashPrefab != null)
             {
-                GameObject muzzleFlashInstance = Instantiate(MuzzleFlashPrefab, WeaponMuzzle.position,
-                    WeaponMuzzle.rotation, WeaponMuzzle.transform);
+                GameObject muzzleFlashInstance = Instantiate(muzzleFlashPrefab, weaponMuzzle.position,
+                    weaponMuzzle.rotation, weaponMuzzle.transform);
                 // Unparent the muzzleFlashInstance
-                if (UnparentMuzzleFlash)
+                if (unparentMuzzleFlash)
                 {
                     muzzleFlashInstance.transform.SetParent(null);
                 }
@@ -468,24 +412,24 @@ namespace Potato.Gameplay
                 Destroy(muzzleFlashInstance, 2f);
             }
 
-            if (HasPhysicalBullets)
+            if (usesPhysicalBullets)
             {
                 ShootShell();
-                m_CarriedPhysicalBullets--;
+                _carriedPhysicalBullets--;
             }
 
-            m_LastTimeShot = Time.time;
+            _lastShotTime = Time.time;
 
             // play shoot SFX
-            if (ShootSfx && !UseContinuousShootSound)
+            if (shootSfx && !useContinuousShotSounds)
             {
-                m_ShootAudioSource.PlayOneShot(ShootSfx);
+                _shootAudioSource.PlayOneShot(shootSfx);
             }
 
             // Trigger attack animation if there is any
-            if (WeaponAnimator)
+            if (weaponAnimator)
             {
-                WeaponAnimator.SetTrigger(k_AnimAttackParameter);
+                weaponAnimator.SetTrigger(k_AnimAttackParameter);
             }
 
             OnShoot?.Invoke();
@@ -494,7 +438,7 @@ namespace Potato.Gameplay
 
         public Vector3 GetShotDirectionWithinSpread(Transform shootTransform)
         {
-            float spreadAngleRatio = BulletSpreadAngle / 180f;
+            float spreadAngleRatio = bulletSpreadAngle / 180f;
             Vector3 spreadWorldDirection = Vector3.Slerp(shootTransform.forward, UnityEngine.Random.insideUnitSphere,
                 spreadAngleRatio);
 

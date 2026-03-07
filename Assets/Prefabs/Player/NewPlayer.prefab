@@ -659,7 +659,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b3b4665893856f4aa1a3b37e7aaa2fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StartingWeapons: []
+  StartingWeapons:
+  - {fileID: 5979245870570534767, guid: d5aa1d876679b8e48914fc3c797f0f8f, type: 3}
   fpsWeaponsLayer: 6
   mainCamera: {fileID: 6934066893293710498}
   weaponCamera: {fileID: 7789353188300807451}
@@ -673,7 +674,7 @@ MonoBehaviour:
     ConstantValue: 0
     ReferenceData: {fileID: 11400000, guid: 1b105e9ce6dec2a438de9474eb90c6b9, type: 2}
   weaponFovMultiplier: 1
-  WeaponSwitchDelay: 1
+  WeaponSwitchDelay: 0.2
   activeWeaponRef:
     UseConstant: 0
     _description: 
