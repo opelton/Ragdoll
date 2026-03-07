@@ -21,6 +21,9 @@ MonoBehaviour:
   crouchButton: {fileID: 11400000, guid: f0a7c79542659da4fac2d1fc24aa6a8c, type: 2}
   jumpButton: {fileID: 11400000, guid: 6aaceb75758a0e944b2ae961885020c2, type: 2}
   useButton: {fileID: 11400000, guid: 6b5c9fb1fd7f9fc4c8841011f914ab26, type: 2}
+  reloadButton: {fileID: 11400000, guid: 0160fe8fbc8d38b45a96f97f91e5b358, type: 2}
+  swapWeaponButton: {fileID: 11400000, guid: 989707097e58b23408a3534370c77bda, type: 2}
+  punchButton: {fileID: 11400000, guid: 3a0a457b84bc0f642acc4685c92eede1, type: 2}
   quitButton: {fileID: 11400000, guid: cafe902d47a33a042b0649607058f142, type: 2}
   lookSensitivity:
     UseConstant: 0

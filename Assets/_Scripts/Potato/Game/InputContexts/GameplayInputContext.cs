@@ -19,6 +19,9 @@ namespace Potato.Game
         [SerializeField] InputButton crouchButton;
         [SerializeField] InputButton jumpButton;
         [SerializeField] InputButton useButton;
+        [SerializeField] InputButton reloadButton;
+        [SerializeField] InputButton swapWeaponButton;
+        [SerializeField] InputButton punchButton;
         [SerializeField] InputButton quitButton;
 
         [Header("Settings Data")]
@@ -49,6 +52,9 @@ namespace Potato.Game
             jumpButton.UpdateState(provider.GetKeyDown(InputConstants.KBM.Game_Jump));
             crouchButton.UpdateState(provider.GetKeyDown(InputConstants.KBM.Game_Crouch));
             useButton.UpdateState(provider.GetKeyDown(InputConstants.KBM.Game_Use));
+            reloadButton.UpdateState(provider.GetKeyDown(InputConstants.KBM.Game_Reload));
+            swapWeaponButton.UpdateState(provider.GetKeyDown(InputConstants.KBM.Game_SwapWeapon));
+            punchButton.UpdateState(provider.GetKeyDown(InputConstants.KBM.Game_Punch));
             quitButton.UpdateState(provider.GetKeyDown(InputConstants.KBM.Game_Quit));
         }
 
@@ -76,6 +82,9 @@ namespace Potato.Game
             jumpButton.ResetState(provider.GetKeyDown(InputConstants.KBM.Game_Jump));
             crouchButton.ResetState(provider.GetKeyDown(InputConstants.KBM.Game_Crouch));
             useButton.ResetState(provider.GetKeyDown(InputConstants.KBM.Game_Use));
+            reloadButton.ResetState(provider.GetKeyDown(InputConstants.KBM.Game_Reload));
+            swapWeaponButton.ResetState(provider.GetKeyDown(InputConstants.KBM.Game_SwapWeapon));
+            punchButton.ResetState(provider.GetKeyDown(InputConstants.KBM.Game_Punch));
             quitButton.ResetState(provider.GetKeyDown(InputConstants.KBM.Game_Quit));
         }
     }

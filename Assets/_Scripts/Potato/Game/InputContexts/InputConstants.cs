@@ -18,8 +18,10 @@ namespace Potato.Game
             public const KeyCode Game_Jump = KeyCode.Space;
             public const KeyCode Game_Crouch = KeyCode.LeftControl;
             public const KeyCode Game_Use = KeyCode.E;
+            public const KeyCode Game_Reload = KeyCode.R;
+            public const KeyCode Game_SwapWeapon = KeyCode.Q;
+            public const KeyCode Game_Punch = KeyCode.Q;
             public const KeyCode Game_Quit = KeyCode.Tab;
-            // todo reload, punch, swap weapon
 
             public const KeyCode Menu_Cancel = KeyCode.Tab;
             public const KeyCode Menu_Submit_Space = KeyCode.Space;

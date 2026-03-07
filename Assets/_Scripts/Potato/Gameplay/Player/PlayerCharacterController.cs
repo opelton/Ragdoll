@@ -1,5 +1,5 @@
-using Potato.Core;
 using Potato.Game;
+using Potato.Core;
 using UnityEngine;
 
 namespace Potato.Gameplay
@@ -17,8 +17,11 @@ namespace Potato.Gameplay
         [SerializeField] private InputFloatAxis moveInput;
         [SerializeField] private InputFloatAxis lookInput;
         [SerializeField] private InputButton sprintInput;
-        [SerializeField] private InputButton jumpInput;
-        [SerializeField] private InputButton crouchInput;
+        // [SerializeField] private InputButton jumpInput;
+        // [SerializeField] private InputButton crouchInput;
+
+        [Header("Settings")]
+        [SerializeField] private IntReference cameraFov;
 
         // [Header("Out Events")]
         // [SerializeField] private FloatEvent playerGroundImpact;
@@ -54,13 +57,15 @@ namespace Potato.Gameplay
         private bool _isGrounded = false;
         private bool _isCrouching = false;
         private Vector3 _groundNormal = Vector3.up;
-        private Vector3 _lastImpactSpeed = Vector3.zero;
+        //private Vector3 _lastImpactSpeed = Vector3.zero;
         private float _lastJumpTime = 0f;
         private float _footstepDistanceCounter = 0f;
         private float _targetCharacterHeight;
 
         // --
         public bool IsGrounded => _isGrounded;
+        public float MaxSpeedOnGround => maxGroundSpeed;
+        public float SprintSpeedModifier => sprintSpeedModifier;
 
         void Start()
         {
@@ -69,14 +74,16 @@ namespace Potato.Gameplay
 
             SetCrouchingState(false, true);
             UpdateCharacterHeight(true);
+
+            playerCamera.fieldOfView = (float)cameraFov.Value;
         }
 
         void Update()
         {
-            bool wasGrounded = _isGrounded;
+            //bool wasGrounded = _isGrounded;
             GroundCheck();
-            CheckFallDamage(wasGrounded);
-            StanceUpdate();
+            //CheckFallDamage(wasGrounded);
+            UpdateCharacterHeight(false);
             HandleMovement(Time.deltaTime);
         }
 
@@ -92,9 +99,7 @@ namespace Potato.Gameplay
 
             bool isSprinting = sprintInput.ButtonDown;
             if (isSprinting)
-            {
                 isSprinting = SetCrouchingState(false, false);
-            }
 
             float speedModifier = isSprinting ? sprintSpeedModifier : 1f;
             Vector3 worldspaceMoveInput = transform.TransformVector(moveInput.Value.x, 0f, moveInput.Value.y);
@@ -110,29 +115,10 @@ namespace Potato.Gameplay
 
                 _velocity = Vector3.Lerp(_velocity, targetVelocity, groundTurningSharpness * dt);
 
-                if (jumpInput.ButtonDown)
-                {
-                    // force the crouch state to false
-                    if (SetCrouchingState(false, false))
-                    {
-                        _velocity = new Vector3(_velocity.x, 0f, _velocity.z);
-                        _velocity += Vector3.up * jumpForce;
-
-                        //playerJumped.Invoke(this);
-
-                        // remember last time we jumped because we need to prevent snapping to ground for a short time
-                        _lastJumpTime = Time.time;
-
-                        // Force grounding to false
-                        _isGrounded = false;
-                        _groundNormal = Vector3.up;
-                    }
-                }
-
                 // footsteps sound
-                if (_footstepDistanceCounter >= 1f)
+                if (_footstepDistanceCounter >= footstepFrequency)
                 {
-                    _footstepDistanceCounter -= 1f;
+                    _footstepDistanceCounter -= footstepFrequency;
                     //playerFootstep.Invoke(this);
                 }
 
@@ -164,47 +150,64 @@ namespace Potato.Gameplay
                 _velocity.normalized, out RaycastHit hit, _velocity.magnitude * dt, groundCheckLayers,
                 QueryTriggerInteraction.Ignore))
             {
-                _lastImpactSpeed = _velocity;
+                //_lastImpactSpeed = _velocity;
                 //playerGroundImpact.Invoke(_velocity.magnitude, this);
 
                 _velocity = Vector3.ProjectOnPlane(_velocity, hit.normal);
             }
-            else
-                _lastImpactSpeed = Vector3.zero;
+            // else
+            //     _lastImpactSpeed = Vector3.zero;
         }
 
-        void StanceUpdate()
+        public void TryJumping()
         {
-            if (crouchInput.ButtonPressed)
+            if (_isGrounded)
             {
-                SetCrouchingState(!_isCrouching, false);
+                // force the crouch state to false
+                if (SetCrouchingState(false, false))
+                {
+                    _velocity = new Vector3(_velocity.x, 0f, _velocity.z);
+                    _velocity += Vector3.up * jumpForce;
+
+                    //playerJumped.Invoke(this);
+
+                    // remember last time we jumped because we need to prevent snapping to ground for a short time
+                    _lastJumpTime = Time.time;
+
+                    // Force grounding to false
+                    _isGrounded = false;
+                    _groundNormal = Vector3.up;
+                }
             }
-            UpdateCharacterHeight(false);
         }
 
-        void CheckFallDamage(bool wasGrounded)
-        {
-            // if (_isGrounded && !wasGrounded)
-            // {
-            //     // Fall damage
-            //     float fallSpeed = -Mathf.Min(_velocity.y, _lastImpactSpeed.y);
-            //     float fallSpeedRatio = (fallSpeed - MinSpeedForFallDamage) /
-            //                            (MaxSpeedForFallDamage - MinSpeedForFallDamage);
-            //     if (receivesFallDamage && fallSpeedRatio > 0f)
-            //     {
-            //         float dmgFromFall = Mathf.Lerp(FallDamageAtMinSpeed, FallDamageAtMaxSpeed, fallSpeedRatio);
-            //         // m_Health.TakeDamage(dmgFromFall, null);
+        public void ToggleCrouch() => SetCrouchingState(!_isCrouching, false);
+        public void TryCrouching() => SetCrouchingState(true, false);
+        public void TryUncrouching() => SetCrouchingState(false, false);
 
-            //         // // fall damage SFX
-            //         // AudioSource.PlayOneShot(FallDamageSfx);
-            //     }
-            //     // else
-            //     // {
-            //     //     // land SFX
-            //     //     AudioSource.PlayOneShot(LandSfx);
-            //     // }
-            // }
-        }
+        // void CheckFallDamage(bool wasGrounded)
+        // {
+        //     if (_isGrounded && !wasGrounded)
+        //     {
+        //         // Fall damage
+        //         float fallSpeed = -Mathf.Min(_velocity.y, _lastImpactSpeed.y);
+        //         float fallSpeedRatio = (fallSpeed - MinSpeedForFallDamage) /
+        //                                (MaxSpeedForFallDamage - MinSpeedForFallDamage);
+        //         if (receivesFallDamage && fallSpeedRatio > 0f)
+        //         {
+        //             float dmgFromFall = Mathf.Lerp(FallDamageAtMinSpeed, FallDamageAtMaxSpeed, fallSpeedRatio);
+        //             // m_Health.TakeDamage(dmgFromFall, null);
+
+        //             // // fall damage SFX
+        //             // AudioSource.PlayOneShot(FallDamageSfx);
+        //         }
+        //         // else
+        //         // {
+        //         //     // land SFX
+        //         //     AudioSource.PlayOneShot(LandSfx);
+        //         // }
+        //     }
+        // }
 
         void UpdateCharacterHeight(bool force)
         {
@@ -213,8 +216,7 @@ namespace Potato.Gameplay
             {
                 _controller.height = _targetCharacterHeight;
                 _controller.center = _controller.height * 0.5f * Vector3.up;
-                playerCamera.transform.localPosition = Vector3.up * _targetCharacterHeight * cameraHeightRatio;
-                // m_Actor.AimPoint.transform.localPosition = m_Controller.center;
+                playerCamera.transform.localPosition = _targetCharacterHeight * cameraHeightRatio * Vector3.up;
             }
             // Update smooth height
             else if (_controller.height != _targetCharacterHeight)
@@ -225,7 +227,6 @@ namespace Potato.Gameplay
                 _controller.center = _controller.height * 0.5f * Vector3.up;
                 playerCamera.transform.localPosition = Vector3.Lerp(playerCamera.transform.localPosition,
                     _targetCharacterHeight * cameraHeightRatio * Vector3.up, crouchingSharpness * Time.deltaTime);
-                // m_Actor.AimPoint.transform.localPosition = m_Controller.center;
             }
         }
 
@@ -248,6 +249,7 @@ namespace Potato.Gameplay
                         _controller.radius,
                         groundCheckLayers,
                         QueryTriggerInteraction.Ignore);
+
                     foreach (Collider c in standingOverlaps)
                     {
                         if (c != _controller)
@@ -259,11 +261,6 @@ namespace Potato.Gameplay
 
                 _targetCharacterHeight = standingHeight;
             }
-
-            // if (OnStanceChanged != null)
-            // {
-            //     OnStanceChanged.Invoke(crouched);
-            // }
 
             _isCrouching = crouched;
             return true;
