@@ -7,6 +7,13 @@ namespace Potato.Game
     {
         public static class KBM
         {
+            const KeyCode kShowMenuButton = 
+#if UNITY_EDITOR || UNITY_WEBGL
+            KeyCode.Tab;        // Tab plays nicer with web browsers and the unity editor
+#else
+            KeyCode.Escape;     // Escape key is expected in shipped builds
+#endif
+
             public const string MoveAxis_X = "Horizontal";
             public const string MoveAxis_Y = "Vertical";
             public const string LookAxis_X = "Look X";
@@ -21,9 +28,9 @@ namespace Potato.Game
             public const KeyCode Game_Reload = KeyCode.R;
             public const KeyCode Game_SwapWeapon = KeyCode.Q;
             public const KeyCode Game_Punch = KeyCode.Q;
-            public const KeyCode Game_Quit = KeyCode.Tab;
+            public const KeyCode Game_Quit = kShowMenuButton;
 
-            public const KeyCode Menu_Cancel = KeyCode.Tab;
+            public const KeyCode Menu_Cancel = kShowMenuButton; 
             public const KeyCode Menu_Submit_Space = KeyCode.Space;
             public const KeyCode Menu_Submit_Return = KeyCode.Return;
         }
