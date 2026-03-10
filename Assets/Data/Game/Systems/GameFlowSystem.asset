@@ -22,6 +22,11 @@ MonoBehaviour:
     _description: 
     ConstantValue: {fileID: 0}
     ReferenceData: {fileID: 11400000, guid: f3bc093275bec99419711eb342efa8ca, type: 2}
+  showLoadScreenRef:
+    UseConstant: 0
+    _description: 
+    ConstantValue: 0
+    ReferenceData: {fileID: 11400000, guid: 479b2881a53385c41ad99096a87e54c9, type: 2}
   reloadSceneCommand: {fileID: 11400000, guid: 785fa714832f29546b6cb6c65c79f70f, type: 2}
   sceneTransitionCommand: {fileID: 11400000, guid: cd2e0b650097d2843af3263b83e1e059, type: 2}
   menuState: {fileID: 11400000, guid: c46df214afd9f75498957d0fed649b04, type: 2}

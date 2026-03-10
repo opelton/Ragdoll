@@ -15,6 +15,7 @@ namespace Potato.Game
         [Header("Out data")]
         [SerializeField] StringReference activeSceneReference;
         [SerializeField] GameStateReference gameStateReference;
+        [SerializeField] BoolReference showLoadScreenRef;
 
         [Header("out events")]
         [SerializeField] GameEvent reloadSceneCommand;
@@ -42,12 +43,14 @@ namespace Potato.Game
 
         public void SceneTransition_Play()
         {
+            showLoadScreenRef.Value = true;
             SetNewState(gameplayState);
             sceneTransitionCommand.Invoke(play, this);
         }
 
         public void ReloadCurrentScene()
         {
+            showLoadScreenRef.Value = true;
             reloadSceneCommand.Invoke(this);
         }
 

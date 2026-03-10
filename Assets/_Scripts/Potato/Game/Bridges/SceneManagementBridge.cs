@@ -39,6 +39,7 @@ namespace Potato.Game
         {
             var op = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
             op.allowSceneActivation = false;
+            sceneLoadAmount.Value = 0;
 
             // activation counts for the last 10% of progress, so isDone would never be true with scene activation disallowed
             while(op.progress < .9f)
@@ -47,7 +48,7 @@ namespace Potato.Game
                 yield return null;
             }
             
-            sceneLoadAmount.Value = 0;
+            sceneLoadAmount.Value = 1;
             op.allowSceneActivation = true;
             yield return op;
         }
