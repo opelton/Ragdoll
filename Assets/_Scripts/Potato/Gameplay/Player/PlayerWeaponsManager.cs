@@ -27,7 +27,7 @@ namespace Potato.Gameplay
         [SerializeField] private InputButton weaponSwitchInput;
 
         [Header("Settings")]
-        [SerializeField] private IntReference defaultFovRef;
+        [SerializeField] private int fixedWeaponFov = 60;
         [SerializeField] private float weaponFovMultiplier = 1f;
         [SerializeField] private float WeaponSwitchDelay = 1f;
 
@@ -75,7 +75,7 @@ namespace Potato.Gameplay
 
             _player = GetComponent<PlayerCharacterController>();
 
-            SetFov(defaultFovRef.Value);
+            SetFov(fixedWeaponFov);
 
             OnSwitchedToWeapon += OnWeaponSwitched;
 
@@ -255,13 +255,13 @@ namespace Potato.Gameplay
                         weaponPose_Aiming.localPosition + activeWeapon.AimOffset,
                         aimAnimationSpeed * Time.deltaTime);
                     SetFov(Mathf.Lerp(mainCamera.fieldOfView,
-                        activeWeapon.AimZoomRatio * defaultFovRef.Value, aimAnimationSpeed * Time.deltaTime));
+                        activeWeapon.AimZoomRatio * fixedWeaponFov, aimAnimationSpeed * Time.deltaTime));
                 }
                 else
                 {
                     _weaponLocalPos = Vector3.Lerp(_weaponLocalPos,
                         weaponPose_Default.localPosition, aimAnimationSpeed * Time.deltaTime);
-                    SetFov(Mathf.Lerp(mainCamera.fieldOfView, defaultFovRef.Value,
+                    SetFov(Mathf.Lerp(mainCamera.fieldOfView, fixedWeaponFov,
                         aimAnimationSpeed * Time.deltaTime));
                 }
             }
