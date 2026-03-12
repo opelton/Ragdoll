@@ -18,7 +18,7 @@ namespace Potato.Game.UI
         [SerializeField] private BoolReference showLoadScreenRef;
 
         [Header("Tuning")]
-        [SerializeField] private float alphaInterpDuration = .25f;
+        //[SerializeField] private float alphaInterpDuration = .25f;
         [SerializeField] private float lingerDuration = .5f;
 
         private Coroutine _loadScreenCoroutine = null;
@@ -28,38 +28,53 @@ namespace Potato.Game.UI
 
         public void OnSceneLoadStarted()
         {
-            if(_loadScreenCoroutine != null)
-                StopCoroutine(_loadScreenCoroutine);
+            loadingScreen.alpha = 1f;
+            // if(_loadScreenCoroutine != null)
+            //     StopCoroutine(_loadScreenCoroutine);
             
-            _loadScreenCoroutine = StartCoroutine(LoadingScreenFade(0f, 1f, alphaInterpDuration));
+            // _loadScreenCoroutine = StartCoroutine(LoadingScreenFade(0f, 1f, alphaInterpDuration));
         }
 
-        public void OnSceneLoadFinished() => StartCoroutine(LoadFinishedSequence());
+        public void OnSceneLoadFinished()
+        {
+            if(_loadScreenCoroutine == null)
+                _loadScreenCoroutine = StartCoroutine(LoadFinishedSequence());
+        }
 
         private IEnumerator LoadFinishedSequence()
         {
-            // if the load finished faster than the screen-fade, wait for the screen-fade
-            if(_loadScreenCoroutine != null)
-                yield return _loadScreenCoroutine;
-
-            loadingScreen.alpha = 1f;
             yield return new WaitForSecondsRealtime(lingerDuration);
-            yield return LoadingScreenFade(1f, 0f, alphaInterpDuration);
-            showLoadScreenRef.Value = false;
-        }
-
-        private IEnumerator LoadingScreenFade(float start, float end, float duration)
-        {
-            float t = 0f;
             loadingScreen.alpha = 0f;
-
-            while(t < duration)
-            {
-                t += Time.deltaTime;
-                float a = Mathf.Clamp01(t / duration);
-                loadingScreen.alpha = Mathf.Lerp(start, end, a);
-                yield return null;
-            }
+            showLoadScreenRef.Value = false;
+            _loadScreenCoroutine = null;
         }
+
+        // public void OnSceneLoadFinished() => StartCoroutine(LoadFinishedSequence());
+
+        // private IEnumerator LoadFinishedSequence()
+        // {
+        //     // if the load finished faster than the screen-fade, wait for the screen-fade
+        //     if(_loadScreenCoroutine != null)
+        //         yield return _loadScreenCoroutine;
+
+        //     loadingScreen.alpha = 1f;
+        //     yield return new WaitForSecondsRealtime(lingerDuration);
+        //     yield return LoadingScreenFade(1f, 0f, alphaInterpDuration);
+        //     showLoadScreenRef.Value = false;
+        // }
+
+        // private IEnumerator LoadingScreenFade(float start, float end, float duration)
+        // {
+        //     float t = 0f;
+        //     loadingScreen.alpha = 0f;
+
+        //     while(t < duration)
+        //     {
+        //         t += Time.deltaTime;
+        //         float a = Mathf.Clamp01(t / duration);
+        //         loadingScreen.alpha = Mathf.Lerp(start, end, a);
+        //         yield return null;
+        //     }
+        // }
     }
 }
