@@ -17,6 +17,7 @@ namespace Potato.Game.UI
         [SerializeField] private Toggle fullScreenToggle;
         [SerializeField] private TMP_Dropdown resolutionDropdown;
         [SerializeField] private Toggle showFramerateToggle;
+        [SerializeField] private Slider fovSlider;
 
         [Header("Gameplay specific")]
         [SerializeField] private TMP_Text settingsTitle;
@@ -31,6 +32,7 @@ namespace Potato.Game.UI
         [SerializeField] private Vector2IntReference resolutionRef;
         [SerializeField] private BoolReference showFramerateRef;
         [SerializeField] private GameStateReference gameStateRef;
+        [SerializeField] private IntReference fovRef;
 
         private Vector2Int[] _allResolutions = null;
         private Dictionary<Vector2Int, int> _resolutionLookup;
@@ -83,6 +85,7 @@ namespace Potato.Game.UI
             resolutionDropdown.value = _resolutionLookup[resolutionRef.Value];
 #endif
             showFramerateToggle.isOn = showFramerateRef.Value;
+            fovSlider.value = fovRef.Value;
         }
 
         public void OnVolumeSliderChanged(float newValue) => volumeRef.Value = newValue;
@@ -91,6 +94,7 @@ namespace Potato.Game.UI
         public void OnFullscreenToggleChanged(bool isToggled) => fullscreenRef.Value = isToggled;
         public void OnMuteToggleChanged(bool isToggled) => muteRef.Value = isToggled;
         public void OnFramerateToggleChanged(bool isToggled) => showFramerateRef.Value = isToggled;
+        public void OnFovSliderChanged(float fov) => fovRef.Value = (int)fov;
         public void OnGameStateChanged(GameState state) => SetGameplayOptionsVisibility(state.SettingsPanelMode);
     }
 }
