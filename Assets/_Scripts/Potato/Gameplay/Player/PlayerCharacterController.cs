@@ -22,6 +22,7 @@ namespace Potato.Gameplay
 
         [Header("Settings")]
         [SerializeField] private IntReference cameraFov;
+        [SerializeField] private BoolReference isPausedRef;
 
         // [Header("Out Events")]
         // [SerializeField] private FloatEvent playerGroundImpact;
@@ -80,23 +81,31 @@ namespace Potato.Gameplay
 
         void Update()
         {
-            //bool wasGrounded = _isGrounded;
-            GroundCheck();
-            //CheckFallDamage(wasGrounded);
-            UpdateCharacterHeight(false);
-            HandleMovement(Time.deltaTime);
+            if(!isPausedRef.Value)
+            {
+                //bool wasGrounded = _isGrounded;
+                GroundCheck();
+                //CheckFallDamage(wasGrounded);
+                UpdateCharacterHeight(false);
+                UpdateCamera();
+                UpdateMovement(Time.deltaTime);
+            }
         }
 
-        void HandleMovement(float dt)
+        void UpdateCamera()
         {
             // camera x
-            transform.Rotate(0f, lookInput.Value.x * turnSpeed * dt, 0f);
+            transform.Rotate(0f, lookInput.Value.x * turnSpeed, 0f);
 
             // camera y
-            _cameraY += lookInput.Value.y * turnSpeed * dt;
+            _cameraY += lookInput.Value.y * turnSpeed;
             _cameraY = Mathf.Clamp(_cameraY, -89f, 89f);
             playerCamera.transform.localEulerAngles = new Vector3(_cameraY, 0, 0);
+        }
 
+        void UpdateMovement(float dt)
+        {
+            // sprinting
             bool isSprinting = sprintInput.ButtonDown;
             if (isSprinting)
                 isSprinting = SetCrouchingState(false, false);
@@ -104,6 +113,7 @@ namespace Potato.Gameplay
             float speedModifier = isSprinting ? sprintSpeedModifier : 1f;
             Vector3 worldspaceMoveInput = transform.TransformVector(moveInput.Value.x, 0f, moveInput.Value.y);
 
+            // movement
             if (_isGrounded)
             {
                 Vector3 targetVelocity = maxGroundSpeed * speedModifier * worldspaceMoveInput;
@@ -125,7 +135,7 @@ namespace Potato.Gameplay
                 // keep track of distance traveled for footsteps sound
                 _footstepDistanceCounter += _velocity.magnitude * dt;
             }
-            // handle air movement
+            // air movement
             else
             {
                 // add air acceleration
@@ -144,8 +154,10 @@ namespace Potato.Gameplay
             Vector3 capsuleBottomBeforeMove = GetCapsuleBottomHemisphere();
             Vector3 capsuleTopBeforeMove = GetCapsuleTopHemisphere(_controller.height);
 
+            // apply movement
             _controller.Move(_velocity * dt);
 
+            // ground impact
             if (Physics.CapsuleCast(capsuleBottomBeforeMove, capsuleTopBeforeMove, _controller.radius,
                 _velocity.normalized, out RaycastHit hit, _velocity.magnitude * dt, groundCheckLayers,
                 QueryTriggerInteraction.Ignore))

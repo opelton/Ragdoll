@@ -35,3 +35,4 @@ MonoBehaviour:
     _description: 
     ConstantValue: 0
     ReferenceData: {fileID: 11400000, guid: ebbf4f26b591cca449d92cb50b179a6b, type: 2}
+  lookSensitivityConstModifier: 0.0033

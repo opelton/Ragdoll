@@ -27,6 +27,7 @@ namespace Potato.Game
         [Header("Settings Data")]
         [SerializeField] FloatReference lookSensitivity;
         [SerializeField] FloatReference lookSensitivityModifierWebGL;
+        [SerializeField] float lookSensitivityConstModifier = 1f;
 
         public override void UpdateInputState(IInputPollingProvider provider)
         {
@@ -37,7 +38,7 @@ namespace Potato.Game
 
             float lookX = provider.GetAxis(InputConstants.KBM.LookAxis_X);
             float lookY = provider.GetAxis(InputConstants.KBM.LookAxis_Y);
-            float lookModifier = lookSensitivity.Value;
+            float lookModifier = lookSensitivity.Value * lookSensitivityConstModifier;
 
 #if UNITY_WEBGL
             lookModifier *= lookSensitivityModifierWebGL.Value;
@@ -67,7 +68,7 @@ namespace Potato.Game
 
             float lookX = provider.GetAxis(InputConstants.KBM.LookAxis_X);
             float lookY = provider.GetAxis(InputConstants.KBM.LookAxis_Y);
-            float lookModifier = lookSensitivity.Value;
+            float lookModifier = lookSensitivity.Value * lookSensitivityConstModifier;
 
 #if UNITY_WEBGL
             lookModifier *= lookSensitivityModifierWebGL.Value;

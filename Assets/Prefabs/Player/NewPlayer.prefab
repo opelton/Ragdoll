@@ -659,6 +659,11 @@ MonoBehaviour:
     _description: 
     ConstantValue: 0
     ReferenceData: {fileID: 11400000, guid: 1b105e9ce6dec2a438de9474eb90c6b9, type: 2}
+  isPausedRef:
+    UseConstant: 0
+    _description: 
+    ConstantValue: 0
+    ReferenceData: {fileID: 11400000, guid: 9e7795fabc707884bad17237177a4234, type: 2}
   gravityDownForce: 20
   groundCheckLayers:
     serializedVersion: 2
