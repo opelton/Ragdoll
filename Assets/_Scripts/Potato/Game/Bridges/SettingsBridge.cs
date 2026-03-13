@@ -17,9 +17,12 @@ namespace Potato.Game
         public bool ShowFPS;
         public bool FullScreen;
         public Vector2Int Resolution;
+        public int Fov;
+        public int TargetFps;
+        public bool LockFps;
+        public bool Vsync;
     }
 
-    // todo -- aspect ratio? fov? 
     public class SettingsBridge : MonoBehaviour
     {
         static readonly string SettingsKey = "MainSettings";
@@ -31,6 +34,10 @@ namespace Potato.Game
         [SerializeField] BoolReference ShowFPS = false;
         [SerializeField] BoolReference FullScreen = false;
         [SerializeField] Vector2IntReference Resolution = new Vector2Int(1280, 720);
+        [SerializeField] IntReference Fov = 60;
+        [SerializeField] IntReference TargetFps = 60;
+        [SerializeField] BoolReference LockFps = true;
+        [SerializeField] BoolReference Vsync = true;
 
         [Header("Audio")]
         [SerializeField] AudioMixer MainAudioMixer;
@@ -77,7 +84,11 @@ namespace Potato.Game
                 MuteAudio = false,
                 ShowFPS = false,
                 FullScreen = Screen.fullScreen,
-                Resolution = new Vector2Int(Screen.currentResolution.width, Screen.currentResolution.height)
+                Resolution = new Vector2Int(Screen.currentResolution.width, Screen.currentResolution.height),
+                Fov = 60,
+                TargetFps = Application.targetFrameRate,
+                LockFps = Application.targetFrameRate != -1,
+                Vsync = QualitySettings.vSyncCount != 0
             };
         }
 
@@ -90,7 +101,11 @@ namespace Potato.Game
                 MuteAudio = MuteAudio.Value,
                 ShowFPS = ShowFPS.Value,
                 FullScreen = FullScreen.Value,
-                Resolution = Resolution.Value
+                Resolution = Resolution.Value,
+                Fov = Fov.Value,
+                TargetFps = TargetFps.Value,
+                LockFps = LockFps.Value,
+                Vsync = Vsync.Value
             };
         }
 
@@ -102,6 +117,10 @@ namespace Potato.Game
             ShowFPS.Value = data.ShowFPS;
             FullScreen.Value = data.FullScreen;
             Resolution.Value = data.Resolution;
+            Fov.Value = data.Fov;
+            TargetFps.Value = data.TargetFps;
+            LockFps.Value = data.LockFps;
+            Vsync.Value = data.Vsync;
         }
 
         float TryGetCurrentVolume()
@@ -140,6 +159,12 @@ namespace Potato.Game
         }
 
         public void SetResolution(Vector2Int resolution) => Screen.SetResolution(resolution.x, resolution.y, FullScreen.Value);
+
+        public void SetFramerateCap(int fpsCap) => FramerateCap(LockFps.Value, fpsCap);
+        public void SetFramerateLock(bool locked) => FramerateCap(locked, TargetFps.Value);
+        public void SetVsync(bool vsync) => QualitySettings.vSyncCount = vsync ? 1 : 0;
+
+        void FramerateCap(bool locked, int fpsCap) => Application.targetFrameRate = locked ? fpsCap : -1;
 
         static float CurrentAspectRatio() => (float)Screen.currentResolution.height / (float)Screen.currentResolution.width;
 

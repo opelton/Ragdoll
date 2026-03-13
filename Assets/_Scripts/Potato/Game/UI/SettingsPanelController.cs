@@ -11,13 +11,16 @@ namespace Potato.Game.UI
     public class SettingsPanelController : MonoBehaviour
     {
         [Header("Settings widgets")]
-        [SerializeField] private Toggle muteToggle;
-        [SerializeField] private Slider volumeSlider;
-        [SerializeField] private Slider mouseSensitivitySlider;
-        [SerializeField] private Toggle fullScreenToggle;
+        [SerializeField] private UiSliderControl volumeSlider;
+        [SerializeField] private UiSliderControl mouseSensitivitySlider;
+        [SerializeField] private UiSliderControl fovSlider;
+        [SerializeField] private UiSliderControl fpsCapSlider;
         [SerializeField] private TMP_Dropdown resolutionDropdown;
+        [SerializeField] private Toggle muteToggle;
+        [SerializeField] private Toggle fullScreenToggle;
         [SerializeField] private Toggle showFramerateToggle;
-        [SerializeField] private Slider fovSlider;
+        [SerializeField] private Toggle lockFpsToggle;
+        [SerializeField] private Toggle vsyncToggle;
 
         [Header("Gameplay specific")]
         [SerializeField] private TMP_Text settingsTitle;
@@ -33,6 +36,9 @@ namespace Potato.Game.UI
         [SerializeField] private BoolReference showFramerateRef;
         [SerializeField] private GameStateReference gameStateRef;
         [SerializeField] private IntReference fovRef;
+        [SerializeField] private IntReference targetFramerateRef;
+        [SerializeField] private BoolReference lockFramerateRef;
+        [SerializeField] private BoolReference vsyncRef;
 
         private Vector2Int[] _allResolutions = null;
         private Dictionary<Vector2Int, int> _resolutionLookup;
@@ -77,24 +83,45 @@ namespace Potato.Game.UI
         void SyncWidgetsToData()
         {
             muteToggle.isOn = muteRef.Value;
-            volumeSlider.value = volumeRef.Value;
-            mouseSensitivitySlider.value = mouseSensitivityRef.Value;
+            volumeSlider.Value = volumeRef.Value;
+            mouseSensitivitySlider.Value = mouseSensitivityRef.Value;
             fullScreenToggle.isOn = fullscreenRef.Value;
+            lockFpsToggle.isOn = lockFramerateRef.Value;
+            vsyncToggle.isOn = vsyncRef.Value;
 
 #if !UNITY_WEBGL
             resolutionDropdown.value = _resolutionLookup[resolutionRef.Value];
 #endif
             showFramerateToggle.isOn = showFramerateRef.Value;
-            fovSlider.value = fovRef.Value;
+            fovSlider.Value = fovRef.Value;
+            fpsCapSlider.Value = targetFramerateRef.Value;
+
+            volumeSlider.SetInteractable(!muteRef.Value);
+            fpsCapSlider.SetInteractable(!vsyncRef.Value && lockFramerateRef.Value);
         }
 
         public void OnVolumeSliderChanged(float newValue) => volumeRef.Value = newValue;
         public void OnMouseSliderChanged(float newValue) => mouseSensitivityRef.Value = newValue;
         public void OnResolutionDropdownChanged(int newIndex) => resolutionRef.Value = _allResolutions[newIndex];
         public void OnFullscreenToggleChanged(bool isToggled) => fullscreenRef.Value = isToggled;
-        public void OnMuteToggleChanged(bool isToggled) => muteRef.Value = isToggled;
+        public void OnMuteToggleChanged(bool isToggled)
+        {
+            muteRef.Value = isToggled;
+            volumeSlider.SetInteractable(!isToggled);
+        }
         public void OnFramerateToggleChanged(bool isToggled) => showFramerateRef.Value = isToggled;
         public void OnFovSliderChanged(float fov) => fovRef.Value = (int)fov;
         public void OnGameStateChanged(GameState state) => SetGameplayOptionsVisibility(state.SettingsPanelMode);
+        public void OnFpsCapSliderChanged(float newValue) => targetFramerateRef.Value = (int)newValue;
+        public void OnFpsCapToggleChanged(bool isToggled)
+        {
+            lockFramerateRef.Value = isToggled;
+            fpsCapSlider.SetInteractable(!vsyncRef.Value && isToggled);
+        }
+        public void OnVsyncToggleChanged(bool isToggled)
+        {
+            vsyncRef.Value = isToggled;
+            fpsCapSlider.SetInteractable(!vsyncRef.Value && lockFramerateRef.Value);
+        }
     }
 }

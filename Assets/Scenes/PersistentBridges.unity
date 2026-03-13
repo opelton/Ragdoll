@@ -204,6 +204,9 @@ GameObject:
   - component: {fileID: 138615021}
   - component: {fileID: 138615020}
   - component: {fileID: 138615019}
+  - component: {fileID: 138615023}
+  - component: {fileID: 138615022}
+  - component: {fileID: 138615024}
   m_Layer: 0
   m_Name: SettingsBridge
   m_TagString: Untagged
@@ -253,6 +256,26 @@ MonoBehaviour:
     _description: 
     ConstantValue: {x: 1280, y: 720}
     ReferenceData: {fileID: 11400000, guid: 598f94abaca744849accc7a53a18572b, type: 2}
+  Fov:
+    UseConstant: 0
+    _description: 
+    ConstantValue: 60
+    ReferenceData: {fileID: 11400000, guid: 1b105e9ce6dec2a438de9474eb90c6b9, type: 2}
+  TargetFps:
+    UseConstant: 0
+    _description: 
+    ConstantValue: 60
+    ReferenceData: {fileID: 11400000, guid: 45dfdf1bf2959a84a9b3f99b6fd8741e, type: 2}
+  LockFps:
+    UseConstant: 0
+    _description: 
+    ConstantValue: 1
+    ReferenceData: {fileID: 11400000, guid: 9eaf8ba0ab910d14db305f0d8c3d8e52, type: 2}
+  Vsync:
+    UseConstant: 0
+    _description: 
+    ConstantValue: 1
+    ReferenceData: {fileID: 11400000, guid: 413ce125d0bfead469825915aa08c3c8, type: 2}
   MainAudioMixer: {fileID: 24100000, guid: c2b4a70e81999a540a00e9726b4cfade, type: 2}
 --- !u!4 &138615017
 Transform:
@@ -376,6 +399,93 @@ MonoBehaviour:
       - m_Target: {fileID: 138615016}
         m_TargetAssemblyTypeName: Core.Potato.SettingsBridge, potato.core
         m_MethodName: SetMute
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &138615022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 138615015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3a8121764677c74e88beb631ab09ed8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _description: 
+  _eventSource: {fileID: 11400000, guid: 5ed0099f4c261ff47bea808f25253348, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 138615016}
+        m_TargetAssemblyTypeName: Potato.Game.SettingsBridge, potato.game
+        m_MethodName: SetFramerateCap
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &138615023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 138615015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2def2a1123972ce4c91b1aabe4e6fb77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _description: 
+  _eventSource: {fileID: 11400000, guid: e93f1eb02569a4e4186d29304c9a7f4a, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 138615016}
+        m_TargetAssemblyTypeName: Potato.Game.SettingsBridge, potato.game
+        m_MethodName: SetFramerateLock
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &138615024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 138615015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2def2a1123972ce4c91b1aabe4e6fb77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _description: 
+  _eventSource: {fileID: 11400000, guid: a9dd00784d9c9cc4c8c1277acbfc7868, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 138615016}
+        m_TargetAssemblyTypeName: Potato.Game.SettingsBridge, potato.game
+        m_MethodName: SetVsync
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

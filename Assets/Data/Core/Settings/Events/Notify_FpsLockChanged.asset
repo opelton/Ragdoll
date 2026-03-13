@@ -9,11 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4a23c6f0d5fdcc34bb670799df859e4b, type: 3}
-  m_Name: Control_MouseSensitivity
+  m_Script: {fileID: 11500000, guid: b066e1825168c064b9c2b57367cc3fee, type: 3}
+  m_Name: Notify_FpsLockChanged
   m_EditorClassIdentifier: 
-  _isReadonly: 0
+  _logInvocations: 0
   _description: 
-  _initialValue: 1
-  _value: 0.9509152
-  onValueChanged: {fileID: 11400000, guid: 50f253e4bd2d82b4eba070139ce7fd3b, type: 2}
+  _testValue: 0

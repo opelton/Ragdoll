@@ -13,6 +13,7 @@ namespace Potato.Game.UI
         [SerializeField] private Slider sliderElement;
 
         [Header("Settings")]
+        [SerializeField] private bool interactable = true;
         [SerializeField] private bool intMode = false;
         [SerializeField] private string labelText;
         [SerializeField] private float minValue = 0f;
@@ -24,7 +25,11 @@ namespace Potato.Game.UI
         [SerializeField] private int multiplyDisplayValue = 1;
 
         public UnityEvent<float> OnSliderChanged;
-        public float Value => sliderElement.value;
+        public float Value
+        {
+            get => sliderElement.value;
+            set => sliderElement.value = value;
+        }
 
         void Awake()
         {
@@ -35,6 +40,7 @@ namespace Potato.Game.UI
             sliderElement.onValueChanged.AddListener(HandleSliderChanged);
 
             UpdateDisplay();
+            SetInteractable(interactable);
         }
 
         void HandleSliderChanged(float value)
@@ -48,6 +54,15 @@ namespace Potato.Game.UI
             displayElement.text = displayAsInt
                 ? Mathf.RoundToInt(Value * multiplyDisplayValue).ToString()
                 : (Value * multiplyDisplayValue).ToString("F1");
+        }
+
+        public void SetInteractable(bool canInteract)
+        {
+            interactable = canInteract;
+            Color interactColor = interactable ? Color.white : Color.gray;
+            labelElement.color = interactColor;
+            displayElement.color = interactColor;
+            sliderElement.interactable = interactable;
         }
 
         void OnValidate()
@@ -64,6 +79,9 @@ namespace Potato.Game.UI
                 if(displayElement != null)
                     UpdateDisplay();
             }
+
+            if(labelElement != null && sliderElement != null && displayElement != null)
+                SetInteractable(interactable);
         }
     }
 }
