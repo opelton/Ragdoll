@@ -13,7 +13,7 @@ namespace Potato.Game.UI
 
         void Update()
         {
-            dtCount += Time.deltaTime;
+            dtCount += Time.unscaledDeltaTime;
             frameCount++;
 
             if (dtCount >= pollingTime)

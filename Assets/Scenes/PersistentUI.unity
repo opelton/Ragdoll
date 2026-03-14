@@ -328,11 +328,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7227690528214761390, guid: 5dcf6ff3e7ed15944b4da1f7da2ccfeb, type: 3}
       propertyPath: m_MaxValue
-      value: 120
+      value: 300
       objectReference: {fileID: 0}
     - target: {fileID: 7227690528214761390, guid: 5dcf6ff3e7ed15944b4da1f7da2ccfeb, type: 3}
       propertyPath: m_MinValue
-      value: 60
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 7227690528214761390, guid: 5dcf6ff3e7ed15944b4da1f7da2ccfeb, type: 3}
       propertyPath: m_WholeNumbers

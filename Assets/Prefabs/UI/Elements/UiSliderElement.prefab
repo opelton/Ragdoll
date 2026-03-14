@@ -64,7 +64,7 @@ MonoBehaviour:
     m_HighlightedColor: {r: 0.28235295, g: 0.7254902, b: 0.95294124, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.28235295, g: 0.7254902, b: 0.95294124, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_DisabledColor: {r: 0.38679248, g: 0.38679248, b: 0.38679248, a: 1}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -86,7 +86,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 0.444
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -416,7 +416,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Label Text
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -573,10 +573,16 @@ MonoBehaviour:
   labelElement: {fileID: 6570199054899745062}
   displayElement: {fileID: 2469466042594143463}
   sliderElement: {fileID: 7227690528214761390}
+  fillElement: {fileID: 8567952140003545828}
+  interactable: 1
   intMode: 0
   labelText: 
   minValue: 0
   maxValue: 1
+  enabledColor: {r: 1, g: 1, b: 1, a: 1}
+  disabledColor: {r: 0.38679248, g: 0.38679248, b: 0.38679248, a: 1}
+  displayAsInt: 0
+  multiplyDisplayValue: 1
   OnSliderChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -645,7 +651,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '###'
+  m_text: 0.4
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

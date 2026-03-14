@@ -116,11 +116,22 @@ namespace Potato.Game.UI
         public void OnFpsCapToggleChanged(bool isToggled)
         {
             lockFramerateRef.Value = isToggled;
+
+            // fps cap must disable vsync to work, ui should reflect that
+            if(isToggled && vsyncRef.Value)
+                vsyncToggle.isOn = false;
+
             fpsCapSlider.SetInteractable(!vsyncRef.Value && isToggled);
         }
         public void OnVsyncToggleChanged(bool isToggled)
         {
+            // engine prioritizes vsync over target framerate
             vsyncRef.Value = isToggled;
+
+            // enabling vsync should also disable the framerate lock in settings
+            if(isToggled && lockFramerateRef.Value)
+                lockFpsToggle.isOn = false;
+
             fpsCapSlider.SetInteractable(!vsyncRef.Value && lockFramerateRef.Value);
         }
     }
