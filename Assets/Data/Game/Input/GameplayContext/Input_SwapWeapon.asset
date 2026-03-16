@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f24141819c478324b86623cb5fd08268, type: 3}
   m_Name: Input_SwapWeapon
   m_EditorClassIdentifier: 
-  _description: 
+  keyCode: 113
+  _description: swap weapon input
   onButtonPressed: {fileID: 11400000, guid: 64dd3883d8c3e614699fb1726830da85, type: 2}
   onButtonReleased: {fileID: 11400000, guid: aa2044d4f7c890341989a1ed4f8a1d1b, type: 2}

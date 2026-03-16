@@ -106,7 +106,7 @@ namespace Potato.Tests.EditMode
             button.onButtonPressed = dummyEvent;
 
             // reset state sets button state without triggering callbacks
-            button.ResetState(true);
+            button.InitializeState(true);
             Assert.IsFalse(wasInvoked);
             Assert.IsTrue(button.ButtonDown);
         }
@@ -126,7 +126,7 @@ namespace Potato.Tests.EditMode
             button.onButtonPressed = dummyEvent;
 
             // start in the down state
-            button.ResetState(true);
+            button.InitializeState(true);
 
             // ncontinuing to hold should not invoke ButtonPressed
             button.UpdateState(true);
@@ -138,14 +138,14 @@ namespace Potato.Tests.EditMode
         [Test]
         public void IntAxisInputButtonInit()
         {
-            InputIntAxis axis = new();
+            InputIntAxis axis = ScriptableObject.CreateInstance<InputIntAxis>();
             Assert.AreEqual(Vector2Int.zero, axis.Value);
         }
 
         [Test]
         public void IntAxisNoCrashOnNullEvents()
         {
-            InputIntAxis axis = new();
+            InputIntAxis axis = ScriptableObject.CreateInstance<InputIntAxis>();
 
             // shouldn't crash when pushing buttons without callbacks
             Assert.DoesNotThrow(() =>
@@ -158,7 +158,7 @@ namespace Potato.Tests.EditMode
         [Test]
         public void IntAxisPollingTest()
         {
-            InputIntAxis axis = new();
+            InputIntAxis axis = ScriptableObject.CreateInstance<InputIntAxis>();
             axis.UpdateState(true, false, true, false);
 
             Assert.AreEqual(new Vector2Int(-1, 1), axis.Value);

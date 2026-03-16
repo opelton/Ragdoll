@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f24141819c478324b86623cb5fd08268, type: 3}
   m_Name: Input_uiSubmit
   m_EditorClassIdentifier: 
-  _description: 
+  keyCode: 101
+  _description: accept/submit/confirm input state, additional keycodes set in MenuContext
   onButtonPressed: {fileID: 11400000, guid: 6d3757023caffea429e13f50533671b2, type: 2}
   onButtonReleased: {fileID: 0}

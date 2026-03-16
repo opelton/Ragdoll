@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1be05d3f1b5e894fa1d0607782f240c, type: 3}
   m_Name: Input_MoveAxis
   m_EditorClassIdentifier: 
+  horizontalKey: Horizontal
+  verticalKey: Vertical
   _description: wasd/stick movement
   onAxisChanged: {fileID: 11400000, guid: 34c6bc2178aa13144981a0ef55c4bb7d, type: 2}

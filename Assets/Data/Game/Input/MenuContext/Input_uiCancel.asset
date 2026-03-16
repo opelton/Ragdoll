@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f24141819c478324b86623cb5fd08268, type: 3}
   m_Name: Input_uiCancel
   m_EditorClassIdentifier: 
-  _description: 
+  keyCode: 27
+  _description: cancel input state
   onButtonPressed: {fileID: 11400000, guid: 26464b80c0f7f8a4fb66999289be6a39, type: 2}
   onButtonReleased: {fileID: 0}

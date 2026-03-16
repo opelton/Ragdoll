@@ -12,18 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4213041ddf29c1b419f100057d1f9e8f, type: 3}
   m_Name: GameplayInputContext
   m_EditorClassIdentifier: 
+  standardInputs:
+  - {fileID: 11400000, guid: f0a7c79542659da4fac2d1fc24aa6a8c, type: 2}
+  - {fileID: 11400000, guid: 0b3c55cacbbd1c14c84865d5434afddb, type: 2}
+  - {fileID: 11400000, guid: cf733a378bf69cf419b04a883baa8f4f, type: 2}
+  - {fileID: 11400000, guid: 6aaceb75758a0e944b2ae961885020c2, type: 2}
+  - {fileID: 11400000, guid: 3a0a457b84bc0f642acc4685c92eede1, type: 2}
+  - {fileID: 11400000, guid: 0160fe8fbc8d38b45a96f97f91e5b358, type: 2}
+  - {fileID: 11400000, guid: a6c8c83cf44537d47bf79f48e20b82f1, type: 2}
+  - {fileID: 11400000, guid: 989707097e58b23408a3534370c77bda, type: 2}
+  - {fileID: 11400000, guid: 6b5c9fb1fd7f9fc4c8841011f914ab26, type: 2}
   playerMoveInput: {fileID: 11400000, guid: 961e4355c1e5a0948b1a9a3263b3f243, type: 2}
   playerLookInput: {fileID: 11400000, guid: 075cf99767d5472478095234510951a8, type: 2}
   rawPlayerLookInput: {fileID: 11400000, guid: 99a182acbad9d9a40afeaa9c4bbc0e06, type: 2}
-  fire1Button: {fileID: 11400000, guid: 0b3c55cacbbd1c14c84865d5434afddb, type: 2}
-  fire2Button: {fileID: 11400000, guid: cf733a378bf69cf419b04a883baa8f4f, type: 2}
-  sprintButton: {fileID: 11400000, guid: a6c8c83cf44537d47bf79f48e20b82f1, type: 2}
-  crouchButton: {fileID: 11400000, guid: f0a7c79542659da4fac2d1fc24aa6a8c, type: 2}
-  jumpButton: {fileID: 11400000, guid: 6aaceb75758a0e944b2ae961885020c2, type: 2}
-  useButton: {fileID: 11400000, guid: 6b5c9fb1fd7f9fc4c8841011f914ab26, type: 2}
-  reloadButton: {fileID: 11400000, guid: 0160fe8fbc8d38b45a96f97f91e5b358, type: 2}
-  swapWeaponButton: {fileID: 11400000, guid: 989707097e58b23408a3534370c77bda, type: 2}
-  punchButton: {fileID: 11400000, guid: 3a0a457b84bc0f642acc4685c92eede1, type: 2}
   quitButton: {fileID: 11400000, guid: cafe902d47a33a042b0649607058f142, type: 2}
   lookSensitivity:
     UseConstant: 0

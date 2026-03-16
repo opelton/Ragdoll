@@ -25,8 +25,8 @@ namespace Potato.Game
 
         public void ClearStaleButtonStates()
         {
-            currentGameStateRef.Value.PauseContext.ResetInputStates(this);
-            currentGameStateRef.Value.Context.ResetInputStates(this);
+            currentGameStateRef.Value.PauseContext.InitializeInputStates(this);
+            currentGameStateRef.Value.Context.InitializeInputStates(this);
         }
     }
 }

@@ -6,6 +6,11 @@ namespace Potato.Game
     [CreateAssetMenu(menuName = "ScriptableObjects/Input/IntAxis")]
     public class InputIntAxis : ScriptableObject
     {
+        [SerializeField] private string horizontalKey;
+        [SerializeField] private string verticalKey;
+        public string HorizontalKey => horizontalKey;
+        public string VerticalKey => verticalKey;
+        
 #if UNITY_EDITOR
         [SerializeField] internal string _description;
 #endif
@@ -56,7 +61,7 @@ namespace Potato.Game
             return newAxis;            
         }
 
-        public void ResetState(bool left, bool right, bool up, bool down) => Value = FromDirections(left, right, up, down);
-        public void ResetState(float horizontal, float vertical, float deadzone = .2f) => Value = FromAxis(horizontal, vertical, deadzone);
+        public void InitializeState(bool left, bool right, bool up, bool down) => Value = FromDirections(left, right, up, down);
+        public void InitializeState(float horizontal, float vertical, float deadzone = .2f) => Value = FromAxis(horizontal, vertical, deadzone);
     }
 }

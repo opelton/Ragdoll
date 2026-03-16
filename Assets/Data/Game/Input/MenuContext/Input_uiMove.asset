@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79344c829834ea84586a461b3fd3784b, type: 3}
   m_Name: Input_uiMove
   m_EditorClassIdentifier: 
-  _description: 
+  horizontalKey: Horizontal
+  verticalKey: Vertical
+  _description: ui selector move state
   onAxisChanged: {fileID: 11400000, guid: c63c4648d6630604a911fc368b3c99d9, type: 2}

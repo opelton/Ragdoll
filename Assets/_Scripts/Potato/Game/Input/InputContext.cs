@@ -11,7 +11,19 @@ namespace Potato.Game
 
     public abstract class InputContext : ScriptableObject
     {
-        public abstract void UpdateInputState(IInputPollingProvider provider);
-        public abstract void ResetInputStates(IInputPollingProvider provider);
+        [SerializeField] protected InputButton[] standardInputs;
+
+        public virtual void UpdateInputState(IInputPollingProvider provider)
+        {
+            if(standardInputs != null)
+                foreach(var button in standardInputs)
+                    button.UpdateState(provider.GetKeyDown(button.Key));
+        }
+        public virtual void InitializeInputStates(IInputPollingProvider provider)
+        {
+            if(standardInputs != null)
+                foreach(var button in standardInputs)
+                    button.InitializeState(provider.GetKeyDown(button.Key));
+        }
     }
 }

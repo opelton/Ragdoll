@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1be05d3f1b5e894fa1d0607782f240c, type: 3}
   m_Name: Input_LookAxis
   m_EditorClassIdentifier: 
+  horizontalKey: Look X
+  verticalKey: Look Y
   _description: mouse/stick look with sensitivity settings
   onAxisChanged: {fileID: 11400000, guid: 7aeeb0f042629cb4eb7c7f9e4b3be455, type: 2}

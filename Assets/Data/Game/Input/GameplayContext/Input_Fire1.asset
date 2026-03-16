@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f24141819c478324b86623cb5fd08268, type: 3}
   m_Name: Input_Fire1
   m_EditorClassIdentifier: 
-  _description: 
+  keyCode: 323
+  _description: fire1 input state
   onButtonPressed: {fileID: 11400000, guid: b7576179a798cc0448fbdf4aa67cc603, type: 2}
   onButtonReleased: {fileID: 11400000, guid: 79c6c7870cc735e4197ceadc3229e0c4, type: 2}

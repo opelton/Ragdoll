@@ -6,6 +6,8 @@ namespace Potato.Game
     [CreateAssetMenu(menuName = "ScriptableObjects/Input/Button")]
     public class InputButton : ScriptableObject
     {
+        [SerializeField] private KeyCode keyCode;
+        public KeyCode Key => keyCode;
         
 #if UNITY_EDITOR
         [SerializeField] internal string _description;
@@ -20,8 +22,6 @@ namespace Potato.Game
         [SerializeField] internal GameEvent onButtonPressed;
         [SerializeField] internal GameEvent onButtonReleased;
 
-        public InputButton() => ResetState();
-
         public void UpdateState(bool isPressed)
         {
             _wasDown = _isDown;
@@ -35,10 +35,10 @@ namespace Potato.Game
         }
 
         // initializes to current input state without invoking button pressed/released
-        public void ResetState(bool resetState = false)
+        public void InitializeState(bool initialState = false)
         {
-            _isDown = resetState;
-            _wasDown = resetState;
+            _isDown = initialState;
+            _wasDown = initialState;
         }
     }
 }

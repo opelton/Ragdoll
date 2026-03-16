@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f24141819c478324b86623cb5fd08268, type: 3}
   m_Name: Input_Reload
   m_EditorClassIdentifier: 
-  _description: 
+  keyCode: 114
+  _description: reload input state
   onButtonPressed: {fileID: 11400000, guid: 358322e3d0dfb6345be3da01b897ea17, type: 2}
   onButtonReleased: {fileID: 11400000, guid: be078b864a0c45f4480f26303a455bc1, type: 2}

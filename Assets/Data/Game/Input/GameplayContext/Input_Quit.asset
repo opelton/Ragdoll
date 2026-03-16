@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f24141819c478324b86623cb5fd08268, type: 3}
   m_Name: Input_Quit
   m_EditorClassIdentifier: 
-  _description: 
+  keyCode: 27
+  _description: quit button state, webgl builds override keycode in GameplayContext
   onButtonPressed: {fileID: 11400000, guid: a16f04b5c6ff30044a421806af497bfd, type: 2}
   onButtonReleased: {fileID: 11400000, guid: 2eb00f24d612ea2469286caf03afb452, type: 2}

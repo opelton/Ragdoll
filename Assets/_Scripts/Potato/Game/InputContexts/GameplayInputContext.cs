@@ -3,90 +3,68 @@ using UnityEngine;
 
 namespace Potato.Game
 {
+    // todo -- better alt keycode/condition handling (webgl/pie/etc)
     [CreateAssetMenu(menuName = "ScriptableObjects/Config/InputContext/GameplayContext")]
     public class GameplayInputContext : InputContext
     {
-        // todo -- automate more of this
-        [Header("Axis Inputs")]
+        [Header("Special Inputs")]
         [SerializeField] InputFloatAxis playerMoveInput;
         [SerializeField] InputFloatAxis playerLookInput;
         [SerializeField] InputFloatAxis rawPlayerLookInput;
-
-        [Header("Button Inputs")]
-        [SerializeField] InputButton fire1Button;
-        [SerializeField] InputButton fire2Button;
-        [SerializeField] InputButton sprintButton;
-        [SerializeField] InputButton crouchButton;
-        [SerializeField] InputButton jumpButton;
-        [SerializeField] InputButton useButton;
-        [SerializeField] InputButton reloadButton;
-        [SerializeField] InputButton swapWeaponButton;
-        [SerializeField] InputButton punchButton;
         [SerializeField] InputButton quitButton;
 
-        [Header("Settings Data")]
+        [Header("Settings")]
         [SerializeField] FloatReference lookSensitivity;
         [SerializeField] FloatReference lookSensitivityModifierWebGL;
         [SerializeField] float lookSensitivityConstModifier = 1f;
 
+        float ScaledLookModifier =>
+#if UNITY_WEBGL
+            lookSensitivity.Value * lookSensitivityConstModifier * lookSensitivityModifierWebGL.Value;
+#else
+            lookSensitivity.Value * lookSensitivityConstModifier;
+#endif
+
         public override void UpdateInputState(IInputPollingProvider provider)
         {
-            // axis
+            base.UpdateInputState(provider);
+
+            // move axis
             playerMoveInput.UpdateState(
-                provider.GetAxis(InputConstants.KBM.MoveAxis_X),
-                provider.GetAxis(InputConstants.KBM.MoveAxis_Y));
+                provider.GetAxis(playerMoveInput.HorizontalKey),
+                provider.GetAxis(playerMoveInput.VerticalKey));
 
-            float lookX = provider.GetAxis(InputConstants.KBM.LookAxis_X);
-            float lookY = provider.GetAxis(InputConstants.KBM.LookAxis_Y);
-            float lookModifier = lookSensitivity.Value * lookSensitivityConstModifier;
+            // look axis
+            float lookX = provider.GetAxis(playerLookInput.HorizontalKey);
+            float lookY = provider.GetAxis(playerLookInput.VerticalKey);
+            float lookModifier = ScaledLookModifier;
 
-#if UNITY_WEBGL
-            lookModifier *= lookSensitivityModifierWebGL.Value;
-#endif
             rawPlayerLookInput.UpdateState(lookX, lookY);
             playerLookInput.UpdateState(lookX * lookModifier, lookY * lookModifier);
 
-            // buttons
-            fire1Button.UpdateState(provider.GetKeyDown(InputConstants.KBM.Game_Fire1));
-            fire2Button.UpdateState(provider.GetKeyDown(InputConstants.KBM.Game_Fire2));
-            sprintButton.UpdateState(provider.GetKeyDown(InputConstants.KBM.Game_Sprint));
-            jumpButton.UpdateState(provider.GetKeyDown(InputConstants.KBM.Game_Jump));
-            crouchButton.UpdateState(provider.GetKeyDown(InputConstants.KBM.Game_Crouch));
-            useButton.UpdateState(provider.GetKeyDown(InputConstants.KBM.Game_Use));
-            reloadButton.UpdateState(provider.GetKeyDown(InputConstants.KBM.Game_Reload));
-            swapWeaponButton.UpdateState(provider.GetKeyDown(InputConstants.KBM.Game_SwapWeapon));
-            punchButton.UpdateState(provider.GetKeyDown(InputConstants.KBM.Game_Punch));
-            quitButton.UpdateState(provider.GetKeyDown(InputConstants.KBM.Game_Quit));
+            // quit key changes based on build type
+            quitButton.UpdateState(provider.GetKeyDown(InputConstants.Game_Quit));
         }
 
-        public override void ResetInputStates(IInputPollingProvider provider)
+        public override void InitializeInputStates(IInputPollingProvider provider)
         {
-            // axis
-            playerMoveInput.ResetState(
-                provider.GetAxis(InputConstants.KBM.MoveAxis_X),
-                provider.GetAxis(InputConstants.KBM.MoveAxis_Y));
+            base.InitializeInputStates(provider);
 
-            float lookX = provider.GetAxis(InputConstants.KBM.LookAxis_X);
-            float lookY = provider.GetAxis(InputConstants.KBM.LookAxis_Y);
-            float lookModifier = lookSensitivity.Value * lookSensitivityConstModifier;
+            // move axis
+            playerMoveInput.InitializeState(
+                provider.GetAxis(playerMoveInput.HorizontalKey),
+                provider.GetAxis(playerMoveInput.VerticalKey));
 
-#if UNITY_WEBGL
-            lookModifier *= lookSensitivityModifierWebGL.Value;
-#endif
-            rawPlayerLookInput.ResetState(lookX, lookY);
-            playerLookInput.ResetState(lookX * lookModifier, lookY * lookModifier);
+            // look axis
+            float lookX = provider.GetAxis(playerLookInput.HorizontalKey);
+            float lookY = provider.GetAxis(playerLookInput.VerticalKey);
+            float lookModifier = ScaledLookModifier;
+            
+            rawPlayerLookInput.InitializeState(lookX, lookY);
+            playerLookInput.InitializeState(lookX * lookModifier, lookY * lookModifier);
 
-            // buttons
-            fire1Button.ResetState(provider.GetKeyDown(InputConstants.KBM.Game_Fire1));
-            fire2Button.ResetState(provider.GetKeyDown(InputConstants.KBM.Game_Fire2));
-            sprintButton.ResetState(provider.GetKeyDown(InputConstants.KBM.Game_Sprint));
-            jumpButton.ResetState(provider.GetKeyDown(InputConstants.KBM.Game_Jump));
-            crouchButton.ResetState(provider.GetKeyDown(InputConstants.KBM.Game_Crouch));
-            useButton.ResetState(provider.GetKeyDown(InputConstants.KBM.Game_Use));
-            reloadButton.ResetState(provider.GetKeyDown(InputConstants.KBM.Game_Reload));
-            swapWeaponButton.ResetState(provider.GetKeyDown(InputConstants.KBM.Game_SwapWeapon));
-            punchButton.ResetState(provider.GetKeyDown(InputConstants.KBM.Game_Punch));
-            quitButton.ResetState(provider.GetKeyDown(InputConstants.KBM.Game_Quit));
+            // quit key changes depending on build type
+            quitButton.InitializeState(provider.GetKeyDown(InputConstants.Game_Quit));
         }
     }
 }
