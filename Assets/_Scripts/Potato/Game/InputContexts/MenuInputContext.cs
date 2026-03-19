@@ -1,4 +1,3 @@
-using Potato.Core;
 using UnityEngine;
 
 namespace Potato.Game

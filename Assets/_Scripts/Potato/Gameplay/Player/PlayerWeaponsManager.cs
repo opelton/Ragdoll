@@ -27,9 +27,10 @@ namespace Potato.Gameplay
         [SerializeField] private InputButton weaponSwitchInput;
 
         [Header("Settings")]
+        [SerializeField] private LayerMask hitboxLayers;
         [SerializeField] private int fixedWeaponFov = 60;
         [SerializeField] private float weaponFovMultiplier = 1f;
-        [SerializeField] private float WeaponSwitchDelay = 1f;
+        [SerializeField] private float weaponSwitchDelay = 1f;
 
         [Header("Out Data")]
         [SerializeField] private WeaponReference activeWeaponRef;
@@ -132,22 +133,20 @@ namespace Potato.Gameplay
             IsPointingAtEnemy = false;
             if (activeWeapon)
             {
-                var hits = Physics.RaycastAll(weaponCamera.transform.position, weaponCamera.transform.forward, 1000, -1, QueryTriggerInteraction.Ignore);
+                var hits = Physics.RaycastAll(weaponCamera.transform.position, weaponCamera.transform.forward, 1000, hitboxLayers, QueryTriggerInteraction.Ignore);
+                // Debug.Log($"crosshairHitCount: {hits.Length} layerIndex: {hitboxLayers}");
 
                 foreach (RaycastHit hit in hits)
                 {
-                    if (hit.collider.gameObject == gameObject) continue;
+                    if (hit.collider.gameObject == gameObject)
+                        continue;
 
-                    IsPointingAtEnemy = true;
-                    break;
-
-                    // todo -- enemy/team/etc component
-                    // if (hit.collider.GetComponentInParent<Health>() != null)
-                    // {
-                    //     IsPointingAtEnemy = true;
-                    //     //Debug.Log(string.Format("Aiming at {0}", hit.collider.gameObject.name));
-                    //     break;
-                    // }
+                    if (hit.collider.GetComponentInParent<Target>() != null)
+                    {
+                        IsPointingAtEnemy = true;
+                        //Debug.Log($"Aiming at {hit.collider.gameObject.name}");
+                        break;
+                    }
                 }
             }
         }
@@ -326,13 +325,13 @@ namespace Potato.Gameplay
         {
             // Calculate the time ratio (0 to 1) since weapon switch was triggered
             float switchingTimeFactor = 0f;
-            if (WeaponSwitchDelay == 0f)
+            if (weaponSwitchDelay == 0f)
             {
                 switchingTimeFactor = 1f;
             }
             else
             {
-                switchingTimeFactor = Mathf.Clamp01((Time.time - _weaponSwitchStartTime) / WeaponSwitchDelay);
+                switchingTimeFactor = Mathf.Clamp01((Time.time - _weaponSwitchStartTime) / weaponSwitchDelay);
             }
 
             // Handle transiting to new switch state

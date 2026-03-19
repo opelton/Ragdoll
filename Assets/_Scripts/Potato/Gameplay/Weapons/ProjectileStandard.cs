@@ -31,7 +31,6 @@ namespace Potato.Gameplay
         [Header("Debug")]
         public Color debugDrawColor = Color.cyan * 0.2f;
 
-        ProjectileBase _projectile;
         Vector3 _previousPosition;
         Vector3 _velocity;
         bool _hasTrajectoryOverride;
@@ -44,38 +43,28 @@ namespace Potato.Gameplay
 
         void OnEnable()
         {
-            _projectile = GetComponent<ProjectileBase>();
-            // DebugUtility.HandleErrorIfNullGetComponent<ProjectileBase, ProjectileStandard>(_projectile, this,
-            //     gameObject);
-
-            _projectile.OnShoot += OnShoot;
-
+            OnShoot += HandleOnShoot;
             Destroy(gameObject, maxLifetime);
         }
 
-        // void Start()
-        // {
-        //     hitLayers = LayerHelper.GetCollisionMaskForLayer(gameObject.layer);
-        // }
-
-        new void OnShoot()
+        void HandleOnShoot()
         {
             _previousPosition = projectileRoot.position;
             _velocity = transform.forward * projectileSpeed;
             _ignoredColliders = new List<Collider>();
-            transform.position += _projectile.InheritedMuzzleVelocity * Time.deltaTime;
+            transform.position += InheritedMuzzleVelocity * Time.deltaTime;
 
             // Ignore colliders of owner
-            Collider[] ownerColliders = _projectile.Owner.GetComponentsInChildren<Collider>();
+            Collider[] ownerColliders = Owner.GetComponentsInChildren<Collider>();
             _ignoredColliders.AddRange(ownerColliders);
 
             // Handle case of player shooting (make projectiles not go through walls, and remember center-of-screen trajectory)
-            PlayerWeaponsManager playerWeaponsManager = _projectile.Owner.GetComponent<PlayerWeaponsManager>();
+            PlayerWeaponsManager playerWeaponsManager = Owner.GetComponent<PlayerWeaponsManager>();
             if (playerWeaponsManager)
             {
                 _hasTrajectoryOverride = true;
 
-                Vector3 cameraToMuzzle = _projectile.InitialPosition -
+                Vector3 cameraToMuzzle = InitialPosition -
                                           playerWeaponsManager.weaponCamera.transform.position;
 
                 _trajectoryCorrectionVector = Vector3.ProjectOnPlane(-cameraToMuzzle,
@@ -107,7 +96,7 @@ namespace Potato.Gameplay
             transform.position += _velocity * Time.deltaTime;
             if (inheritWeaponVelocity)
             {
-                transform.position += _projectile.InheritedMuzzleVelocity * Time.deltaTime;
+                transform.position += InheritedMuzzleVelocity * Time.deltaTime;
             }
 
             // Drift towards trajectory override (this is so that projectiles can be centered 
@@ -179,23 +168,13 @@ namespace Potato.Gameplay
 
         bool IsHitValid(RaycastHit hit)
         {
-            // // ignore hits with an ignore component
-            // if (hit.collider.GetComponent<IgnoreHitDetection>())
-            // {
-            //     return false;
-            // }
-
-            // // ignore hits with triggers that don't have a Damageable component
-            // if (hit.collider.isTrigger && hit.collider.GetComponent<Damageable>() == null)
-            // {
-            //     return false;
-            // }
+            // ignore hits with triggers that don't have a Damageable component
+            if (hit.collider.isTrigger && hit.collider.GetComponent<Target>() == null)
+                return false;
 
             // ignore hits with specific ignored colliders (self colliders, by default)
             if (_ignoredColliders != null && _ignoredColliders.Contains(hit.collider))
-            {
                 return false;
-            }
 
             return true;
         }
@@ -205,18 +184,15 @@ namespace Potato.Gameplay
             // damage
             if (damageArea)
             {
-                // // area damage
-                // damageArea.InflictDamageInArea(damage, point, hitLayers, k_TriggerInteraction,
-                //     _projectile.Owner);
+                // area damage
+                damageArea.InflictDamageInArea(damage, point, hitLayers, k_TriggerInteraction, Owner);
             }
             else
             {
-                // // point damage
-                // Damageable damageable = collider.GetComponent<Damageable>();
-                // if (damageable)
-                // {
-                //     damageable.InflictDamage(damage, false, _projectile.Owner);
-                // }
+                // point damage
+                Target target = collider.GetComponent<Target>();
+                if (target)
+                    target.InflictDamage(damage, Owner);
             }
 
             // impact vfx

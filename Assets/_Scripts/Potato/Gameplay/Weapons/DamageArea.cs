@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Potato.Gameplay
@@ -17,30 +18,24 @@ namespace Potato.Gameplay
         public void InflictDamageInArea(float damage, Vector3 center, LayerMask layers,
             QueryTriggerInteraction interaction, GameObject owner)
         {
-            // Dictionary<Health, Damageable> uniqueDamagedHealths = new Dictionary<Health, Damageable>();
+            var uniqueTargets = new HashSet<Target>();
 
-            // // Create a collection of unique health components that would be damaged in the area of effect (in order to avoid damaging a same entity multiple times)
-            // Collider[] affectedColliders = Physics.OverlapSphere(center, AreaOfEffectDistance, layers, interaction);
-            // foreach (var coll in affectedColliders)
-            // {
-            //     Damageable damageable = coll.GetComponent<Damageable>();
-            //     if (damageable)
-            //     {
-            //         Health health = damageable.GetComponentInParent<Health>();
-            //         if (health && !uniqueDamagedHealths.ContainsKey(health))
-            //         {
-            //             uniqueDamagedHealths.Add(health, damageable);
-            //         }
-            //     }
-            // }
+            // Create a collection of unique health components that would be damaged in the area of effect (in order to avoid damaging a same entity multiple times)
+            Collider[] affectedColliders = Physics.OverlapSphere(center, AreaOfEffectDistance, layers, interaction);
+            foreach (var collider in affectedColliders)
+            {
+                collider.TryGetComponent(out Target target);
+                if (target != null)
+                    uniqueTargets.Add(target);
+            }
 
-            // // Apply damages with distance falloff
-            // foreach (Damageable uniqueDamageable in uniqueDamagedHealths.Values)
-            // {
-            //     float distance = Vector3.Distance(uniqueDamageable.transform.position, transform.position);
-            //     uniqueDamageable.InflictDamage(
-            //         damage * DamageRatioOverDistance.Evaluate(distance / AreaOfEffectDistance), true, owner);
-            // }
+            // Apply damages with distance falloff
+            foreach (Target uniqueTarget in uniqueTargets)
+            {
+                float distance = Vector3.Distance(uniqueTarget.transform.position, transform.position);
+                uniqueTarget.InflictDamage(
+                    damage * DamageRatioOverDistance.Evaluate(distance / AreaOfEffectDistance), owner);
+            }
         }
 
         void OnDrawGizmosSelected()

@@ -703,9 +703,12 @@ MonoBehaviour:
   fire2Input: {fileID: 11400000, guid: cf733a378bf69cf419b04a883baa8f4f, type: 2}
   reloadInput: {fileID: 11400000, guid: 0160fe8fbc8d38b45a96f97f91e5b358, type: 2}
   weaponSwitchInput: {fileID: 11400000, guid: 989707097e58b23408a3534370c77bda, type: 2}
+  hitboxLayers:
+    serializedVersion: 2
+    m_Bits: 1024
   fixedWeaponFov: 60
   weaponFovMultiplier: 1
-  WeaponSwitchDelay: 0.2
+  weaponSwitchDelay: 1
   activeWeaponRef:
     UseConstant: 0
     _description: 

@@ -17,8 +17,6 @@ namespace Potato.Gameplay
         [SerializeField] private InputFloatAxis moveInput;
         [SerializeField] private InputFloatAxis lookInput;
         [SerializeField] private InputButton sprintInput;
-        // [SerializeField] private InputButton jumpInput;
-        // [SerializeField] private InputButton crouchInput;
 
         [Header("Settings")]
         [SerializeField] private IntReference cameraFov;
