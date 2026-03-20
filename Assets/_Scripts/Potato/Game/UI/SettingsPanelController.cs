@@ -25,6 +25,7 @@ namespace Potato.Game.UI
         [Header("Gameplay specific")]
         [SerializeField] private TMP_Text settingsTitle;
         [SerializeField] private GameObject restartButton;
+        [SerializeField] private GameObject mainMenuButton;
         [SerializeField] private GameObject quitButton;
 
         [Header("Shared data")]
@@ -45,7 +46,7 @@ namespace Potato.Game.UI
 
         void OnEnable()
         {
-            SetGameplayOptionsVisibility(gameStateRef.Value.SettingsPanelMode);
+            SetGameplayOptionsVisibility(gameStateRef.Value.ShowGameFlowSettingsButtons);
 #if !UNITY_WEBGL
             if(_allResolutions == null)
             {
@@ -59,7 +60,9 @@ namespace Potato.Game.UI
 
             resolutionDropdown.gameObject.SetActive(true);
 #else
+            // can't quit a browser or change its resolution
             resolutionDropdown.gameObject.SetActive(false);
+            quitButton.SetActive(false);
 #endif
             SyncWidgetsToData();
         }
@@ -68,6 +71,7 @@ namespace Potato.Game.UI
         {
             settingsTitle.text = showGameplayOptions ? "PAUSE / SETTINGS" : "SETTINGS";
             restartButton.SetActive(showGameplayOptions);
+            mainMenuButton.SetActive(showGameplayOptions);
             quitButton.SetActive(showGameplayOptions);
         }
 
@@ -111,7 +115,7 @@ namespace Potato.Game.UI
         }
         public void OnFramerateToggleChanged(bool isToggled) => showFramerateRef.Value = isToggled;
         public void OnFovSliderChanged(float fov) => fovRef.Value = (int)fov;
-        public void OnGameStateChanged(GameState state) => SetGameplayOptionsVisibility(state.SettingsPanelMode);
+        public void OnGameStateChanged(GameState state) => SetGameplayOptionsVisibility(state.ShowGameFlowSettingsButtons);
         public void OnFpsCapSliderChanged(float newValue) => targetFramerateRef.Value = (int)newValue;
         public void OnFpsCapToggleChanged(bool isToggled)
         {
