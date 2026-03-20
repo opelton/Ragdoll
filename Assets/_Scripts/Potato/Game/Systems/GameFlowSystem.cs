@@ -29,22 +29,25 @@ namespace Potato.Game
         [SerializeField] private string mainMenu;
         [SerializeField] private string play;
 
+        public GameState MenuState => menuState;
+        public GameState GameplayState => gameplayState;
+
         public void SceneTransition_Splash()
         {
-            SetNewState(menuState);
+            SetGamestate(menuState);
             sceneTransitionCommand.Invoke(splash, this);
         }
 
         public void SceneTransition_MainMenu()
         {
-            SetNewState(menuState);
+            SetGamestate(menuState);
             sceneTransitionCommand.Invoke(mainMenu, this);
         }
 
         public void SceneTransition_Play()
         {
             showLoadScreenRef.Value = true;
-            SetNewState(gameplayState);
+            SetGamestate(gameplayState);
             sceneTransitionCommand.Invoke(play, this);
         }
 
@@ -54,7 +57,7 @@ namespace Potato.Game
             reloadSceneCommand.Invoke(this);
         }
 
-        void SetNewState(GameState newState)
+        public void SetGamestate(GameState newState)
         {
             // check that it's actually different to avoid invoking unnecessary onChanged
             if(gameStateReference.Value != newState)

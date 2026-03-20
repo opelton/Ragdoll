@@ -2,7 +2,8 @@
     "name": "potato.game",
     "rootNamespace": "",
     "references": [
-        "GUID:94e2445ce4cb5fe41b6f42eb71bb22e8"
+        "GUID:94e2445ce4cb5fe41b6f42eb71bb22e8",
+        "GUID:15fc0a57446b3144c949da3e2b9737a9"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

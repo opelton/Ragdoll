@@ -3624,6 +3624,85 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 618651978}
   m_CullTransparentMesh: 1
+--- !u!1 &657402324
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 657402327}
+  - component: {fileID: 657402326}
+  - component: {fileID: 657402325}
+  m_Layer: 0
+  m_Name: URPCameraStacker
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &657402325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 657402324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b0217ef88762284e9eeb1ea3734e0b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _description: +/- gameplay cameras
+  _eventSource: {fileID: 11400000, guid: 6cca7310df0e09f4b89b098a2ff56aa3, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 657402326}
+        m_TargetAssemblyTypeName: Potato.Game.URPCameraStacker, potato.game
+        m_MethodName: OnGameplayCameraDataChanged
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &657402326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 657402324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a462dfdd605f644c81110c70e481f99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiCamera: {fileID: 837094523}
+  gameCameraData:
+    UseConstant: 0
+    _description: 
+    ReferenceData: {fileID: 11400000, guid: 8c907afa42380154685ec8382eaf7157, type: 2}
+--- !u!4 &657402327
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 657402324}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &725151156
 GameObject:
   m_ObjectHideFlags: 0
@@ -4551,7 +4630,7 @@ GameObject:
   - component: {fileID: 837094523}
   - component: {fileID: 837094522}
   m_Layer: 0
-  m_Name: Camera
+  m_Name: uiCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8505,3 +8584,4 @@ SceneRoots:
   m_Roots:
   - {fileID: 1173749444}
   - {fileID: 837094524}
+  - {fileID: 657402327}

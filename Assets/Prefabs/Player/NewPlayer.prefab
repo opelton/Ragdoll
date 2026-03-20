@@ -588,6 +588,8 @@ GameObject:
   - component: {fileID: 4885557767878954236}
   - component: {fileID: 5465555400534215456}
   - component: {fileID: 4615072429341156804}
+  - component: {fileID: 4721358083673864960}
+  - component: {fileID: 6697798063545405728}
   m_Layer: 9
   m_Name: NewPlayer
   m_TagString: Untagged
@@ -726,6 +728,40 @@ MonoBehaviour:
   maxRecoil: 0.5
   recoilRecoverySharpness: 10
   aimAnimationSpeed: 10
+--- !u!114 &4721358083673864960
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5886909609703047410}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 129861e0714cf014fbac79c401456264, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameFlowSystem: {fileID: 11400000, guid: 8933b0ff70f3feb469e4192e43c0bbad, type: 2}
+--- !u!114 &6697798063545405728
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5886909609703047410}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ee660419d958c2478f05ff7823713e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameCam: {fileID: 6934066893293710498}
+  fpsCam: {fileID: 7789353188300807451}
+  gameCamsDataRef:
+    UseConstant: 0
+    _description: 
+    ConstantValue:
+      gameplayCamera: {fileID: 0}
+      fpsCamera: {fileID: 0}
+    ReferenceData: {fileID: 11400000, guid: 8c907afa42380154685ec8382eaf7157, type: 2}
 --- !u!1 &5990631301142876808
 GameObject:
   m_ObjectHideFlags: 0
