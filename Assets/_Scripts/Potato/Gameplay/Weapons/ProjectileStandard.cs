@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -65,10 +64,10 @@ namespace Potato.Gameplay
                 _hasTrajectoryOverride = true;
 
                 Vector3 cameraToMuzzle = InitialPosition -
-                                          playerWeaponsManager.weaponCamera.transform.position;
+                                          playerWeaponsManager.AimPosition;
 
                 _trajectoryCorrectionVector = Vector3.ProjectOnPlane(-cameraToMuzzle,
-                    playerWeaponsManager.weaponCamera.transform.forward);
+                    playerWeaponsManager.AimDirection);
                 if (trajectoryCorrectionDistance == 0)
                 {
                     transform.position += _trajectoryCorrectionVector;
@@ -79,7 +78,7 @@ namespace Potato.Gameplay
                     _hasTrajectoryOverride = false;
                 }
 
-                if (Physics.Raycast(playerWeaponsManager.weaponCamera.transform.position, cameraToMuzzle.normalized,
+                if (Physics.Raycast(playerWeaponsManager.AimPosition, cameraToMuzzle.normalized,
                     out RaycastHit hit, cameraToMuzzle.magnitude, hitLayers, k_TriggerInteraction))
                 {
                     if (IsHitValid(hit))

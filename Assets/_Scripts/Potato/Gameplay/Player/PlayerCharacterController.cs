@@ -19,7 +19,6 @@ namespace Potato.Gameplay
         [SerializeField] private InputButton sprintInput;
 
         [Header("Settings")]
-        [SerializeField] private IntReference cameraFov;
         [SerializeField] private BoolReference isPausedRef;
 
         // [Header("Out Events")]
@@ -73,8 +72,6 @@ namespace Potato.Gameplay
 
             SetCrouchingState(false, true);
             UpdateCharacterHeight(true);
-
-            playerCamera.fieldOfView = cameraFov.Value;
         }
 
         void Update()
@@ -343,7 +340,5 @@ namespace Potato.Gameplay
             Vector3 directionRight = Vector3.Cross(direction, transform.up);
             return Vector3.Cross(slopeNormal, directionRight).normalized;
         }
-
-        public void OnFovChanged(int newFov) => playerCamera.fieldOfView = newFov;
     }
 }

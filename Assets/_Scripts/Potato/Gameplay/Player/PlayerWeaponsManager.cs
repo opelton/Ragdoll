@@ -6,65 +6,46 @@ using Potato.Game;
 
 namespace Potato.Gameplay
 {
-    [RequireComponent(typeof(PlayerCharacterController))]
+    [RequireComponent(typeof(FirstPersonAnimationController))]
     public class PlayerWeaponsManager : MonoBehaviour
     {
         public enum WeaponReadyState { Up, Down, PutDownPrevious, PutUpNew }
+
+        [SerializeField] private RangedAttackSystem rats;
+        [SerializeField] private Transform weaponRoot;
 
         [Header("Loadout")]
         [SerializeField] private List<WeaponController> StartingWeapons = new();
 
         [Header("Camera")]
         [SerializeField][LayerIndex] private int fpsWeaponsLayer;
-        // todo -- camera system
-        [SerializeField] private Camera mainCamera;
-        public Camera weaponCamera;
+        [SerializeField] private PlayerCamerasController playerCams;
 
         [Header("Input Data")]
         [SerializeField] private InputButton fire1Input;
         [SerializeField] private InputButton fire2Input;
         [SerializeField] private InputButton reloadInput;
         [SerializeField] private InputButton weaponSwitchInput;
+        [SerializeField] private FloatReference playerStanceFovModifier;
 
         [Header("Settings")]
         [SerializeField] private LayerMask hitboxLayers;
-        [SerializeField] private int fixedWeaponFov = 60;
-        [SerializeField] private float weaponFovMultiplier = 1f;
         [SerializeField] private float weaponSwitchDelay = 1f;
 
         [Header("Out Data")]
         [SerializeField] private WeaponReference activeWeaponRef;
         public UnityAction<WeaponController> OnSwitchedToWeapon;
-        // public UnityAction<WeaponController, int> OnAddedWeapon;
-        // public UnityAction<WeaponController, int> OnRemovedWeapon;
-
-        [Header("Weapon Animation")]
-        [SerializeField] private Transform weaponRoot;
-        [SerializeField] private Transform weaponPose_Default;
-        [SerializeField] private Transform weaponPose_Aiming;
-        [SerializeField] private Transform weaponPose_Down;
-        [SerializeField] private float weaponBobFrequency = 10f;
-        [SerializeField] private float weaponBobSharpness = 10f;
-        [SerializeField] private float weaponBob_default = 0.05f;
-        [SerializeField] private float weaponBob_aiming = 0.02f;
-        [SerializeField] private float recoilSharpness = 50f;
-        [SerializeField] private float maxRecoil = 0.5f;
-        [SerializeField] private float recoilRecoverySharpness = 10f;
-        [SerializeField] private float aimAnimationSpeed = 10f;
 
         public bool IsAiming { get; private set; }
         public bool IsPointingAtEnemy { get; private set; }
         public int ActiveWeaponIndex { get; private set; }
+        public Vector3 AimPosition => playerCams.AimPos;
+        public Vector3 AimDirection => playerCams.AimDir;
+        public WeaponReadyState ReadyState => _weaponReadiness;
 
         // ---
-        private PlayerCharacterController _player;
+        private FirstPersonAnimationController _playerAnim;
         private WeaponController[] _weaponSlots = new WeaponController[9]; // 9 available weapon slots
-        private float _weaponBobFactor;
-        private Vector3 _lastPlayerPos;
-        private Vector3 _weaponLocalPos;
-        private Vector3 _weaponBobLocalPos;
-        private Vector3 _weaponRecoilLocalPos;
-        private Vector3 _totalRecoil;
         private float _weaponSwitchStartTime;
         private WeaponReadyState _weaponReadiness;
         private int _nextWeaponIndex;
@@ -73,12 +54,7 @@ namespace Potato.Gameplay
         {
             ActiveWeaponIndex = -1;
             _weaponReadiness = WeaponReadyState.Down;
-
-            _player = GetComponent<PlayerCharacterController>();
-
-            SetFov(fixedWeaponFov);
-
-            OnSwitchedToWeapon += OnWeaponSwitched;
+            _playerAnim = GetComponent<FirstPersonAnimationController>();
 
             // Add starting weapons
             foreach (var weapon in StartingWeapons)
@@ -89,87 +65,56 @@ namespace Potato.Gameplay
 
         void Update()
         {
-            // shoot handling
             WeaponController activeWeapon = GetActiveWeapon();
 
-            if (activeWeapon != null && activeWeapon.IsReloading)
-                return;
-
-            if (activeWeapon != null && _weaponReadiness == WeaponReadyState.Up)
+            if (activeWeapon != null)
             {
-                if (!activeWeapon.AutomaticReload && reloadInput.ButtonPressed && activeWeapon.CurrentAmmoRatio < 1.0f)
-                {
-                    IsAiming = false;
-                    activeWeapon.StartReloadAnimation();
+                if(activeWeapon.IsReloading)
                     return;
-                }
-                // handle aiming down sights
-                IsAiming = fire2Input.ButtonDown;
 
-                // handle shooting
-                bool hasFired = activeWeapon.HandleShootInputs(
-                    fire1Input.ButtonPressed,
-                    fire1Input.ButtonDown,
-                    fire1Input.ButtonReleased);
-
-                // Handle accumulating recoil
-                if (hasFired)
+                if (_weaponReadiness == WeaponReadyState.Up)
                 {
-                    _totalRecoil += Vector3.back * activeWeapon.RecoilForce;
-                    _totalRecoil = Vector3.ClampMagnitude(_totalRecoil, maxRecoil);
+                    if (!activeWeapon.AutomaticReload && reloadInput.ButtonPressed && activeWeapon.CurrentAmmoRatio < 1.0f)
+                    {
+                        IsAiming = false;
+                        activeWeapon.StartReloadAnimation();
+                        return;
+                    }
+
+                    // handle aiming down sights
+                    IsAiming = fire2Input.ButtonDown;
+
+                    // handle shooting
+                    bool hasFired = activeWeapon.HandleShootInputs(
+                        fire1Input.ButtonPressed,
+                        fire1Input.ButtonDown);
+
+                    // Handle accumulating recoil
+                    if (hasFired)
+                        _playerAnim.OnWeaponFired(activeWeapon.RecoilForce);
                 }
             }
 
             // weapon switch handling
-            if (!IsAiming &&
-                (activeWeapon == null || !activeWeapon.IsCharging) &&
-                (_weaponReadiness == WeaponReadyState.Up || _weaponReadiness == WeaponReadyState.Down))
+            if ((_weaponReadiness == WeaponReadyState.Up || _weaponReadiness == WeaponReadyState.Down)
+                && !IsAiming && activeWeapon == null)
             {
                 if(weaponSwitchInput.ButtonPressed)
                     SwitchWeapon(true);
             }
 
             // Pointing at enemy handling
-            IsPointingAtEnemy = false;
             if (activeWeapon)
-            {
-                var hits = Physics.RaycastAll(weaponCamera.transform.position, weaponCamera.transform.forward, 1000, hitboxLayers, QueryTriggerInteraction.Ignore);
-                // Debug.Log($"crosshairHitCount: {hits.Length} layerIndex: {hitboxLayers}");
-
-                foreach (RaycastHit hit in hits)
-                {
-                    if (hit.collider.gameObject == gameObject)
-                        continue;
-
-                    if (hit.collider.GetComponentInParent<Target>() != null)
-                    {
-                        IsPointingAtEnemy = true;
-                        //Debug.Log($"Aiming at {hit.collider.gameObject.name}");
-                        break;
-                    }
-                }
-            }
+                IsPointingAtEnemy = rats.IsTargetingEnemy(gameObject, playerCams.AimPos, playerCams.AimDir);
+            else
+                IsPointingAtEnemy = false;
         }
 
 
         // Update various animated features in LateUpdate because it needs to override the animated arm position
         void LateUpdate()
         {
-            UpdateWeaponAiming();
-            UpdateWeaponBob();
-            UpdateWeaponRecoil();
             UpdateWeaponSwitching();
-
-            // Set final weapon socket position based on all the combined animation influences
-            weaponRoot.localPosition =
-                _weaponLocalPos + _weaponBobLocalPos + _weaponRecoilLocalPos;
-        }
-
-        // Sets the FOV of the main camera and the weapon camera simultaneously
-        public void SetFov(float fov)
-        {
-            //m_PlayerCharacterController.PlayerCamera.fieldOfView = fov;
-            weaponCamera.fieldOfView = fov * weaponFovMultiplier;
         }
 
         // Iterate on all weapon slots to find the next valid weapon to switch to
@@ -209,15 +154,12 @@ namespace Potato.Gameplay
                 // Handle case of switching to a valid weapon for the first time (simply put it up without putting anything down first)
                 if (GetActiveWeapon() == null)
                 {
-                    _weaponLocalPos = weaponPose_Down.localPosition;
+                    _playerAnim.SetWeaponPose_Down();
                     _weaponReadiness = WeaponReadyState.PutUpNew;
                     ActiveWeaponIndex = _nextWeaponIndex;
 
                     WeaponController newWeapon = GetWeaponAtSlotIndex(_nextWeaponIndex);
-                    if (OnSwitchedToWeapon != null)
-                    {
-                        OnSwitchedToWeapon.Invoke(newWeapon);
-                    }
+                    OnWeaponSwitched(newWeapon);
                 }
                 // otherwise, remember we are putting down our current weapon for switching to the next one
                 else
@@ -227,112 +169,11 @@ namespace Potato.Gameplay
             }
         }
 
-        // public WeaponController HasWeapon(WeaponController weaponPrefab)
-        // {
-        //     // Checks if we already have a weapon coming from the specified prefab
-        //     for (var index = 0; index < _weaponSlots.Length; index++)
-        //     {
-        //         var w = _weaponSlots[index];
-        //         if (w != null && w.SourcePrefab == weaponPrefab.gameObject)
-        //         {
-        //             return w;
-        //         }
-        //     }
-
-        //     return null;
-        // }
-
-        // Updates weapon position and camera FoV for the aiming transition
-        void UpdateWeaponAiming()
-        {
-            if (_weaponReadiness == WeaponReadyState.Up)
-            {
-                WeaponController activeWeapon = GetActiveWeapon();
-                if (IsAiming && activeWeapon)
-                {
-                    _weaponLocalPos = Vector3.Lerp(_weaponLocalPos,
-                        weaponPose_Aiming.localPosition + activeWeapon.AimOffset,
-                        aimAnimationSpeed * Time.deltaTime);
-                    SetFov(Mathf.Lerp(mainCamera.fieldOfView,
-                        activeWeapon.AimZoomRatio * fixedWeaponFov, aimAnimationSpeed * Time.deltaTime));
-                }
-                else
-                {
-                    _weaponLocalPos = Vector3.Lerp(_weaponLocalPos,
-                        weaponPose_Default.localPosition, aimAnimationSpeed * Time.deltaTime);
-                    SetFov(Mathf.Lerp(mainCamera.fieldOfView, fixedWeaponFov,
-                        aimAnimationSpeed * Time.deltaTime));
-                }
-            }
-        }
-
-        // Updates the weapon bob animation based on character speed
-        void UpdateWeaponBob()
-        {
-            if (Time.deltaTime > 0f)
-            {
-                Vector3 playerCharacterVelocity =
-                    (_player.transform.position - _lastPlayerPos) / Time.deltaTime;
-
-                // calculate a smoothed weapon bob amount based on how close to our max grounded movement velocity we are
-                float characterMovementFactor = 0f;
-                if (_player.IsGrounded)
-                {
-                    characterMovementFactor =
-                        Mathf.Clamp01(playerCharacterVelocity.magnitude /
-                                      (_player.MaxSpeedOnGround *
-                                       _player.SprintSpeedModifier));
-                }
-
-                _weaponBobFactor =
-                    Mathf.Lerp(_weaponBobFactor, characterMovementFactor, weaponBobSharpness * Time.deltaTime);
-
-                // Calculate vertical and horizontal weapon bob values based on a sine function
-                float bobAmount = IsAiming ? weaponBob_aiming : weaponBob_default;
-                float frequency = weaponBobFrequency;
-                float hBobValue = Mathf.Sin(Time.time * frequency) * bobAmount * _weaponBobFactor;
-                float vBobValue = ((Mathf.Sin(Time.time * frequency * 2f) * 0.5f) + 0.5f) * bobAmount *
-                                  _weaponBobFactor;
-
-                // Apply weapon bob
-                _weaponBobLocalPos.x = hBobValue;
-                _weaponBobLocalPos.y = Mathf.Abs(vBobValue);
-
-                _lastPlayerPos = _player.transform.position;
-            }
-        }
-
-        // Updates the weapon recoil animation
-        void UpdateWeaponRecoil()
-        {
-            // if the accumulated recoil is further away from the current position, make the current position move towards the recoil target
-            if (_weaponRecoilLocalPos.z >= _totalRecoil.z * 0.99f)
-            {
-                _weaponRecoilLocalPos = Vector3.Lerp(_weaponRecoilLocalPos, _totalRecoil,
-                    recoilSharpness * Time.deltaTime);
-            }
-            // otherwise, move recoil position to make it recover towards its resting pose
-            else
-            {
-                _weaponRecoilLocalPos = Vector3.Lerp(_weaponRecoilLocalPos, Vector3.zero,
-                    recoilRecoverySharpness * Time.deltaTime);
-                _totalRecoil = _weaponRecoilLocalPos;
-            }
-        }
-
         // Updates the animated transition of switching weapons
         void UpdateWeaponSwitching()
         {
             // Calculate the time ratio (0 to 1) since weapon switch was triggered
-            float switchingTimeFactor = 0f;
-            if (weaponSwitchDelay == 0f)
-            {
-                switchingTimeFactor = 1f;
-            }
-            else
-            {
-                switchingTimeFactor = Mathf.Clamp01((Time.time - _weaponSwitchStartTime) / weaponSwitchDelay);
-            }
+            float switchingTimeFactor = weaponSwitchDelay == 0f ? 1f : Mathf.Clamp01((Time.time - _weaponSwitchStartTime) / weaponSwitchDelay);
 
             // Handle transiting to new switch state
             if (switchingTimeFactor >= 1f)
@@ -342,19 +183,14 @@ namespace Potato.Gameplay
                     // Deactivate old weapon
                     WeaponController oldWeapon = GetWeaponAtSlotIndex(ActiveWeaponIndex);
                     if (oldWeapon != null)
-                    {
                         oldWeapon.ShowWeapon(false);
-                    }
 
                     ActiveWeaponIndex = _nextWeaponIndex;
                     switchingTimeFactor = 0f;
 
                     // Activate new weapon
                     WeaponController newWeapon = GetWeaponAtSlotIndex(ActiveWeaponIndex);
-                    if (OnSwitchedToWeapon != null)
-                    {
-                        OnSwitchedToWeapon.Invoke(newWeapon);
-                    }
+                    OnWeaponSwitched(newWeapon);
 
                     if (newWeapon)
                     {
@@ -362,39 +198,18 @@ namespace Potato.Gameplay
                         _weaponReadiness = WeaponReadyState.PutUpNew;
                     }
                     else
-                    {
-                        // if new weapon is null, don't follow through with putting weapon back up
                         _weaponReadiness = WeaponReadyState.Down;
-                    }
                 }
                 else if (_weaponReadiness == WeaponReadyState.PutUpNew)
-                {
                     _weaponReadiness = WeaponReadyState.Up;
-                }
             }
 
-            // Handle moving the weapon socket position for the animated weapon switching
-            if (_weaponReadiness == WeaponReadyState.PutDownPrevious)
-            {
-                _weaponLocalPos = Vector3.Lerp(weaponPose_Default.localPosition,
-                    weaponPose_Down.localPosition, switchingTimeFactor);
-            }
-            else if (_weaponReadiness == WeaponReadyState.PutUpNew)
-            {
-                _weaponLocalPos = Vector3.Lerp(weaponPose_Down.localPosition,
-                    weaponPose_Default.localPosition, switchingTimeFactor);
-            }
+            _playerAnim.UpdateWeaponSwitchingAnimation(switchingTimeFactor);
         }
 
         // Adds a weapon to our inventory
         public bool AddWeapon(WeaponController weaponPrefab)
         {
-            // // if we already hold this weapon type (a weapon coming from the same source prefab), don't add the weapon
-            // if (HasWeapon(weaponPrefab) != null)
-            // {
-            //     return false;
-            // }
-
             // search our weapon slots for the first free one, assign the weapon to it, and return true if we found one. Return false otherwise
             for (int i = 0; i < _weaponSlots.Length; i++)
             {
@@ -403,8 +218,7 @@ namespace Potato.Gameplay
                 {
                     // spawn the weapon prefab as child of the weapon socket
                     WeaponController weaponInstance = Instantiate(weaponPrefab, weaponRoot);
-                    weaponInstance.transform.localPosition = Vector3.zero;
-                    weaponInstance.transform.localRotation = Quaternion.identity;
+                    weaponInstance.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
 
                     // Set owner to this gameObject so the weapon can alter projectile/damage logic accordingly
                     weaponInstance.Owner = gameObject;
@@ -417,49 +231,17 @@ namespace Potato.Gameplay
 
                     _weaponSlots[i] = weaponInstance;
 
-                    // if (OnAddedWeapon != null)
-                    //     OnAddedWeapon.Invoke(weaponInstance, i);
-
                     return true;
                 }
             }
 
             // Handle auto-switching to weapon if no weapons currently
             if (GetActiveWeapon() == null)
-            {
                 SwitchWeapon(true);
-            }
 
             return false;
         }
 
-        public bool RemoveWeapon(WeaponController weaponInstance)
-        {
-            // Look through our slots for that weapon
-            for (int i = 0; i < _weaponSlots.Length; i++)
-            {
-                // when weapon found, remove it
-                if (_weaponSlots[i] == weaponInstance)
-                {
-                    _weaponSlots[i] = null;
-
-                    // if (OnRemovedWeapon != null)
-                    //     OnRemovedWeapon.Invoke(weaponInstance, i);
-
-                    Destroy(weaponInstance.gameObject);
-
-                    // Handle case of removing active weapon (switch to next weapon)
-                    if (i == ActiveWeaponIndex)
-                    {
-                        SwitchWeapon(true);
-                    }
-
-                    return true;
-                }
-            }
-
-            return false;
-        }
 
         public WeaponController GetActiveWeapon() => GetWeaponAtSlotIndex(ActiveWeaponIndex);
 
