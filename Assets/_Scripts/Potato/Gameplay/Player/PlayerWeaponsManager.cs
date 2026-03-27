@@ -26,7 +26,6 @@ namespace Potato.Gameplay
         [SerializeField] private InputButton fire2Input;
         [SerializeField] private InputButton reloadInput;
         [SerializeField] private InputButton weaponSwitchInput;
-        [SerializeField] private FloatReference playerStanceFovModifier;
 
         [Header("Settings")]
         [SerializeField] private LayerMask hitboxLayers;
@@ -34,10 +33,12 @@ namespace Potato.Gameplay
 
         [Header("Out Data")]
         [SerializeField] private WeaponReference activeWeaponRef;
+        [SerializeField] private BoolReference isAimingAtEnemy;
+        [SerializeField] private IntReference playerCurrentAmmo;        
+        [SerializeField] private IntReference playerMaxAmmo;
         public UnityAction<WeaponController> OnSwitchedToWeapon;
 
         public bool IsAiming { get; private set; }
-        public bool IsPointingAtEnemy { get; private set; }
         public int ActiveWeaponIndex { get; private set; }
         public Vector3 AimPosition => playerCams.AimPos;
         public Vector3 AimDirection => playerCams.AimDir;
@@ -74,7 +75,7 @@ namespace Potato.Gameplay
 
                 if (_weaponReadiness == WeaponReadyState.Up)
                 {
-                    if (!activeWeapon.AutomaticReload && reloadInput.ButtonPressed && activeWeapon.CurrentAmmoRatio < 1.0f)
+                    if (!activeWeapon.AutomaticReload && reloadInput.ButtonPressed && activeWeapon.CurrentAmmo < activeWeapon.MaxAmmo)
                     {
                         IsAiming = false;
                         activeWeapon.StartReloadAnimation();
@@ -93,6 +94,9 @@ namespace Potato.Gameplay
                     if (hasFired)
                         _playerAnim.OnWeaponFired(activeWeapon.RecoilForce);
                 }
+
+                if(playerCurrentAmmo.Value != activeWeapon.CurrentAmmo)
+                    playerCurrentAmmo.Value = activeWeapon.CurrentAmmo;
             }
 
             // weapon switch handling
@@ -104,10 +108,11 @@ namespace Potato.Gameplay
             }
 
             // Pointing at enemy handling
-            if (activeWeapon)
-                IsPointingAtEnemy = rats.IsTargetingEnemy(gameObject, playerCams.AimPos, playerCams.AimDir);
-            else
-                IsPointingAtEnemy = false;
+            var targetingHostile = activeWeapon != null && rats.IsTargetingEnemy(gameObject, playerCams.AimPos, playerCams.AimDir);
+            
+            // avoid firing an onChanged event unless it changed
+            if(isAimingAtEnemy.Value != targetingHostile)
+                isAimingAtEnemy.Value = targetingHostile;
         }
 
 
@@ -276,6 +281,8 @@ namespace Potato.Gameplay
         {
             if (newGun != null)
                 newGun.ShowWeapon(true);
+            
+            playerMaxAmmo.Value = newGun.MaxAmmo;
         }        
     }
 }

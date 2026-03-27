@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20cb408f140159545905cfbb827745d6, type: 3}
+  m_Name: Display_PlayerHP
+  m_EditorClassIdentifier: 
+  _isReadonly: 0
+  _description: 
+  _initialValue: 100
+  _value: 100
+  onValueChanged: {fileID: 11400000, guid: 845ca4fd07940124eae336041ea45470, type: 2}

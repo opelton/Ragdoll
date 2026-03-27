@@ -32,6 +32,8 @@ namespace Potato.Core
 
         bool ShouldUseConstValue => UseConstant || ReferenceData == null;
 
+        public U DefaultValue => ShouldUseConstValue ? default : ReferenceData.InitialValue;
+
         public U Value
         {
             get => ShouldUseConstValue ? ConstantValue : ReferenceData.Value;

@@ -48,14 +48,15 @@ namespace Potato.Gameplay
         [SerializeField] private float shotReloadDelay = 2f;
         [SerializeField] private int maxAmmo = 8;
 
-        private int _currentAmmo;
+        private int _currentAmmo = 0;
         private float _lastAmmoTime = Mathf.NegativeInfinity;
         private float _lastShotTime = Mathf.NegativeInfinity;
         private Vector3 _lastMuzzlePosition;
 
         public GameObject Owner { get; set; }
         public GameObject SourcePrefab { get; set; }
-        public float CurrentAmmoRatio { get; private set; }
+        public int CurrentAmmo => _currentAmmo;
+        public int MaxAmmo => maxAmmo;
         public bool IsWeaponActive { get; private set; }
         public Vector3 MuzzleWorldVelocity { get; private set; }
         public float RecoilForce => recoilForce;
@@ -101,11 +102,6 @@ namespace Potato.Gameplay
                 // limits ammo to max value
                 _currentAmmo = Math.Clamp(_currentAmmo, 0, maxAmmo);
             }
-
-            if (maxAmmo == Mathf.Infinity)
-                CurrentAmmoRatio = 1f;
-            else
-                CurrentAmmoRatio = _currentAmmo / maxAmmo;
         }
 
         public void ShowWeapon(bool show)

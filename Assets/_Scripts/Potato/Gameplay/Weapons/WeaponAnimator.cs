@@ -32,6 +32,7 @@ namespace Potato.Gameplay
             if(_shootAudioSource != null)
             {
                 // todo -- game systems lifecycle should be managed to guarantee things like audio sources are set up ahead of time
+                // also, this doesn't fix what it's trying to fix...
                 if(_shootAudioSource.enabled == false)
                     _shootAudioSource.enabled = true;
 
