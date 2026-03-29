@@ -193,5 +193,10 @@ namespace Potato.Game
 
             return validResolutions.ToArray();
         }
+
+        public static Vector2Int GetCurrentResolution()
+        {
+            return new(Screen.currentResolution.width, Screen.currentResolution.height);
+        }
     }
 }

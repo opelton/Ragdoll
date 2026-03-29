@@ -33,6 +33,12 @@ namespace Potato.Game.UI
             get => sliderElement.value;
             set => sliderElement.value = value;
         }
+        
+        public bool Interactable
+        {
+            get => sliderElement.interactable;
+            set => SetInteractable(value);
+        }
 
         void Awake()
         {

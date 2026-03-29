@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,11 +15,12 @@ namespace Potato.Game.UI
         [SerializeField] private UiSliderControl fovSlider;
         [SerializeField] private UiSliderControl fpsCapSlider;
         [SerializeField] private TMP_Dropdown resolutionDropdown;
-        [SerializeField] private Toggle muteToggle;
-        [SerializeField] private Toggle fullScreenToggle;
-        [SerializeField] private Toggle showFramerateToggle;
-        [SerializeField] private Toggle lockFpsToggle;
-        [SerializeField] private Toggle vsyncToggle;
+        [SerializeField] private TMP_Text resolutionText;
+        [SerializeField] private UiToggleControl muteToggle;
+        [SerializeField] private UiToggleControl fullScreenToggle;
+        [SerializeField] private UiToggleControl showFramerateToggle;
+        [SerializeField] private UiToggleControl lockFpsToggle;
+        [SerializeField] private UiToggleControl vsyncToggle;
 
         [Header("Gameplay specific")]
         [SerializeField] private TMP_Text settingsTitle;
@@ -42,12 +42,26 @@ namespace Potato.Game.UI
         [SerializeField] private BoolReference vsyncRef;
 
         private Vector2Int[] _allResolutions = null;
-        private Dictionary<Vector2Int, int> _resolutionLookup;
 
-        void OnEnable()
+#if !UNITY_WEBGL && !UNITY_EDITOR
+        private Dictionary<Vector2Int, int> _resolutionLookup;
+#endif
+
+        void Start()
         {
             SetGameplayOptionsVisibility(gameStateRef.Value.ShowGameFlowSettingsButtons);
-#if !UNITY_WEBGL
+
+#if UNITY_WEBGL || UNITY_EDITOR
+            _allResolutions = new[] { SettingsBridge.GetCurrentResolution()};
+
+            // no resolution or fullscreen in editor or webgl
+            resolutionDropdown.interactable = false;
+            resolutionText.color = Color.grey;
+            fullScreenToggle.SetInteractable(false);
+
+            // vsync overridden in editor and webgl
+            vsyncToggle.SetInteractable(false);
+#else
             if(_allResolutions == null)
             {
                 _resolutionLookup = new();
@@ -55,14 +69,18 @@ namespace Potato.Game.UI
                 for(int i = 0; i < _allResolutions.Length; ++i)
                     _resolutionLookup.TryAdd(_allResolutions[i], i);
 
-                PopulateResolutionDropdown();
             }
+#endif
+            PopulateResolutionDropdown();
 
-            resolutionDropdown.gameObject.SetActive(true);
-#else
-            // can't quit a browser or change its resolution
-            resolutionDropdown.gameObject.SetActive(false);
+#if UNITY_WEBGL
+            // no quit in webgl
             quitButton.SetActive(false);
+
+            // vsync being forced-on overrides target fps
+            lockFpsToggle.SetInteractable(false);
+#else
+            quitButton.SetActive(true);
 #endif
             SyncWidgetsToData();
         }
@@ -86,19 +104,32 @@ namespace Potato.Game.UI
 
         void SyncWidgetsToData()
         {
-            muteToggle.isOn = muteRef.Value;
+            muteToggle.Value = muteRef.Value;
             volumeSlider.Value = volumeRef.Value;
             mouseSensitivitySlider.Value = mouseSensitivityRef.Value;
-            fullScreenToggle.isOn = fullscreenRef.Value;
-            lockFpsToggle.isOn = lockFramerateRef.Value;
-            vsyncToggle.isOn = vsyncRef.Value;
-
-#if !UNITY_WEBGL
-            resolutionDropdown.value = _resolutionLookup[resolutionRef.Value];
-#endif
-            showFramerateToggle.isOn = showFramerateRef.Value;
+            showFramerateToggle.Value = showFramerateRef.Value;
             fovSlider.Value = fovRef.Value;
             fpsCapSlider.Value = targetFramerateRef.Value;
+
+#if UNITY_WEBGL || UNITY_EDITOR
+            fullScreenToggle.Value = false;
+            resolutionDropdown.value = 0;
+#else
+            vsyncToggle.Value = vsyncRef.Value;
+            fullScreenToggle.Value = fullscreenRef.Value;
+            resolutionDropdown.value = _resolutionLookup[resolutionRef.Value];
+#endif
+
+            // vsync is forced-on in webgl, forced-off in editor (which also impacts target framerate)
+#if UNITY_WEBGL
+            vsyncToggle.Value = true;
+            lockFpsToggle.Value = false;
+#elif UNITY_EDITOR
+            vsyncToggle.Value = false;
+#else
+            lockFpsToggle.Value = lockFramerateRef.Value;
+            vsyncToggle.Value = vsyncRef.Value;
+#endif
 
             volumeSlider.SetInteractable(!muteRef.Value);
             fpsCapSlider.SetInteractable(!vsyncRef.Value && lockFramerateRef.Value);
@@ -123,7 +154,7 @@ namespace Potato.Game.UI
 
             // fps cap must disable vsync to work, ui should reflect that
             if(isToggled && vsyncRef.Value)
-                vsyncToggle.isOn = false;
+                vsyncToggle.Value = false;
 
             fpsCapSlider.SetInteractable(!vsyncRef.Value && isToggled);
         }
@@ -134,7 +165,7 @@ namespace Potato.Game.UI
 
             // enabling vsync should also disable the framerate lock in settings
             if(isToggled && lockFramerateRef.Value)
-                lockFpsToggle.isOn = false;
+                lockFpsToggle.Value = false;
 
             fpsCapSlider.SetInteractable(!vsyncRef.Value && lockFramerateRef.Value);
         }

@@ -10,7 +10,11 @@ namespace Potato.Gameplay.UI
 
         void Start()
         {
-            pauseInputText.text = InputConstants.Game_Quit.ToString();
+            var buttonName = InputConstants.Game_Quit.ToString();
+            if(buttonName.Length >= 3)
+                buttonName = buttonName[..3];
+                
+            pauseInputText.text = buttonName;
         }
     }
 }
