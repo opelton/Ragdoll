@@ -9,7 +9,7 @@ namespace Potato.Gameplay
     [RequireComponent(typeof(FirstPersonAnimationController))]
     public class PlayerWeaponsManager : MonoBehaviour
     {
-        public enum WeaponReadyState { Up, Down, PutDownPrevious, PutUpNew }
+        public enum WeaponStance { Up, Down, Stowing, Drawing }
 
         [SerializeField] private RangedAttackSystem rats;
         [SerializeField] private Transform weaponRoot;
@@ -42,19 +42,19 @@ namespace Potato.Gameplay
         public int ActiveWeaponIndex { get; private set; }
         public Vector3 AimPosition => playerCams.AimPos;
         public Vector3 AimDirection => playerCams.AimDir;
-        public WeaponReadyState ReadyState => _weaponReadiness;
+        public WeaponStance Stance => _weaponStance;
 
         // ---
         private FirstPersonAnimationController _playerAnim;
         private WeaponController[] _weaponSlots = new WeaponController[9]; // 9 available weapon slots
         private float _weaponSwitchStartTime;
-        private WeaponReadyState _weaponReadiness;
+        private WeaponStance _weaponStance;
         private int _nextWeaponIndex;
 
         void Start()
         {
             ActiveWeaponIndex = -1;
-            _weaponReadiness = WeaponReadyState.Down;
+            _weaponStance = WeaponStance.Down;
             _playerAnim = GetComponent<FirstPersonAnimationController>();
 
             // Add starting weapons
@@ -64,6 +64,7 @@ namespace Potato.Gameplay
             SwitchWeapon(true);
         }
 
+        // todo -- only forward the inputs to current weapon, should not handle things like ammo or reloading
         void Update()
         {
             WeaponController activeWeapon = GetActiveWeapon();
@@ -73,12 +74,13 @@ namespace Potato.Gameplay
                 if(activeWeapon.IsReloading)
                     return;
 
-                if (_weaponReadiness == WeaponReadyState.Up)
+                if (_weaponStance == WeaponStance.Up)
                 {
+                    // fetch aim status from weapon instead of setting it
                     if (!activeWeapon.AutomaticReload && reloadInput.ButtonPressed && activeWeapon.CurrentAmmo < activeWeapon.MaxAmmo)
                     {
                         IsAiming = false;
-                        activeWeapon.StartReloadAnimation();
+                        activeWeapon.StartReload();
                         return;
                     }
 
@@ -100,7 +102,7 @@ namespace Potato.Gameplay
             }
 
             // weapon switch handling
-            if ((_weaponReadiness == WeaponReadyState.Up || _weaponReadiness == WeaponReadyState.Down)
+            if ((_weaponStance == WeaponStance.Up || _weaponStance == WeaponStance.Down)
                 && !IsAiming && activeWeapon == null)
             {
                 if(weaponSwitchInput.ButtonPressed)
@@ -160,7 +162,7 @@ namespace Potato.Gameplay
                 if (GetActiveWeapon() == null)
                 {
                     _playerAnim.SetWeaponPose_Down();
-                    _weaponReadiness = WeaponReadyState.PutUpNew;
+                    _weaponStance = WeaponStance.Drawing;
                     ActiveWeaponIndex = _nextWeaponIndex;
 
                     WeaponController newWeapon = GetWeaponAtSlotIndex(_nextWeaponIndex);
@@ -169,7 +171,7 @@ namespace Potato.Gameplay
                 // otherwise, remember we are putting down our current weapon for switching to the next one
                 else
                 {
-                    _weaponReadiness = WeaponReadyState.PutDownPrevious;
+                    _weaponStance = WeaponStance.Stowing;
                 }
             }
         }
@@ -183,7 +185,7 @@ namespace Potato.Gameplay
             // Handle transiting to new switch state
             if (switchingTimeFactor >= 1f)
             {
-                if (_weaponReadiness == WeaponReadyState.PutDownPrevious)
+                if (_weaponStance == WeaponStance.Stowing)
                 {
                     // Deactivate old weapon
                     WeaponController oldWeapon = GetWeaponAtSlotIndex(ActiveWeaponIndex);
@@ -200,13 +202,13 @@ namespace Potato.Gameplay
                     if (newWeapon)
                     {
                         _weaponSwitchStartTime = Time.time;
-                        _weaponReadiness = WeaponReadyState.PutUpNew;
+                        _weaponStance = WeaponStance.Drawing;
                     }
                     else
-                        _weaponReadiness = WeaponReadyState.Down;
+                        _weaponStance = WeaponStance.Down;
                 }
-                else if (_weaponReadiness == WeaponReadyState.PutUpNew)
-                    _weaponReadiness = WeaponReadyState.Up;
+                else if (_weaponStance == WeaponStance.Drawing)
+                    _weaponStance = WeaponStance.Up;
             }
 
             _playerAnim.UpdateWeaponSwitchingAnimation(switchingTimeFactor);

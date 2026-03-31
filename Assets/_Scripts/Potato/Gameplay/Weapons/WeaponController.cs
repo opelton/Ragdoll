@@ -65,14 +65,13 @@ namespace Potato.Gameplay
         public bool AutomaticReload => automaticReload;
         public bool IsReloading { get; private set; }
 
-
         void Awake()
         {
             _currentAmmo = maxAmmo;
             _lastMuzzlePosition = weaponMuzzle.position;
         }
 
-        public void StartReloadAnimation()
+        public void StartReload()
         {
             if (_currentAmmo < maxAmmo)
             {
@@ -90,6 +89,11 @@ namespace Potato.Gameplay
                 MuzzleWorldVelocity = (weaponMuzzle.position - _lastMuzzlePosition) / Time.deltaTime;
                 _lastMuzzlePosition = weaponMuzzle.position;
             }
+        }
+
+        public void UpdateInputs(bool fire1Down, bool fire1Held, bool aimDown, bool reloadDown)
+        {
+            
         }
 
         void UpdateAmmo()
@@ -156,15 +160,6 @@ namespace Potato.Gameplay
             _lastShotTime = Time.time;
 
             OnShoot?.Invoke(weaponMuzzle);
-        }
-
-        public Vector3 GetShotDirectionWithinSpread(Transform shootTransform)
-        {
-            float spreadAngleRatio = bulletSpreadAngle / 180f;
-            Vector3 spreadWorldDirection = Vector3.Slerp(shootTransform.forward, UnityEngine.Random.insideUnitSphere,
-                spreadAngleRatio);
-
-            return spreadWorldDirection;
         }
     }
 }
