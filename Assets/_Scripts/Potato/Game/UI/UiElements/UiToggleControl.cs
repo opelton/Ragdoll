@@ -14,7 +14,6 @@ namespace Potato.Game.UI
         [SerializeField] private Image fillElement;
 
         [Header("Settings")]
-        [SerializeField] private bool toggled = true;
         [SerializeField] private string labelText;
         [SerializeField] private bool interactable = true;
         [SerializeField] private Color enabledColor = Color.white;
@@ -36,7 +35,6 @@ namespace Potato.Game.UI
         {
             Interactable = interactable;
             UpdateLabel();
-            UpdateToggle();
         }
 
         public void SetInteractable(bool newValue)
@@ -51,15 +49,10 @@ namespace Potato.Game.UI
 
         void UpdateLabel() => labelElement.text = labelText;
 
-        void UpdateToggle() => Value = toggled;
-
         void OnValidate()
         {
             if(labelElement != null)
                 UpdateLabel();
-
-            if(toggleElement != null)
-                UpdateToggle();
 
             if(labelElement != null && toggleElement != null)
                 Interactable = interactable;

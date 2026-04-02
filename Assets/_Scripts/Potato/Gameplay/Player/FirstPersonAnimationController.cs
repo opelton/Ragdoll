@@ -33,13 +33,16 @@ namespace Potato.Gameplay
         {
             _player = GetComponent<PlayerCharacterController>();
             _weapons = GetComponent<PlayerWeaponsManager>();
+            SetWeaponPose_Down();
         }
 
+        // todo -- only update these when they're actually happening, instead of always checking if they are
         void LateUpdate()
         {
             UpdateWeaponAiming();
             UpdateWeaponBob();
             UpdateWeaponRecoil();
+            UpdateWeaponSwitchingAnimation(_weapons.WeaponSwitchTimingFactor);
 
             // Set final weapon socket position based on all the combined animation influences
             weaponRoot.localPosition =
@@ -123,7 +126,7 @@ namespace Potato.Gameplay
         }
         
         // Updates the animated transition of switching weapons
-        public void UpdateWeaponSwitchingAnimation(float switchingTimeFactor)
+        void UpdateWeaponSwitchingAnimation(float switchingTimeFactor)
         {
             var weaponStance = _weapons.Stance;
 
@@ -140,11 +143,11 @@ namespace Potato.Gameplay
             }
         }
 
-        public void SetWeaponPose_Down() => _weaponLocalPos = weaponPose_Down.localPosition;
+        void SetWeaponPose_Down() => _weaponLocalPos = weaponPose_Down.localPosition;
 
-        public void OnWeaponFired(float recoilForce)
+        public void OnWeaponFired(WeaponAttackInfo attackData)
         {
-            _totalRecoil += Vector3.back * recoilForce;
+            _totalRecoil += Vector3.back * attackData.recoilForce;
             _totalRecoil = Vector3.ClampMagnitude(_totalRecoil, maxRecoil);
         }
     }

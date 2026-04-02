@@ -133,7 +133,7 @@ namespace Potato.Game
         public void SetVolume(float rawValue)
         {
             float dB = -80f;    // muted value
-            if (rawValue > 0f)
+            if (!MuteAudio.Value && rawValue > 0f)
             {
                 float clampedValue = Mathf.Clamp(rawValue, 0.0001f, 1f);
                 dB = 20 * Mathf.Log10(clampedValue);

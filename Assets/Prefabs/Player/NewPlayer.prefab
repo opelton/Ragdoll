@@ -378,8 +378,9 @@ GameObject:
   - component: {fileID: 6324086442476015078}
   - component: {fileID: 8450269946794536070}
   - component: {fileID: 1046679319790994097}
-  - component: {fileID: 1532423573729972516}
   - component: {fileID: 4652617024928818412}
+  - component: {fileID: 5646522603461414655}
+  - component: {fileID: 1200091709937200478}
   m_Layer: 9
   m_Name: EventListeners
   m_TagString: Untagged
@@ -518,35 +519,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &1532423573729972516
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4344926436189153364}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51b4d53e1826a6b4ebb916b759e929bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _description: responds by setting weapon visibility
-  _eventSource: {fileID: 11400000, guid: 5dc917451659cf647b62a4d73d1e81c6, type: 2}
-  Response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4615072429341156804}
-        m_TargetAssemblyTypeName: Potato.Gameplay.PlayerWeaponsManager, potato.gameplay
-        m_MethodName: OnWeaponSwitched
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!114 &4652617024928818412
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -568,6 +540,65 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: Potato.Gameplay.PlayerCamerasController, potato.gameplay
         m_MethodName: UpdateFovs
         m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &5646522603461414655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4344926436189153364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e3ce58489b3ad34d82e05b3c35d493b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _description: attempt to swap active weapons
+  _eventSource: {fileID: 11400000, guid: 64dd3883d8c3e614699fb1726830da85, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4615072429341156804}
+        m_TargetAssemblyTypeName: Potato.Gameplay.PlayerWeaponsManager, potato.gameplay
+        m_MethodName: SwapWeapon
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1200091709937200478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4344926436189153364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0449e40b3a240b341be04f63c19c4f46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _description: 
+  _eventSource: {fileID: 11400000, guid: e45b5590e9881b248949b5170bb31fda, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8377179856262897326}
+        m_TargetAssemblyTypeName: Potato.Gameplay.FirstPersonAnimationController,
+          potato.gameplay
+        m_MethodName: OnWeaponFired
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -803,6 +834,7 @@ MonoBehaviour:
   weaponRoot: {fileID: 3338884953393690280}
   StartingWeapons:
   - {fileID: 5979245870570534767, guid: d5aa1d876679b8e48914fc3c797f0f8f, type: 3}
+  - {fileID: 5979245870570534767, guid: fbe33a8693f271a4a99908b53483f68d, type: 3}
   fpsWeaponsLayer: 6
   playerCams: {fileID: 5482295246588910145}
   fire1Input: {fileID: 11400000, guid: 0b3c55cacbbd1c14c84865d5434afddb, type: 2}
@@ -812,7 +844,8 @@ MonoBehaviour:
   hitboxLayers:
     serializedVersion: 2
     m_Bits: 1024
-  weaponSwitchDelay: 1
+  weaponSwitchDelay: 0.15
+  onShootEvent: {fileID: 11400000, guid: e45b5590e9881b248949b5170bb31fda, type: 2}
   activeWeaponRef:
     UseConstant: 0
     _description: 
