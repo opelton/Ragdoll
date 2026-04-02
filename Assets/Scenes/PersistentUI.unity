@@ -6101,7 +6101,7 @@ GameObject:
   - component: {fileID: 1678032193}
   - component: {fileID: 1678032194}
   - component: {fileID: 1678032196}
-  - component: {fileID: 1678032195}
+  - component: {fileID: 1678032197}
   m_Layer: 0
   m_Name: HUDCanvas
   m_TagString: Untagged
@@ -6267,40 +6267,11 @@ MonoBehaviour:
     _description: 
     ConstantValue: 0
     ReferenceData: {fileID: 11400000, guid: f1a7dedb012965341832d9731f6bd75d, type: 2}
-  playerMaxAmmo:
+  activeWeaponRef:
     UseConstant: 0
     _description: 
-    ConstantValue: 0
-    ReferenceData: {fileID: 11400000, guid: b42a8fca2b689444bb5b2ad0db4f85a5, type: 2}
---- !u!114 &1678032195
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1678032186}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3a8121764677c74e88beb631ab09ed8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _description: player max ammo changed
-  _eventSource: {fileID: 11400000, guid: b100c822b49a9ba4eb373a715cfc4f55, type: 2}
-  Response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1678032194}
-        m_TargetAssemblyTypeName: Potato.Gameplay.UI.AmmoUI, potato.gameplay.ui
-        m_MethodName: UpdateMaxAmmo
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+    ConstantValue: {fileID: 0}
+    ReferenceData: {fileID: 11400000, guid: 6d891ef6534953a49bdcb66b5185210b, type: 2}
 --- !u!114 &1678032196
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6321,6 +6292,35 @@ MonoBehaviour:
       - m_Target: {fileID: 1678032194}
         m_TargetAssemblyTypeName: Potato.Gameplay.UI.AmmoUI, potato.gameplay.ui
         m_MethodName: UpdateCurrentAmmo
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1678032197
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1678032186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51b4d53e1826a6b4ebb916b759e929bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _description: 
+  _eventSource: {fileID: 11400000, guid: 5dc917451659cf647b62a4d73d1e81c6, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1678032194}
+        m_TargetAssemblyTypeName: Potato.Gameplay.UI.AmmoUI, potato.gameplay.ui
+        m_MethodName: UpdateActiveWeapon
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -13,11 +13,11 @@ namespace Potato.Gameplay.UI
         
         [Header("Shared Data")]
         [SerializeField] private IntReference playerCurrentAmmo;        
-        [SerializeField] private IntReference playerMaxAmmo;
+        [SerializeField] private WeaponReference activeWeaponRef;
 
         void OnEnable()
         {
-            UpdateMaxAmmo(playerMaxAmmo.Value);
+            UpdateActiveWeapon(activeWeaponRef.Value);
             UpdateCurrentAmmo(playerCurrentAmmo.Value);
         }
 
@@ -26,13 +26,14 @@ namespace Potato.Gameplay.UI
             currentAmmoDisplay.text = newCurrentAmmo.ToString();
         }
 
-        public void UpdateMaxAmmo(int newMaxAmmo)
+        public void UpdateActiveWeapon(WeaponController activeWeapon)
         {
-            // hide display if max ammo is 0
-            if(ammoDisplayRoot.activeSelf != (newMaxAmmo != 0))
-                ammoDisplayRoot.SetActive(newMaxAmmo != 0);
+            // hide display if max ammo is 0, check for change before setting
+            if(ammoDisplayRoot.activeSelf != (activeWeapon != null))
+                ammoDisplayRoot.SetActive(activeWeapon != null);
 
-            maxAmmoDisplay.text = newMaxAmmo.ToString();
+            if(activeWeapon != null)
+                maxAmmoDisplay.text = activeWeapon.MaxAmmo.ToString();
         }
     }
 }

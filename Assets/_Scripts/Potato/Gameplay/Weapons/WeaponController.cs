@@ -91,11 +91,6 @@ namespace Potato.Gameplay
             }
         }
 
-        public void UpdateInputs(bool fire1Down, bool fire1Held, bool aimDown, bool reloadDown)
-        {
-            
-        }
-
         void UpdateAmmo()
         {
             if (_currentAmmo < maxAmmo && automaticReload && _lastShotTime + shotReloadDelay < Time.time &&  _lastAmmoTime + ammoReloadDelay < Time.time)

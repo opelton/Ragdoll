@@ -42,7 +42,6 @@ namespace Potato.Gameplay
         [SerializeField] private WeaponReference activeWeaponRef;
         [SerializeField] private BoolReference isAimingAtEnemy;
         [SerializeField] private IntReference playerCurrentAmmo;        
-        [SerializeField] private IntReference playerMaxAmmo;
 
         public bool IsAiming { get; private set; }
         public int ActiveWeaponIndex { get; private set; }
@@ -58,11 +57,6 @@ namespace Potato.Gameplay
         private int _nextWeaponIndex;
 
         // first person animator should have the weapon audio source, not each weapon prefab
-        // weapon switching needs huge refactor
-            // SwitchToWeaponIndex is used on Start
-            // UpdateWeaponSwitching is used every other time weapons switch
-        // HUD should listen to active weapon events and update logos/crosshairs/ammo/etc
-            // keep current/max ammo variables?
         void Start()
         {
             ActiveWeaponIndex = -1;
@@ -72,7 +66,7 @@ namespace Potato.Gameplay
             foreach (var weapon in StartingWeapons)
                 AddWeapon(weapon);
 
-            SwitchWeapon(true);
+            SwapWeapon();
         }
 
         // todo -- only forward the inputs to current weapon, should not handle things like ammo or reloading
@@ -102,7 +96,6 @@ namespace Potato.Gameplay
                         fire1Input.ButtonPressed,
                         fire1Input.ButtonDown);
 
-                    // Handle accumulating recoil
                     if (hasFired)
                         onShootEvent.Invoke(GetWeaponAttackInfo(activeWeapon), this);
                 }
@@ -110,14 +103,6 @@ namespace Potato.Gameplay
                 if(playerCurrentAmmo.Value != activeWeapon.CurrentAmmo)
                     playerCurrentAmmo.Value = activeWeapon.CurrentAmmo;
             }
-
-            // // weapon switch handling
-            // if ((_weaponStance == WeaponStance.Up || _weaponStance == WeaponStance.Down)
-            //     && !IsAiming && activeWeapon == null)
-            // {
-            //     if(weaponSwitchInput.ButtonPressed)
-            //         SwitchWeapon(true);
-            // }
 
             // Pointing at enemy handling
             var targetingHostile = activeWeapon != null && rats.IsTargetingEnemy(gameObject, playerCams.AimPos, playerCams.AimDir);
@@ -131,31 +116,6 @@ namespace Potato.Gameplay
         void LateUpdate()
         {
             UpdateWeaponSwitching();
-        }
-
-        // Iterate on all weapon slots to find the next valid weapon to switch to
-        void SwitchWeapon(bool ascendingOrder)
-        {
-            int newWeaponIndex = -1;
-            int closestSlotDistance = _weaponSlots.Length;
-            for (int i = 0; i < _weaponSlots.Length; i++)
-            {
-                // If the weapon at this slot is valid, calculate its "distance" from the active slot index (either in ascending or descending order)
-                // and select it if it's the closest distance yet
-                if (i != ActiveWeaponIndex && GetWeaponAtSlotIndex(i) != null)
-                {
-                    int distanceToActiveIndex = GetDistanceBetweenWeaponSlots(ActiveWeaponIndex, i, ascendingOrder);
-
-                    if (distanceToActiveIndex < closestSlotDistance)
-                    {
-                        closestSlotDistance = distanceToActiveIndex;
-                        newWeaponIndex = i;
-                    }
-                }
-            }
-
-            // Handle switching to the new weapon index
-            SwitchToWeaponIndex(newWeaponIndex);
         }
 
         // Switches to the given weapon index in weapon slots if the new index is a valid weapon that is different from our current one
@@ -173,7 +133,6 @@ namespace Potato.Gameplay
                     _weaponStance = WeaponStance.Drawing;
                     ActiveWeaponIndex = _nextWeaponIndex;
 
-                    //Debug.Log("SwitchToWeaponIndex");
                     WeaponController newWeapon = GetWeaponAtSlotIndex(_nextWeaponIndex);
                     OnWeaponSwitched(newWeapon);
                 }
@@ -222,7 +181,7 @@ namespace Potato.Gameplay
         }
 
         // Adds a weapon to our inventory
-        public bool AddWeapon(WeaponController weaponPrefab)
+        bool AddWeapon(WeaponController weaponPrefab)
         {
             // search our weapon slots for the first free one, assign the weapon to it, and return true if we found one. Return false otherwise
             for (int i = 0; i < _weaponSlots.Length; i++)
@@ -251,7 +210,7 @@ namespace Potato.Gameplay
 
             // Handle auto-switching to weapon if no weapons currently
             if (GetActiveWeapon() == null)
-                SwitchWeapon(true);
+                SwapWeapon();
 
             return false;
         }
@@ -259,7 +218,7 @@ namespace Potato.Gameplay
 
         public WeaponController GetActiveWeapon() => GetWeaponAtSlotIndex(ActiveWeaponIndex);
 
-        public WeaponController GetWeaponAtSlotIndex(int index)
+        WeaponController GetWeaponAtSlotIndex(int index)
         {
             // find the active weapon in our weapon slots based on our active weapon index
             if (index >= 0 && index < _weaponSlots.Length)
@@ -269,32 +228,22 @@ namespace Potato.Gameplay
             return null;
         }
 
-        // Calculates the "distance" between two weapon slot indexes
-        // For example: if we had 5 weapon slots, the distance between slots #2 and #4 would be 2 in ascending order, and 3 in descending order
-        int GetDistanceBetweenWeaponSlots(int fromSlotIndex, int toSlotIndex, bool ascendingOrder)
-        {
-            int distanceBetweenSlots = 0;
-
-            if (ascendingOrder)
-                distanceBetweenSlots = toSlotIndex - fromSlotIndex;
-            else
-                distanceBetweenSlots = -1 * (toSlotIndex - fromSlotIndex);
-
-            if (distanceBetweenSlots < 0)
-                distanceBetweenSlots = _weaponSlots.Length + distanceBetweenSlots;
-
-            return distanceBetweenSlots;
-        }
-
         void OnWeaponSwitched(WeaponController newGun)
         {
             if (newGun != null)
                 newGun.ShowWeapon(true);
             
-            playerMaxAmmo.Value = newGun.MaxAmmo;
+            activeWeaponRef.Value = newGun;
         }
 
-        public void SwapWeapon() => SwitchWeapon(true);
+        public void SwapWeapon()
+        {
+            var nextIndex = ActiveWeaponIndex + 1;
+            if(nextIndex >= _weaponSlots.Length || _weaponSlots[nextIndex] == null)
+                nextIndex = 0;
+
+            SwitchToWeaponIndex(nextIndex);
+        }
         
         WeaponAttackInfo GetWeaponAttackInfo(WeaponController activeWeapon)
         {
