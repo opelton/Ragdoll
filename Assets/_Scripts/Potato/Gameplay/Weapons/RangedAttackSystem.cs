@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Potato.Gameplay
 {
     // owner of hitscan, projectiles, and explosions
-    [CreateAssetMenu(menuName = "ScriptableObjects/Gameplay/Systems/RangedAttack")]
+    [CreateAssetMenu(menuName = "ScriptableObjects/Systems/RangedAttack")]
     public class RangedAttackSystem : ScriptableObject
     {
         [SerializeField] private float maxRaycastRange = 1000f;

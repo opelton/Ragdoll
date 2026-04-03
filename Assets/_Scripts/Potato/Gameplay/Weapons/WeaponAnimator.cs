@@ -1,3 +1,4 @@
+using Potato.Game;
 using UnityEngine;
 
 namespace Potato.Gameplay
@@ -5,6 +6,7 @@ namespace Potato.Gameplay
     public class WeaponAnimator : MonoBehaviour
     {
         const string k_AnimAttackParameter = "Attack";
+        [SerializeField] private AudioSystem audioSystem;
 
         [Header("Audio & Visual")]
         [SerializeField] private GameObject muzzleFlashPrefab;
@@ -12,12 +14,10 @@ namespace Potato.Gameplay
         [SerializeField] private AudioClip shootSfx;
         [SerializeField] private AudioClip changeWeaponSfx;
 
-        AudioSource _shootAudioSource;
         Animator _weaponAnimator;
 
         void Awake()    // _shootAudioSource null ref if this is Start()
         {
-            TryGetComponent(out _shootAudioSource);
             TryGetComponent(out _weaponAnimator);
         }
 
@@ -29,15 +29,7 @@ namespace Potato.Gameplay
 
         public void OnShowWeapon()
         {
-            if(_shootAudioSource != null)
-            {
-                // todo -- game systems lifecycle should be managed to guarantee things like audio sources are set up ahead of time
-                // also, this doesn't fix what it's trying to fix...
-                if(_shootAudioSource.enabled == false)
-                    _shootAudioSource.enabled = true;
-
-                _shootAudioSource.PlayOneShot(changeWeaponSfx);
-            }
+            audioSystem.PlayFirstPersonAudio(changeWeaponSfx);
         }
 
         public void OnWeaponFired(Transform muzzleTransform)
@@ -55,8 +47,8 @@ namespace Potato.Gameplay
             }
 
             // play shoot SFX
-            if (shootSfx && _shootAudioSource != null)
-                _shootAudioSource.PlayOneShot(shootSfx);
+            if (shootSfx)
+                audioSystem.PlayFirstPersonAudio(shootSfx);
 
             // Trigger attack animation if there is any
             if (_weaponAnimator != null)

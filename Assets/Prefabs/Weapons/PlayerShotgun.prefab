@@ -117,6 +117,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf6b90aa9176c9849b4cef067c593870, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioSystem: {fileID: 11400000, guid: b53c0bb3d09ac564b9285025ee046e23, type: 2}
   muzzleFlashPrefab: {fileID: 748781637555137343, guid: b5e7a6bb4fce0154b94696224c463829, type: 3}
   unparentMuzzleFlash: 0
   shootSfx: {fileID: 8300000, guid: 0c7def6a5b8d24f4ba66cad10e9288fe, type: 3}
