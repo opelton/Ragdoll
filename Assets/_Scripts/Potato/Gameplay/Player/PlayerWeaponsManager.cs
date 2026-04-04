@@ -76,25 +76,16 @@ namespace Potato.Gameplay
 
             if (activeWeapon != null)
             {
-                if(activeWeapon.IsReloading)
-                    return;
-
                 if (_weaponStance == WeaponStance.Up)
                 {
-                    if (!activeWeapon.AutomaticReload && reloadInput.ButtonPressed && activeWeapon.CurrentAmmo < activeWeapon.MaxAmmo)
-                    {
-                        IsAiming = false;
-                        activeWeapon.StartReload();
-                        return;
-                    }
-
                     // handle aiming down sights
-                    IsAiming = fire2Input.ButtonDown;
+                    IsAiming = fire2Input.ButtonDown && !activeWeapon.IsReloading;
 
                     // handle shooting
-                    bool hasFired = activeWeapon.HandleShootInputs(
+                    bool hasFired = activeWeapon.HandleWeaponInputs(
                         fire1Input.ButtonPressed,
-                        fire1Input.ButtonDown);
+                        fire1Input.ButtonDown,
+                        reloadInput.ButtonPressed);
 
                     if (hasFired)
                         onShootEvent.Invoke(GetWeaponAttackInfo(activeWeapon), this);
@@ -195,7 +186,6 @@ namespace Potato.Gameplay
 
                     // Set owner to this gameObject so the weapon can alter projectile/damage logic accordingly
                     weaponInstance.Owner = gameObject;
-                    weaponInstance.SourcePrefab = weaponPrefab.gameObject;
                     weaponInstance.ShowWeapon(false);
 
                     // Assign the first person layer to the weapon

@@ -1006,8 +1006,7 @@ MonoBehaviour:
   rats: {fileID: 11400000, guid: beabe8fa1f42ec944b266f906c28d1ff, type: 2}
   weaponRoot: {fileID: 3338884953393690280}
   StartingWeapons:
-  - {fileID: 5979245870570534767, guid: fbe33a8693f271a4a99908b53483f68d, type: 3}
-  - {fileID: 5979245870570534767, guid: d5aa1d876679b8e48914fc3c797f0f8f, type: 3}
+  - {fileID: -3478305940785308574, guid: fbe33a8693f271a4a99908b53483f68d, type: 3}
   fpsWeaponsLayer: 6
   playerCams: {fileID: 5482295246588910145}
   fire1Input: {fileID: 11400000, guid: 0b3c55cacbbd1c14c84865d5434afddb, type: 2}
