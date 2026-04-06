@@ -1007,6 +1007,7 @@ MonoBehaviour:
   weaponRoot: {fileID: 3338884953393690280}
   StartingWeapons:
   - {fileID: -3478305940785308574, guid: fbe33a8693f271a4a99908b53483f68d, type: 3}
+  - {fileID: 8045222605648114655, guid: 0fa2a51bf7c7ae0419f36bcd26c8356d, type: 3}
   fpsWeaponsLayer: 6
   playerCams: {fileID: 5482295246588910145}
   fire1Input: {fileID: 11400000, guid: 0b3c55cacbbd1c14c84865d5434afddb, type: 2}

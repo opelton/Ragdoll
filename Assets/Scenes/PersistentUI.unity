@@ -6207,6 +6207,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 437bee966051d96449d75a5c8273ad51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerActiveWeapon:
+    UseConstant: 0
+    _description: 
+    ConstantValue: {fileID: 0}
+    ReferenceData: {fileID: 11400000, guid: 6d891ef6534953a49bdcb66b5185210b, type: 2}
   isPlayerTargetingEnemy:
     UseConstant: 0
     _description: 
@@ -6214,6 +6219,7 @@ MonoBehaviour:
     ReferenceData: {fileID: 11400000, guid: e89d675cae355d24b9a86a49dc6e6132, type: 2}
   crosshairImage: {fileID: 8482267084639903874}
   defaultCrosshairSprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  defaultCrosshairSize: 5
   crosshairColor_Neutral: {r: 1, g: 1, b: 1, a: 1}
   crosshairColor_Hostile: {r: 1, g: 0, b: 0, a: 1}
 --- !u!114 &1678032192
@@ -6321,6 +6327,18 @@ MonoBehaviour:
       - m_Target: {fileID: 1678032194}
         m_TargetAssemblyTypeName: Potato.Gameplay.UI.AmmoUI, potato.gameplay.ui
         m_MethodName: UpdateActiveWeapon
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1678032191}
+        m_TargetAssemblyTypeName: Potato.Gameplay.UI.PlayerCrosshairUI, potato.gameplay.ui
+        m_MethodName: OnPlayerActiveWeaponChanged
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

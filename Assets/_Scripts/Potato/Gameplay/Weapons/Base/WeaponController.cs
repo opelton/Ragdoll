@@ -9,7 +9,6 @@ namespace Potato.Gameplay
     {
         public Sprite CrosshairSprite;
         public int CrosshairSize;
-        public Color CrosshairColor;
     }
 
     public abstract class WeaponController : MonoBehaviour
@@ -25,8 +24,7 @@ namespace Potato.Gameplay
         [Header("WeaponInfo")]
         public string WeaponDisplayName;
         public Sprite WeaponIcon;
-        public CrosshairData CrosshairData_Default;
-        public CrosshairData CrosshairData_TargetingEnemy;
+        public CrosshairData WeaponCrosshairData;
 
         [Header("Shoot Parameters")]
         [SerializeField] protected ShootType shootType;

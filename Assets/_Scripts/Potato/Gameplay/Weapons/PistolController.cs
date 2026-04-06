@@ -3,7 +3,7 @@ using Potato.Game;
 
 namespace Potato.Gameplay
 {
-    public class ShotgunController : WeaponController
+    public class PistolController : WeaponController
     {
         enum WeaponState { Ready, Reloading }
 
