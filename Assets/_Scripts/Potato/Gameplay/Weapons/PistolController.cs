@@ -9,6 +9,12 @@ namespace Potato.Gameplay
 
         StateMachine<WeaponState> _fsm;
 
+        // todo -- sequence
+        // 1. open ammo
+        // 2. dump spent rounds
+        // 3. load new rounds
+        // 4. ready gun
+        // 5. firing+cooldown
         protected override void Awake()
         {
             base.Awake();

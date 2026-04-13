@@ -9,6 +9,12 @@ namespace Potato.Gameplay
 
         StateMachine<WeaponState> _fsm;
 
+        // todo -- sequence
+        // 0. prepare for reload (shift grip, palm ammo, open latch, etc)
+        // 1. shell into tube (repeat if not full)
+        // 2. pump(back) eject spent shell, ready new shell from tube into receiver
+        // 3. pump(forward) chambers new shell from receiver
+        // 4. firing+cooldown
         protected override void Awake()
         {
             base.Awake();
