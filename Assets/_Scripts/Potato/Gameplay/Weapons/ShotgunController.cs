@@ -7,6 +7,8 @@ namespace Potato.Gameplay
     {
         enum WeaponState { Ready, Reloading }
 
+        ShotgunAnimator Animator => (ShotgunAnimator)weaponAnimator;
+
         StateMachine<WeaponState> _fsm;
 
         // todo -- sequence
@@ -25,7 +27,7 @@ namespace Potato.Gameplay
                 _fsm.AddState(new(WeaponState.Reloading,
                 onEnter: () =>
                 {
-                    weaponAnimator.StartReloadAnimation();
+                    Animator.StartReloadAnimation();
                     IsReloading = true;
                 },
                 onUpdate: dt =>

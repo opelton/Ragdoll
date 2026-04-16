@@ -70,10 +70,12 @@ namespace Potato.Gameplay
             }
         }
 
-        public void ShowWeapon(bool show)
+        public virtual void ShowWeapon(bool show)
         {
             weaponRoot.SetActive(show);
-            weaponAnimator.OnShowWeapon();
+
+            if(show)
+                weaponAnimator.AnimateShowWeapon();
         }
 
         public abstract bool HandleWeaponInputs(bool fire1Down, bool fire1Held, bool reloadDown);
@@ -81,7 +83,7 @@ namespace Potato.Gameplay
         protected virtual void FireWeapon()
         {
             rats.DoProjectileAttack(this, projectilePrefab, weaponMuzzle.position, weaponMuzzle.forward, bulletsPerShot, bulletSpreadAngle);
-            weaponAnimator.OnWeaponFired(weaponMuzzle);
+            weaponAnimator.AnimateWeaponAttack(weaponMuzzle);
             _lastShotTime = Time.time;
         }
     }
