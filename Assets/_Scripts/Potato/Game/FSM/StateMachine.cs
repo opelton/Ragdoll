@@ -22,6 +22,19 @@ namespace Potato.Game
                 _nextState = state;
         }
 
+        public void SetCurrentState(T identifier)
+        {
+            if(_currentState != null && EqualityComparer<T>.Default.Equals(_currentState.Identifier, identifier))
+                return;
+
+            if(_states.TryGetValue(identifier, out State<T> nextState))
+            {
+                _currentState?.ExitState();
+                _currentState = nextState;
+                _currentState.EnterState();
+            }
+        }
+
         public void Update(float dt)
         {
             if(_nextState != null && _currentState != _nextState)

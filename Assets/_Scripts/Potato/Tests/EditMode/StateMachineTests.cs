@@ -152,7 +152,7 @@ namespace Potato.Tests.EditMode
         }
 
         [Test]
-        public void ChangeState()
+        public void SetNextState()
         {
             var fsm = new StateMachine<int>();
             float alice = 0f;
@@ -161,22 +161,58 @@ namespace Potato.Tests.EditMode
             // first update should enter the state, next update should call its update
             fsm.AddState(new State<int>(0, onUpdate: value => alice += value));
             fsm.AddState(new State<int>(1, onUpdate: value => bob += value));
+
+            // next state is applied on next update
             fsm.SetNextState(0);
+
+            // on enter/exit triggered on first update, update hasn't happened yet
             fsm.Update(1f);
+
+            // onUpdate hasn't been called yet
+            Assert.AreEqual(0f, alice);
+            Assert.AreEqual(0f, bob);
+
+            // first update after entering state, onUpdate is called
             fsm.Update(1f);
 
             // alice was updated once, bob hasn't gone yet
             Assert.AreEqual(1f, alice);
             Assert.AreEqual(0f, bob);
 
-            // bob's turn
+            // bob's turn, update twice to enter state and then update once
             fsm.SetNextState(1);
             fsm.Update(1f);
             fsm.Update(1f);
 
-            // alice stopped updating
+            // alice stopped updating, bob has updated once
             Assert.AreEqual(1f, bob);
             Assert.AreEqual(1f, alice);
+        }
+
+        [Test]
+        public void SetCurrentState()
+        {
+            var fsm = new StateMachine<int>();
+            int alice = 0;
+            int bob = 0;
+            
+            // first update should enter the state, next update should call its update
+            fsm.AddState(new State<int>(0, onEnter: () => alice += 1));
+            fsm.AddState(new State<int>(1, onEnter: () => bob += 1));
+
+            // no state entered yet
+            Assert.AreEqual(0, alice);
+            Assert.AreEqual(0, bob);
+
+            // on enter should be called immediately, without waiting for update
+            fsm.SetCurrentState(0);
+
+            Assert.AreEqual(1, alice);
+            Assert.AreEqual(0, bob);
+
+            fsm.SetCurrentState(1);
+            Assert.AreEqual(1, alice);
+            Assert.AreEqual(1, bob);
         }
 
         [Test]
