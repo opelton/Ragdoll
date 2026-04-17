@@ -6,13 +6,19 @@ namespace Potato.Gameplay
 {
     public class ShotgunController : WeaponController
     {
-        enum WeaponState { Neutral, Firing, Reloading, Extracting, Chambering }
+        enum WeaponState { Neutral, Firing, Reloading, Extracting, Chambering, Slamfiring }
         enum ChamberState { Empty, Ready, Fired }
+
+        [Header("Special params")]
+        [SerializeField] private float minSlamfireTime = .5f;
+
+
         ShotgunAnimator Animator => (ShotgunAnimator)weaponAnimator;
 
         // control vars
         ChamberState _chamberState = ChamberState.Ready;
         bool _receiverLoaded;   // a shell is ready to be chambered
+        bool _triggerPulled = false;
 
         // shotgun state control
         StateMachine<WeaponState> _fsm;
@@ -26,6 +32,11 @@ namespace Potato.Gameplay
             _fsm.SetNextState(WeaponState.Neutral);
         }
 
+        void OnEnable()
+        {
+            _fsm?.SetNextState(WeaponState.Neutral);
+        }
+
         protected override void Update()
         {
             _fsm.Update(Time.deltaTime);
@@ -33,27 +44,24 @@ namespace Potato.Gameplay
 
         public override bool HandleWeaponInputs(bool fire1Down, bool fire1Held, bool reloadDown)
         {
+            if(_triggerPulled != fire1Held)
+            {
+                if(fire1Held)
+                    Animator.AnimateTrigger_Pulled();
+                else
+                    Animator.AnimateTrigger_Release();
+            }
+            _triggerPulled = fire1Held;
+
             if(reloadDown)
             {
                 RequestReload();
                 return false;                
             }
 
-            switch (shootType)
-            {
-                case ShootType.Manual:
-                    if (fire1Down)
-                        return TryShoot();
-                    return false;
-
-                case ShootType.Automatic:
-                    if (fire1Held)
-                        return TryShoot();
-                    return false;
-
-                default:
-                    return false;
-            }
+            if(_triggerPulled)
+                return TryShoot();
+            return false;
         }
 
         // todo -- state transition control is busted
@@ -80,11 +88,22 @@ namespace Potato.Gameplay
                 if(_chamberState == ChamberState.Fired)
                     _fsm.SetCurrentState(WeaponState.Extracting);
                 else if(_receiverLoaded)
-                    _fsm.SetCurrentState(WeaponState.Chambering);
-
+                {
+                    if(_lastShotTime + shotCooldown + minSlamfireTime < Time.time)
+                        _fsm.SetCurrentState(WeaponState.Slamfiring);                    
+                    else
+                        _fsm.SetCurrentState(WeaponState.Chambering);
+                }
             }
 
             return false;
+        }
+
+        void HandleShooting()
+        {
+            FireWeapon();
+            _currentAmmo -= 1;
+            _chamberState = ChamberState.Fired;
         }
 
         void RequestReload()
@@ -112,9 +131,7 @@ namespace Potato.Gameplay
             _fsm.AddState(new(WeaponState.Firing,
                 onEnter: () =>
                 {
-                    FireWeapon();
-                    _currentAmmo -= 1;
-                    _chamberState = ChamberState.Fired;
+                    HandleShooting();
                 },
                 onUpdate: _ =>
                 {
@@ -122,10 +139,6 @@ namespace Potato.Gameplay
                     // lastShotTime instead of timeInState because interrupts (todo) shouldn't stop cooldown
                     if(CurrentAmmo != 0 && _lastShotTime + (shotCooldown * .25f) <= Time.time)
                         _fsm.SetCurrentState(WeaponState.Extracting);
-                },
-                onExit: () =>
-                {
-                    Animator.AnimateTrigger_Release();
                 }
             ));
 
@@ -186,6 +199,28 @@ namespace Potato.Gameplay
                     // chamber time = 40-45% shot cd
                     if(_fsm.TimeInState >= shotCooldown * .45f)
                         _fsm.SetCurrentState(WeaponState.Neutral);
+                },
+                onExit: () =>
+                {
+                    Animator.AnimateForendPosition(0f);
+                    _receiverLoaded = false;
+                    _chamberState = ChamberState.Ready;
+                }
+            ));
+
+            _fsm.AddState(new(WeaponState.Slamfiring,
+                onEnter: () =>
+                {
+                    HandleShooting();
+                },
+                onUpdate: _ =>
+                {
+                    float extractLerp = 1f - (_fsm.TimeInState / (shotCooldown * .1f));
+                    Animator.AnimateForendPosition(extractLerp);
+
+                    // delay before pump = 20-30% shot cd
+                    if(CurrentAmmo != 0 && _lastShotTime + (shotCooldown * .25f) <= Time.time)
+                        _fsm.SetCurrentState(WeaponState.Extracting);
                 },
                 onExit: () =>
                 {

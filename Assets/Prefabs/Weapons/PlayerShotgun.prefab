@@ -92,7 +92,7 @@ MonoBehaviour:
   shotCooldown: 0.625
   bulletSpreadAngle: 3
   bulletsPerShot: 8
-  recoilForce: 1
+  recoilForce: 1.5
   aimZoomRatio: 0.8
   aimOffset: {x: -0.21, y: -0.05, z: -0.7}
   ammoReloadDelay: 0.5
