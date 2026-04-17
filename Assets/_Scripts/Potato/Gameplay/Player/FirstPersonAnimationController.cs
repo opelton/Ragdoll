@@ -25,6 +25,7 @@ namespace Potato.Gameplay
         private Vector3 _weaponRecoilLocalPos;
         private Vector3 _totalRecoil;
         private Vector3 _weaponLocalPos;
+        private Quaternion _weaponLocalRotation;
         private Vector3 _weaponBobLocalPos;
         private Vector3 _lastPlayerPos;
         private float _weaponBobFactor;
@@ -45,8 +46,10 @@ namespace Potato.Gameplay
             UpdateWeaponSwitchingAnimation(_weapons.WeaponSwitchTimingFactor);
 
             // Set final weapon socket position based on all the combined animation influences
-            weaponRoot.localPosition =
-                _weaponLocalPos + _weaponBobLocalPos + _weaponRecoilLocalPos;
+            
+            weaponRoot.SetLocalPositionAndRotation(
+                _weaponLocalPos + _weaponBobLocalPos + _weaponRecoilLocalPos,
+                _weaponLocalRotation);
         }
 
         void UpdateWeaponRecoil()
@@ -113,12 +116,20 @@ namespace Potato.Gameplay
                         weaponPose_Aiming.localPosition + activeWeapon.AimOffset,
                         aimAnimationSpeed * Time.deltaTime);
 
+                    _weaponLocalRotation = Quaternion.Lerp(_weaponLocalRotation,
+                        Quaternion.Inverse(activeWeapon.WeaponMeshTransform.localRotation),
+                        aimAnimationSpeed * Time.deltaTime);
+
                     playerStanceFovModifier.Value = Mathf.Lerp(playerStanceFovModifier.Value, activeWeapon.AimZoomRatio, aimAnimationSpeed * Time.deltaTime);
                 }
                 else
                 {
                     _weaponLocalPos = Vector3.Lerp(_weaponLocalPos,
                         weaponPose_Default.localPosition, aimAnimationSpeed * Time.deltaTime);
+
+                    _weaponLocalRotation = Quaternion.Lerp(_weaponLocalRotation,
+                        Quaternion.identity,
+                        aimAnimationSpeed * Time.deltaTime);
 
                     playerStanceFovModifier.Value = Mathf.Lerp(playerStanceFovModifier.Value, 1f, aimAnimationSpeed * Time.deltaTime);
                 }
@@ -128,23 +139,34 @@ namespace Potato.Gameplay
         // Updates the animated transition of switching weapons
         void UpdateWeaponSwitchingAnimation(float switchingTimeFactor)
         {
-            var weaponStance = _weapons.Stance;
+            WeaponController activeWeapon = _weapons.GetActiveWeapon();
+            if(activeWeapon == null)
+                return;
 
             // Handle moving the weapon socket position for the animated weapon switching
-            if (weaponStance == PlayerWeaponsManager.WeaponStance.Stowing)
+            if (_weapons.Stance == PlayerWeaponsManager.WeaponStance.Stowing)
             {
                 _weaponLocalPos = Vector3.Lerp(weaponPose_Default.localPosition,
                     weaponPose_Down.localPosition, switchingTimeFactor);
+
+                _weaponLocalRotation = Quaternion.Lerp(_weaponLocalRotation,
+                        weaponPose_Down.transform.localRotation,
+                        aimAnimationSpeed * Time.deltaTime);
             }
-            else if (weaponStance == PlayerWeaponsManager.WeaponStance.Drawing)
+            else if (_weapons.Stance == PlayerWeaponsManager.WeaponStance.Drawing)
             {
                 _weaponLocalPos = Vector3.Lerp(weaponPose_Down.localPosition,
                     weaponPose_Default.localPosition, switchingTimeFactor);
+
+                _weaponLocalRotation = Quaternion.Lerp(_weaponLocalRotation,
+                        weaponPose_Default.transform.localRotation,
+                        aimAnimationSpeed * Time.deltaTime);
             }
         }
 
         void SetWeaponPose_Down() => _weaponLocalPos = weaponPose_Down.localPosition;
 
+        // todo -- better animation controls (state-based?) recoil time + position
         public void OnWeaponFired(WeaponAttackInfo attackData)
         {
             _totalRecoil += Vector3.back * attackData.recoilForce;

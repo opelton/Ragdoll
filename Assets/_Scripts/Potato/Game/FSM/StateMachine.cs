@@ -24,11 +24,11 @@ namespace Potato.Game
 
         public void SetCurrentState(T identifier)
         {
-            if(_currentState != null && EqualityComparer<T>.Default.Equals(_currentState.Identifier, identifier))
-                return;
-
             if(_states.TryGetValue(identifier, out State<T> nextState))
             {
+                if(_currentState == nextState)
+                    return;
+
                 _currentState?.ExitState();
                 _currentState = nextState;
                 _currentState.EnterState();
@@ -50,5 +50,14 @@ namespace Potato.Game
         }
 
         public void ResetState() => _currentState?.EnterState();
+
+        public void RepeatState()
+        {
+            if(_currentState == null)
+                return;
+
+            _currentState.ExitState();
+            _currentState.EnterState();
+        }
     }
 }

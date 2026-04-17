@@ -25,7 +25,7 @@ namespace Potato.Gameplay
                 _fsm.AddState(new(WeaponState.Reloading,
                 onEnter: () =>
                 {
-                    weaponAnimator.StartReloadAnimation();
+                    //weaponAnimator.StartReloadAnimation();
                     IsReloading = true;
                 },
                 onUpdate: dt =>

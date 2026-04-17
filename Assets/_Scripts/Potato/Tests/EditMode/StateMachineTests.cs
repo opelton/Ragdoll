@@ -152,6 +152,23 @@ namespace Potato.Tests.EditMode
         }
 
         [Test]
+        public void ExitStateImmediate()
+        {
+            var fsm = new StateMachine<int>();
+            float data = 0f;
+            
+            // should do nothing until transitioning to the next state
+            fsm.AddState(new State<int>(0, onExit: () => data += 1f));
+            fsm.AddState(new State<int>(1));
+
+            fsm.SetCurrentState(0);
+            Assert.AreEqual(0f, data);
+
+            fsm.SetCurrentState(1);
+            Assert.AreEqual(1f, data);
+        }
+
+        [Test]
         public void SetNextState()
         {
             var fsm = new StateMachine<int>();

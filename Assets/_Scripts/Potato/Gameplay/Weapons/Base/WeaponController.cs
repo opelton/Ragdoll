@@ -19,6 +19,7 @@ namespace Potato.Gameplay
         [SerializeField] protected WeaponAnimator weaponAnimator;
         [SerializeField] protected ProjectileBase projectilePrefab;
         [SerializeField] protected GameObject weaponRoot;
+        [SerializeField] protected Transform weaponMeshTransform;
         [SerializeField] protected Transform weaponMuzzle;
 
         [Header("WeaponInfo")]
@@ -52,6 +53,7 @@ namespace Potato.Gameplay
         public Vector3 MuzzleWorldVelocity { get; private set; }
         public float RecoilForce => recoilForce;
         public Vector3 AimOffset => aimOffset;
+        public Transform WeaponMeshTransform => weaponMeshTransform;
         public float AimZoomRatio => aimZoomRatio;
         public bool IsReloading { get; protected set; }
 

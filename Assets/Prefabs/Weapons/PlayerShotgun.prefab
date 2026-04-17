@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 194752902605644694}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.092, z: 1.989}
+  m_LocalPosition: {x: 0, y: -0.06, z: 2.12}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -63,7 +63,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7481629919649122903}
-  - {fileID: 3150095933379938902}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &-3478305940785308574
@@ -82,6 +81,7 @@ MonoBehaviour:
   weaponAnimator: {fileID: 2925216673732141023}
   projectilePrefab: {fileID: -8391667986270217369, guid: e254e57d705dd7d4b91ffa5173f36eef, type: 3}
   weaponRoot: {fileID: 272834481384891812}
+  weaponMeshTransform: {fileID: 7481629919649122903}
   weaponMuzzle: {fileID: 1732878112373857488}
   WeaponDisplayName: Shotgun
   WeaponIcon: {fileID: 21300000, guid: 73527895d9b1a2f458340c1c094f5ca6, type: 3}
@@ -92,9 +92,9 @@ MonoBehaviour:
   shotCooldown: 0.625
   bulletSpreadAngle: 3
   bulletsPerShot: 8
-  recoilForce: 1.5
+  recoilForce: 1
   aimZoomRatio: 0.8
-  aimOffset: {x: 0, y: 0.075, z: 0}
+  aimOffset: {x: -0.21, y: -0.05, z: -0.7}
   ammoReloadDelay: 0.5
   maxAmmo: 6
   shotsPerReload: 1
@@ -115,8 +115,8 @@ MonoBehaviour:
   unparentMuzzleFlash: 0
   shootSfx: {fileID: 8300000, guid: 0c7def6a5b8d24f4ba66cad10e9288fe, type: 3}
   changeWeaponSfx: {fileID: 8300000, guid: 513333bff9ccdcd448c18e4d7220b01d, type: 3}
-  forendBone: {fileID: 0}
-  triggerBone: {fileID: 0}
+  forendBone: {fileID: 5721818058870618333}
+  triggerBone: {fileID: 1375567587646462410}
   forendPose_Front: 1.456282
   forendPose_Back: 1.12
   triggerPose_Pulled: 17.5
@@ -145,15 +145,15 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1013322581982692732}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.25, z: -1.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1732878112373857488}
   - {fileID: 4762198687984000951}
   - {fileID: 4340773259444232793}
-  m_Father: {fileID: 1233993565748622079}
+  m_Father: {fileID: 7481629919649122903}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2298219628515510740
 GameObject:
@@ -180,7 +180,7 @@ Transform:
   m_GameObject: {fileID: 2298219628515510740}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.0128, y: 0.101, z: 1.009}
+  m_LocalPosition: {x: 0, y: -0.06, z: 0.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -241,14 +241,15 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7885813220552656351}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.25, z: 1.2}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: 0, y: -0.0085519515, z: 0, w: 0.99996346}
+  m_LocalPosition: {x: 0.21, y: -0.05, z: 1.35}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 600137074108739444}
+  - {fileID: 3150095933379938902}
   m_Father: {fileID: 1233993565748622079}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -0.98, z: 0}
 --- !u!1001 &1143531676387133599
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -357,5 +358,15 @@ PrefabInstance:
 --- !u!4 &600137074108739444 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 7a6ffe80c5d35084a968c05d47629a0f, type: 3}
+  m_PrefabInstance: {fileID: 1143531676387133599}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1375567587646462410 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2074008158862512469, guid: 7a6ffe80c5d35084a968c05d47629a0f, type: 3}
+  m_PrefabInstance: {fileID: 1143531676387133599}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &5721818058870618333 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -4559508463208386494, guid: 7a6ffe80c5d35084a968c05d47629a0f, type: 3}
   m_PrefabInstance: {fileID: 1143531676387133599}
   m_PrefabAsset: {fileID: 0}

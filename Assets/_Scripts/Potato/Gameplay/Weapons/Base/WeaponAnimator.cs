@@ -13,14 +13,16 @@ namespace Potato.Gameplay
         [SerializeField] protected AudioClip shootSfx;
         [SerializeField] protected AudioClip changeWeaponSfx;
 
-        public virtual void StartReloadAnimation()
-        {
-
-        }
+        // public virtual void StartReloadAnimation() { }
 
         public virtual void AnimateShowWeapon()
         {
             audioSystem.PlayFirstPersonAudio(changeWeaponSfx);
+        }
+
+        public virtual void AnimateShellEject()
+        {
+            Debug.Log("todo -- eject shell");
         }
 
         public virtual void AnimateWeaponAttack(Transform muzzleTransform)
