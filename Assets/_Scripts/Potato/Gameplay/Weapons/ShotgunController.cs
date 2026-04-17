@@ -39,6 +39,7 @@ namespace Potato.Gameplay
 
         protected override void Update()
         {
+            base.Update();
             _fsm.Update(Time.deltaTime);
         }
 
@@ -47,37 +48,23 @@ namespace Potato.Gameplay
             if(_triggerPulled != fire1Held)
             {
                 if(fire1Held)
-                    Animator.AnimateTrigger_Pulled();
+                    Animator.AnimateTrigger_Pulled(CurrentAmmo == 0);
                 else
                     Animator.AnimateTrigger_Release();
             }
             _triggerPulled = fire1Held;
 
             if(reloadDown)
-            {
                 RequestReload();
-                return false;                
-            }
-
-            if(_triggerPulled)
+            else if(fire1Held)
                 return TryShoot();
+            
             return false;
         }
 
-        // todo -- state transition control is busted
-        // if chamber is ready, fire
-        // else if chamber is fired, extract
-        // else if chamber is empty
-            // if receiver is loaded, chamber+shoot (slamfire)
-            // if receiver is empty
-                // if tube has ammo, extract
-                // else, reload
         bool TryShoot()
         {
-            if(_currentAmmo <= 0)
-                RequestReload();
-
-            else if (_lastShotTime + shotCooldown < Time.time)
+            if (CurrentAmmo > 0 && _lastShotTime + shotCooldown < Time.time)
             {
                 if(_chamberState == ChamberState.Ready)
                 {
@@ -108,11 +95,13 @@ namespace Potato.Gameplay
 
         void RequestReload()
         {
+            // if ammo can be refilled, and isn't already reloading, trigger reload
             if(CurrentAmmo < MaxAmmo)
             {
                 if(!IsReloading)
                     _fsm.SetCurrentState(WeaponState.Reloading);
             }
+            // if full ammo, but chamber isn't ready to fire, make it ready
             else if(_chamberState != ChamberState.Ready)
             {
                 if(_chamberState == ChamberState.Empty && _receiverLoaded)
@@ -120,6 +109,9 @@ namespace Potato.Gameplay
                 else
                     _fsm.SetCurrentState(WeaponState.Extracting);
             }
+            // if the previous conditions are cleared, gun is ready to fire
+            else
+                _fsm.SetCurrentState(WeaponState.Neutral);
         }
 
         void InitializeStateMachine()
@@ -151,6 +143,8 @@ namespace Potato.Gameplay
                 {
                     if(_fsm.TimeInState >= ammoReloadDelay)
                     {
+                        Animator.Sfx_Reload();
+                        
                         _currentAmmo = Math.Min(_currentAmmo + shotsPerReload, MaxAmmo);
                         if(CurrentAmmo != MaxAmmo)
                             _fsm.ResetState();
@@ -168,6 +162,7 @@ namespace Potato.Gameplay
                 onEnter: () =>
                 {
                     Animator.AnimateForendPosition(0f);
+                    Animator.Sfx_Extract();
                 },
                 onUpdate: _ =>
                 {
@@ -180,9 +175,10 @@ namespace Potato.Gameplay
                 },
                 onExit: () =>
                 {
+                    Animator.AnimateForendPosition(1f);
                     Animator.AnimateShellEject();
                     _chamberState = ChamberState.Empty;
-                    _receiverLoaded = true;
+                    _receiverLoaded = CurrentAmmo > 0;
                 }
             ));
 
@@ -190,6 +186,7 @@ namespace Potato.Gameplay
                 onEnter: () =>
                 {
                     Animator.AnimateForendPosition(1f);
+                    Animator.Sfx_Chamber();
                 },
                 onUpdate: _ =>
                 {
@@ -203,14 +200,15 @@ namespace Potato.Gameplay
                 onExit: () =>
                 {
                     Animator.AnimateForendPosition(0f);
+                    _chamberState = _receiverLoaded ? ChamberState.Ready : ChamberState.Empty;
                     _receiverLoaded = false;
-                    _chamberState = ChamberState.Ready;
                 }
             ));
 
             _fsm.AddState(new(WeaponState.Slamfiring,
                 onEnter: () =>
                 {
+                    Animator.Sfx_Chamber();
                     HandleShooting();
                 },
                 onUpdate: _ =>
@@ -225,8 +223,8 @@ namespace Potato.Gameplay
                 onExit: () =>
                 {
                     Animator.AnimateForendPosition(0f);
+                    _chamberState = _receiverLoaded ? ChamberState.Ready : ChamberState.Empty;
                     _receiverLoaded = false;
-                    _chamberState = ChamberState.Ready;
                 }
             ));
         }

@@ -14,6 +14,14 @@ namespace Potato.Gameplay
         [SerializeField] private float triggerPose_Pulled;
         [SerializeField] private float triggerPose_Neutral;
 
+        [Header("SFX")]
+        [SerializeField] private AudioClip sfxTriggerDryfire;
+        [SerializeField] private AudioClip sfxTriggerPull;
+        [SerializeField] private AudioClip sfxTriggerRelease;
+        [SerializeField] private AudioClip sfxExtract;
+        [SerializeField] private AudioClip sfxChamber;
+        [SerializeField] private AudioClip sfxReload;
+
         // 0f = default
         // 1f = back
         public void AnimateForendPosition(float lerp)
@@ -24,7 +32,20 @@ namespace Potato.Gameplay
                  lerp);
         }
 
-        public void AnimateTrigger_Pulled() => triggerBone.localRotation = Quaternion.Euler(new Vector3(triggerPose_Pulled, 0f, 0f));
-        public void AnimateTrigger_Release() => triggerBone.localRotation = Quaternion.Euler(new Vector3(triggerPose_Neutral, 0f, 0f));
+        public void Sfx_Extract() => audioSystem.PlayFirstPersonAudio(sfxExtract);
+        public void Sfx_Chamber() => audioSystem.PlayFirstPersonAudio(sfxChamber);
+        public void Sfx_Reload() => audioSystem.PlayFirstPersonAudio(sfxReload);
+
+        public void AnimateTrigger_Pulled(bool dryfire = false)
+        {
+            audioSystem.PlayFirstPersonAudio(dryfire ? sfxTriggerDryfire : sfxTriggerPull);
+            triggerBone.localRotation = Quaternion.Euler(new Vector3(triggerPose_Pulled, 0f, 0f));
+        }
+
+        public void AnimateTrigger_Release()
+        {
+            audioSystem.PlayFirstPersonAudio(sfxTriggerRelease);
+            triggerBone.localRotation = Quaternion.Euler(new Vector3(triggerPose_Neutral, 0f, 0f));
+        }
     }
 }

@@ -5,9 +5,8 @@ namespace Potato.Gameplay
 {
     public class WeaponAnimator : MonoBehaviour
     {
+        [Header("Base animator params")]
         [SerializeField] protected AudioSystem audioSystem;
-
-        [Header("Audio & Visual")]
         [SerializeField] protected GameObject muzzleFlashPrefab;
         [SerializeField] protected bool unparentMuzzleFlash;
         [SerializeField] protected AudioClip shootSfx;
@@ -22,7 +21,7 @@ namespace Potato.Gameplay
 
         public virtual void AnimateShellEject()
         {
-            Debug.Log("todo -- eject shell");
+            //Debug.Log("todo -- eject shell");
         }
 
         public virtual void AnimateWeaponAttack(Transform muzzleTransform)
