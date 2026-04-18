@@ -176,7 +176,7 @@ namespace Potato.Gameplay
                 onExit: () =>
                 {
                     Animator.AnimateForendPosition(1f);
-                    Animator.AnimateShellEject();
+                    Animator.AnimateShellEject(MuzzleWorldVelocity);
                     _chamberState = ChamberState.Empty;
                     _receiverLoaded = CurrentAmmo > 0;
                 }

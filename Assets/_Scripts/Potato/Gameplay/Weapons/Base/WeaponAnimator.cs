@@ -19,7 +19,7 @@ namespace Potato.Gameplay
             audioSystem.PlayFirstPersonAudio(changeWeaponSfx);
         }
 
-        public virtual void AnimateShellEject()
+        public virtual void AnimateShellEject(Vector3 inheritedVelocity)
         {
             //Debug.Log("todo -- eject shell");
         }

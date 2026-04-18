@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1732878112373857488}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GunMuzzle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 1233993565748622079}
   - component: {fileID: -3478305940785308574}
   - component: {fileID: 2925216673732141023}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: PlayerShotgun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -128,6 +128,9 @@ MonoBehaviour:
   sfxExtract: {fileID: 8300000, guid: 509fe69b77d88d74c9dd6483e01be1f3, type: 3}
   sfxChamber: {fileID: 8300000, guid: 006393b178818204d8c27099f46f1709, type: 3}
   sfxReload: {fileID: 8300000, guid: fffc2b8dfbc092c48b054e7225a25ee8, type: 3}
+  shellCasing: {fileID: 842102195212727362, guid: ee6360921d4ef654896863dd281edbba, type: 3}
+  shellEjectionPort: {fileID: 4340773259444232793}
+  shellEjectionForce: 2
 --- !u!1 &1013322581982692732
 GameObject:
   m_ObjectHideFlags: 0
@@ -137,7 +140,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3150095933379938902}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sockets
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -171,7 +174,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4340773259444232793}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: EjectionPort
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -186,13 +189,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2298219628515510740}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.06, z: 0.1}
+  m_LocalRotation: {x: -0.0794527, y: 0.5872274, z: 0.058073014, w: 0.80341697}
+  m_LocalPosition: {x: 0.000000004656613, y: -0.060000017, z: 0.100000024}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3150095933379938902}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -11.296, y: 72.327, z: 0}
 --- !u!1 &6524709496503804387
 GameObject:
   m_ObjectHideFlags: 0
@@ -202,7 +205,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4762198687984000951}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: AimPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -233,7 +236,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7481629919649122903}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: WeaponMesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -309,9 +312,25 @@ PrefabInstance:
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -981144869737702371, guid: 7a6ffe80c5d35084a968c05d47629a0f, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -206542344122629601, guid: 7a6ffe80c5d35084a968c05d47629a0f, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 7a6ffe80c5d35084a968c05d47629a0f, type: 3}
       propertyPath: m_Name
       value: shotgunV1
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 7a6ffe80c5d35084a968c05d47629a0f, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5528860797864257434, guid: 7a6ffe80c5d35084a968c05d47629a0f, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5746564759562468899, guid: 7a6ffe80c5d35084a968c05d47629a0f, type: 3}
       propertyPath: m_LocalRotation.w
@@ -328,6 +347,14 @@ PrefabInstance:
     - target: {fileID: 5746564759562468899, guid: 7a6ffe80c5d35084a968c05d47629a0f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 7036213049465896255, guid: 7a6ffe80c5d35084a968c05d47629a0f, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8047465163179215362, guid: 7a6ffe80c5d35084a968c05d47629a0f, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8879528566716807029, guid: 7a6ffe80c5d35084a968c05d47629a0f, type: 3}
       propertyPath: m_LocalScale.x
