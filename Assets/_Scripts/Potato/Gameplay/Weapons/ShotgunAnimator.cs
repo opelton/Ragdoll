@@ -1,9 +1,11 @@
+using Potato.Game;
 using UnityEngine;
 
 namespace Potato.Gameplay
 {
     public class ShotgunAnimator : WeaponAnimator
     {
+
         [Header("Armature Bones")]
         [SerializeField] private Transform forendBone;
         [SerializeField] private Transform triggerBone;
@@ -21,12 +23,6 @@ namespace Potato.Gameplay
         [SerializeField] private AudioClip sfxExtract;
         [SerializeField] private AudioClip sfxChamber;
         [SerializeField] private AudioClip sfxReload;
-
-        [Header("Shell casing")]
-        [SerializeField] private GameObject shellCasing;
-        [SerializeField] private Transform shellEjectionPort;
-        [SerializeField] private float shellEjectionForce = 10f;
-
 
         // 0f = default
         // 1f = back
@@ -52,14 +48,6 @@ namespace Potato.Gameplay
         {
             audioSystem.PlayFirstPersonAudio(sfxTriggerRelease);
             triggerBone.localRotation = Quaternion.Euler(new Vector3(triggerPose_Neutral, 0f, 0f));
-        }
-
-        public override void AnimateShellEject(Vector3 inheritedVelocity)
-        {
-            // todo -- shell ejection position is wrong when FOV != 60
-            // todo -- fx system for handling this kind of spawning, particles, spatial noises, etc
-            Rigidbody shellBody = Instantiate(shellCasing, shellEjectionPort.position, shellEjectionPort.rotation).GetComponent<Rigidbody>();
-            shellBody.AddForce((shellEjectionPort.forward * shellEjectionForce) + inheritedVelocity, ForceMode.Impulse);
         }
     }
 }

@@ -45,12 +45,11 @@ namespace Potato.Gameplay
 
         protected int _currentAmmo = 0;
         protected float _lastShotTime = Mathf.NegativeInfinity;
-        protected Vector3 _lastMuzzlePosition;
 
         public GameObject Owner { get; set; }
         public int CurrentAmmo => _currentAmmo;
         public int MaxAmmo => maxAmmo;
-        public Vector3 MuzzleWorldVelocity { get; private set; }
+        public Vector3 MuzzleWorldVelocity => weaponAnimator.MuzzleWorldVelocity;
         public float RecoilForce => recoilForce;
         public Vector3 AimOffset => aimOffset;
         public Transform WeaponMeshTransform => weaponMeshTransform;
@@ -60,16 +59,6 @@ namespace Potato.Gameplay
         protected virtual void Awake()
         {
             _currentAmmo = maxAmmo;
-            _lastMuzzlePosition = weaponMuzzle.position;
-        }
-
-        protected virtual void Update()
-        {
-            if (Time.deltaTime > 0)
-            {
-                MuzzleWorldVelocity = (weaponMuzzle.position - _lastMuzzlePosition) / Time.deltaTime;
-                _lastMuzzlePosition = weaponMuzzle.position;
-            }
         }
 
         public virtual void ShowWeapon(bool show)
@@ -85,7 +74,7 @@ namespace Potato.Gameplay
         protected virtual void FireWeapon()
         {
             rats.DoProjectileAttack(this, projectilePrefab, weaponMuzzle.position, weaponMuzzle.forward, bulletsPerShot, bulletSpreadAngle);
-            weaponAnimator.AnimateWeaponAttack(weaponMuzzle);
+            weaponAnimator.AnimateWeaponAttack();
             _lastShotTime = Time.time;
         }
     }

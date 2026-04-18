@@ -1,0 +1,37 @@
+using UnityEngine;
+using Potato.Game;
+
+namespace Potato.Gameplay
+{
+    // Owner of spawning junk in game or first-person space
+    [CreateAssetMenu(menuName = "ScriptableObjects/Systems/Debris")]
+    public class DebrisSystem : ScriptableObject
+    {
+        [SerializeField] private GameplayCameraDataReference gameCams;
+
+        public GameObject SpawnWeaponSpacePrefabInWorldSpace(GameObject prefab, Vector3 weaponSpacePosition, Quaternion weaponSpaceRotation, Vector3 velocity, float spin = 0f)
+        {
+            GameObject obj = SpawnWeaponSpacePrefabInWorldSpace(prefab, weaponSpacePosition, weaponSpaceRotation);
+            Rigidbody rb = obj.GetComponent<Rigidbody>();
+
+            rb.velocity = gameCams.Value.gameplayCamera.transform.TransformDirection(velocity);
+            
+            if(spin != 0)
+                rb.angularVelocity = Random.insideUnitSphere * spin;
+
+            return obj;
+        }
+
+        // translates prefab in gameplayCamera's layer to the position it would occupy using fpsCamera's view matrix
+        public GameObject SpawnWeaponSpacePrefabInWorldSpace(GameObject prefab, Vector3 weaponSpacePosition, Quaternion weaponSpaceRotation)
+        {
+            Vector3 screenPos = gameCams.Value.fpsCamera.WorldToViewportPoint(weaponSpacePosition);
+            Vector3 worldPos = gameCams.Value.gameplayCamera.ViewportToWorldPoint(screenPos);
+
+            Quaternion relativeRotation = Quaternion.Inverse(gameCams.Value.fpsCamera.transform.rotation) * weaponSpaceRotation;
+            Quaternion worldRotation = gameCams.Value.gameplayCamera.transform.rotation * relativeRotation;
+
+            return Instantiate(prefab, worldPos, worldRotation);
+        }
+    }
+}

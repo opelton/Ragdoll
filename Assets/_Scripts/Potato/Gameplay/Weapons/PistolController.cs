@@ -48,7 +48,7 @@ namespace Potato.Gameplay
             _fsm.SetNextState(WeaponState.Ready);
         }
 
-        protected override void Update()
+        void Update()
         {
             _fsm.Update(Time.deltaTime);
         }

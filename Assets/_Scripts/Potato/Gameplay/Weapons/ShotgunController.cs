@@ -37,9 +37,8 @@ namespace Potato.Gameplay
             _fsm?.SetNextState(WeaponState.Neutral);
         }
 
-        protected override void Update()
+        void Update()
         {
-            base.Update();
             _fsm.Update(Time.deltaTime);
         }
 
@@ -176,7 +175,7 @@ namespace Potato.Gameplay
                 onExit: () =>
                 {
                     Animator.AnimateForendPosition(1f);
-                    Animator.AnimateShellEject(MuzzleWorldVelocity);
+                    Animator.AnimateShellEject();
                     _chamberState = ChamberState.Empty;
                     _receiverLoaded = CurrentAmmo > 0;
                 }
