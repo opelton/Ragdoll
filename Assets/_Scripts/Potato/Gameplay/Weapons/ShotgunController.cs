@@ -6,13 +6,8 @@ namespace Potato.Gameplay
 {
     public class ShotgunController : WeaponController
     {
-        enum WeaponState { Neutral, Firing, Reloading, Extracting, Chambering, Slamfiring }
+        enum WeaponState { Neutral, Firing, Reloading, Extracting, Chambering }
         enum ChamberState { Empty, Ready, Fired }
-
-        [Header("Special params")]
-        [SerializeField] private float minSlamfireTime = .5f;
-
-
         ShotgunAnimator Animator => (ShotgunAnimator)weaponAnimator;
 
         // control vars
@@ -74,12 +69,7 @@ namespace Potato.Gameplay
                 if(_chamberState == ChamberState.Fired)
                     _fsm.SetCurrentState(WeaponState.Extracting);
                 else if(_receiverLoaded)
-                {
-                    if(_lastShotTime + shotCooldown + minSlamfireTime < Time.time)
-                        _fsm.SetCurrentState(WeaponState.Slamfiring);                    
-                    else
-                        _fsm.SetCurrentState(WeaponState.Chambering);
-                }
+                    _fsm.SetCurrentState(WeaponState.Chambering);
             }
 
             return false;
@@ -195,29 +185,6 @@ namespace Potato.Gameplay
                     // chamber time = 40-45% shot cd
                     if(_fsm.TimeInState >= shotCooldown * .45f)
                         _fsm.SetCurrentState(WeaponState.Neutral);
-                },
-                onExit: () =>
-                {
-                    Animator.AnimateForendPosition(0f);
-                    _chamberState = _receiverLoaded ? ChamberState.Ready : ChamberState.Empty;
-                    _receiverLoaded = false;
-                }
-            ));
-
-            _fsm.AddState(new(WeaponState.Slamfiring,
-                onEnter: () =>
-                {
-                    Animator.Sfx_Chamber();
-                    HandleShooting();
-                },
-                onUpdate: _ =>
-                {
-                    float extractLerp = 1f - (_fsm.TimeInState / (shotCooldown * .1f));
-                    Animator.AnimateForendPosition(extractLerp);
-
-                    // delay before pump = 20-30% shot cd
-                    if(CurrentAmmo != 0 && _lastShotTime + (shotCooldown * .25f) <= Time.time)
-                        _fsm.SetCurrentState(WeaponState.Extracting);
                 },
                 onExit: () =>
                 {

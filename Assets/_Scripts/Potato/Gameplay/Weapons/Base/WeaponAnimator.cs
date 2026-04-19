@@ -1,5 +1,6 @@
 using Potato.Game;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 namespace Potato.Gameplay
 {
@@ -32,14 +33,14 @@ namespace Potato.Gameplay
             _lastEjectorPosition = shellEjectionPort.position;
         }
 
-        protected virtual void Update()
+        void FixedUpdate()
         {
             if (Time.deltaTime > 0)
             {
-                MuzzleWorldVelocity = (weaponMuzzle.position - _lastMuzzlePosition) / Time.deltaTime;
+                MuzzleWorldVelocity = (weaponMuzzle.position - _lastMuzzlePosition) / Time.fixedDeltaTime;
                 _lastMuzzlePosition = weaponMuzzle.position;
 
-                EjectorWorldVelocity = (shellEjectionPort.position - _lastEjectorPosition) / Time.deltaTime;
+                EjectorWorldVelocity = (shellEjectionPort.position - _lastEjectorPosition) / Time.fixedDeltaTime;
                 _lastEjectorPosition = shellEjectionPort.position;
             }
         }

@@ -666,7 +666,7 @@ MonoBehaviour:
   Response:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5482295246588910145}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Potato.Gameplay.PlayerCamerasController, potato.gameplay
         m_MethodName: UpdateFovs
         m_Mode: 1
@@ -779,6 +779,7 @@ GameObject:
   - component: {fileID: 383583639453121482}
   - component: {fileID: 474274340960877635}
   - component: {fileID: 2553879135995020797}
+  - component: {fileID: 3538010742275564257}
   m_Layer: 9
   m_Name: Auxiliary
   m_TagString: Untagged
@@ -862,6 +863,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioSource: {fileID: 3994790540778442830}
+--- !u!114 &3538010742275564257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5174286529531665204}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 003537368dc28654da95c9db253b176c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameCam: {fileID: 6934066893293710498}
+  fpsCam: {fileID: 7789353188300807451}
+  baseFov:
+    UseConstant: 0
+    _description: 
+    ConstantValue: 0
+    ReferenceData: {fileID: 11400000, guid: 1b105e9ce6dec2a438de9474eb90c6b9, type: 2}
+  stanceFovModifier:
+    UseConstant: 0
+    _description: 
+    ConstantValue: 0
+    ReferenceData: {fileID: 11400000, guid: bb4d56ea78308244e8642699aca07fc0, type: 2}
+  fixedFirstPersonFov: 60
 --- !u!1 &5886909609703047410
 GameObject:
   m_ObjectHideFlags: 0
@@ -873,7 +899,6 @@ GameObject:
   - component: {fileID: 6657562907950387057}
   - component: {fileID: 4885557767878954236}
   - component: {fileID: 5465555400534215456}
-  - component: {fileID: 5482295246588910145}
   - component: {fileID: 4615072429341156804}
   - component: {fileID: 8377179856262897326}
   m_Layer: 9
@@ -966,31 +991,6 @@ MonoBehaviour:
   turnSpeed: 1000
   jumpForce: 9
   footstepFrequency: 1
---- !u!114 &5482295246588910145
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5886909609703047410}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 003537368dc28654da95c9db253b176c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameCam: {fileID: 6934066893293710498}
-  fpsCam: {fileID: 7789353188300807451}
-  baseFov:
-    UseConstant: 0
-    _description: 
-    ConstantValue: 0
-    ReferenceData: {fileID: 11400000, guid: 1b105e9ce6dec2a438de9474eb90c6b9, type: 2}
-  stanceFovModifier:
-    UseConstant: 0
-    _description: 
-    ConstantValue: 0
-    ReferenceData: {fileID: 11400000, guid: bb4d56ea78308244e8642699aca07fc0, type: 2}
-  fixedFirstPersonFov: 60
 --- !u!114 &4615072429341156804
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1009,7 +1009,7 @@ MonoBehaviour:
   - {fileID: -3478305940785308574, guid: fbe33a8693f271a4a99908b53483f68d, type: 3}
   - {fileID: 8045222605648114655, guid: 0fa2a51bf7c7ae0419f36bcd26c8356d, type: 3}
   fpsWeaponsLayer: 6
-  playerCams: {fileID: 5482295246588910145}
+  playerCams: {fileID: 3538010742275564257}
   fire1Input: {fileID: 11400000, guid: 0b3c55cacbbd1c14c84865d5434afddb, type: 2}
   fire2Input: {fileID: 11400000, guid: cf733a378bf69cf419b04a883baa8f4f, type: 2}
   reloadInput: {fileID: 11400000, guid: 0160fe8fbc8d38b45a96f97f91e5b358, type: 2}

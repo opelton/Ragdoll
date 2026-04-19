@@ -26,39 +26,6 @@ namespace Potato.Gameplay.UI
             crosshairImage.color = isPlayerTargetingEnemy.Value ? crosshairColor_Hostile : crosshairColor_Neutral;
         }
 
-        // void Update()
-        // {
-        //     UpdateCrosshairPointingAtEnemy(false);
-        //     m_WasPointingAtEnemy = m_WeaponsManager.IsPointingAtEnemy;
-        // }
-
-        // void UpdateCrosshairPointingAtEnemy(bool force)
-        // {
-        //     if (m_CrosshairDataDefault.CrosshairSprite == null)
-        //         return;
-
-        //     if ((force || !m_WasPointingAtEnemy) && m_WeaponsManager.IsPointingAtEnemy)
-        //     {
-        //         m_CurrentCrosshair = m_CrosshairDataTarget;
-        //         CrosshairImage.sprite = m_CurrentCrosshair.CrosshairSprite;
-        //         //m_CrosshairRectTransform.sizeDelta = m_CurrentCrosshair.CrosshairSize * Vector2.one;
-        //     }
-        //     else if ((force || m_WasPointingAtEnemy) && !m_WeaponsManager.IsPointingAtEnemy)
-        //     {
-        //         m_CurrentCrosshair = m_CrosshairDataDefault;
-        //         CrosshairImage.sprite = m_CurrentCrosshair.CrosshairSprite;
-        //         //m_CrosshairRectTransform.sizeDelta = m_CurrentCrosshair.CrosshairSize * Vector2.one;
-        //     }
-
-        //     CrosshairImage.color = m_CurrentCrosshair.CrosshairColor;
-        //     // CrosshairImage.color = Color.Lerp(CrosshairImage.color, m_CurrentCrosshair.CrosshairColor,
-        //     //     Time.deltaTime * CrosshairUpdateshrpness);
-
-        //     // m_CrosshairRectTransform.sizeDelta = Mathf.Lerp(m_CrosshairRectTransform.sizeDelta.x,
-        //     //     m_CurrentCrosshair.CrosshairSize,
-        //     //     Time.deltaTime * CrosshairUpdateshrpness) * Vector2.one;
-        // }
-
         void UpdateCrosshairSprite()
         {
             if(playerActiveWeapon.Value == null)
