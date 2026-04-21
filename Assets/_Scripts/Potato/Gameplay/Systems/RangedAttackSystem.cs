@@ -6,27 +6,21 @@ namespace Potato.Gameplay
     [CreateAssetMenu(menuName = "ScriptableObjects/Systems/RangedAttack")]
     public class RangedAttackSystem : ScriptableObject
     {
-        [SerializeField] private float maxRaycastRange = 1000f;
+        [SerializeField] private float maxRaycastRange = 1000f; // tf2 uses ~156
         [Tooltip("Layers that can block raycasts")]
         [SerializeField] private LayerMask targetLayers;
         // [Tooltip("Layer to assign projectiles")]
         // [SerializeField][LayerIndex] int hitboxLayer;
 
-        public bool IsTargetingEnemy(GameObject owner, Vector3 origin, Vector3 direction)
+        public float MaxAttackRange => maxRaycastRange;
+
+        // raycast on layer for enemies + surfaces
+        // if no hits, targeting nothing
+        // else if enemy component, targeting enemy
+        // else, targeting wall
+        public int PreviewAttackRaycast(Vector3 origin, Vector3 direction, ref RaycastHit[] hits)
         {
-            var hits = Physics.RaycastAll(origin, direction, maxRaycastRange, targetLayers, QueryTriggerInteraction.Ignore);
-            // Debug.Log($"crosshairHitCount: {hits.Length} layerIndex: {hitboxLayers}");
-
-            foreach (RaycastHit hit in hits)
-            {
-                if (hit.collider.gameObject == owner.gameObject)
-                    continue;
-
-                if (hit.collider.GetComponentInParent<Target>() != null)
-                    return true;
-            }
-
-            return false;
+            return Physics.RaycastNonAlloc(origin, direction, hits, maxRaycastRange, targetLayers, QueryTriggerInteraction.Ignore);
         }
 
         public void DoHitscanAttack(WeaponController owner, Vector3 origin, Vector3 direction, int count, float spread)

@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace Potato.Gameplay
 {
@@ -10,16 +9,17 @@ namespace Potato.Gameplay
         public Vector3 InitialDirection { get; private set; }
         public Vector3 InheritedMuzzleVelocity { get; private set; }
 
-        public UnityAction OnShoot;
-
         public void Shoot(WeaponController controller)
         {
             Owner = controller.Owner;
             InitialPosition = transform.position;
             InitialDirection = transform.forward;
             InheritedMuzzleVelocity = controller.MuzzleWorldVelocity;
+            transform.position += InheritedMuzzleVelocity * Time.deltaTime;
 
-            OnShoot?.Invoke();
+            HandleOnShoot();
         }
+
+        protected abstract void HandleOnShoot();
     }
 }

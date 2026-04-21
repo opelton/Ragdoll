@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77b9ee6838795d94aa6fa9b56148b0a2, type: 3}
   m_Name: RangedAttackSystem
   m_EditorClassIdentifier: 
-  maxRaycastRange: 1000
+  maxRaycastRange: 100
   targetLayers:
     serializedVersion: 2
     m_Bits: 1280

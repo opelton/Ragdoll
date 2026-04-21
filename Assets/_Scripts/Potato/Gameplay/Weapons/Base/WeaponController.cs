@@ -1,4 +1,5 @@
 using System;
+using Potato.Core;
 using UnityEngine;
 
 namespace Potato.Gameplay
@@ -17,6 +18,7 @@ namespace Potato.Gameplay
 
         [SerializeField] protected RangedAttackSystem rats;
         [SerializeField] protected WeaponAnimator weaponAnimator;
+        [SerializeField] protected Vector3Reference playerAimPoint;
         [SerializeField] protected ProjectileBase projectilePrefab;
         [SerializeField] protected GameObject weaponRoot;
         [SerializeField] protected Transform weaponMeshTransform;
@@ -73,7 +75,8 @@ namespace Potato.Gameplay
 
         protected virtual void FireWeapon()
         {
-            rats.DoProjectileAttack(this, projectilePrefab, weaponMuzzle.position, weaponMuzzle.forward, bulletsPerShot, bulletSpreadAngle);
+            var attackDirection = (playerAimPoint.Value - weaponMuzzle.position).normalized;
+            rats.DoProjectileAttack(this, projectilePrefab, weaponMuzzle.position, attackDirection, bulletsPerShot, bulletSpreadAngle);
             weaponAnimator.AnimateWeaponAttack();
             _lastShotTime = Time.time;
         }

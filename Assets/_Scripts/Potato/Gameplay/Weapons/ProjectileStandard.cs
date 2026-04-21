@@ -16,10 +16,6 @@ namespace Potato.Gameplay
         public AudioClip impactSxfClip;
         public float projectileSpeed = 20f;
         public float projectileGravityForce = 0f;
-
-        [Tooltip(
-            "Distance over which the projectile will correct its course to fit the intended trajectory (used to drift projectiles towards center of screen in First Person view). At values under 0, there is no correction")]
-        public float trajectoryCorrectionDistance = -1;
         public bool inheritWeaponVelocity = false;
 
         [Header("damage")]
@@ -32,9 +28,6 @@ namespace Potato.Gameplay
 
         Vector3 _previousPosition;
         Vector3 _velocity;
-        bool _hasTrajectoryOverride;
-        Vector3 _trajectoryCorrectionVector;
-        Vector3 _consumedTrajectoryCorrectionVector;
         List<Collider> _ignoredColliders;
 
 
@@ -42,41 +35,26 @@ namespace Potato.Gameplay
 
         void OnEnable()
         {
-            OnShoot += HandleOnShoot;
             Destroy(gameObject, maxLifetime);
         }
 
-        void HandleOnShoot()
+        protected override void HandleOnShoot()
         {
             _previousPosition = projectileRoot.position;
-            _velocity = transform.forward * projectileSpeed;
+            _velocity = InitialDirection * projectileSpeed;
             _ignoredColliders = new List<Collider>();
-            transform.position += InheritedMuzzleVelocity * Time.deltaTime;
 
             // Ignore colliders of owner
             Collider[] ownerColliders = Owner.GetComponentsInChildren<Collider>();
             _ignoredColliders.AddRange(ownerColliders);
 
+            // todo -- this shouldn't be the projectile's job
             // Handle case of player shooting (make projectiles not go through walls, and remember center-of-screen trajectory)
             PlayerWeaponsManager playerWeaponsManager = Owner.GetComponent<PlayerWeaponsManager>();
             if (playerWeaponsManager)
             {
-                _hasTrajectoryOverride = true;
-
                 Vector3 cameraToMuzzle = InitialPosition -
                                           playerWeaponsManager.AimPosition;
-
-                _trajectoryCorrectionVector = Vector3.ProjectOnPlane(-cameraToMuzzle,
-                    playerWeaponsManager.AimDirection);
-                if (trajectoryCorrectionDistance == 0)
-                {
-                    transform.position += _trajectoryCorrectionVector;
-                    _consumedTrajectoryCorrectionVector = _trajectoryCorrectionVector;
-                }
-                else if (trajectoryCorrectionDistance < 0)
-                {
-                    _hasTrajectoryOverride = false;
-                }
 
                 if (Physics.Raycast(playerWeaponsManager.AimPosition, cameraToMuzzle.normalized,
                     out RaycastHit hit, cameraToMuzzle.magnitude, hitLayers, k_TriggerInteraction))
@@ -98,41 +76,19 @@ namespace Potato.Gameplay
                 transform.position += InheritedMuzzleVelocity * Time.deltaTime;
             }
 
-            // Drift towards trajectory override (this is so that projectiles can be centered 
-            // with the camera center even though the actual weapon is offset)
-            if (_hasTrajectoryOverride && _consumedTrajectoryCorrectionVector.sqrMagnitude <
-                _trajectoryCorrectionVector.sqrMagnitude)
-            {
-                Vector3 correctionLeft = _trajectoryCorrectionVector - _consumedTrajectoryCorrectionVector;
-                float distanceThisFrame = (projectileRoot.position - _previousPosition).magnitude;
-                Vector3 correctionThisFrame =
-                    (distanceThisFrame / trajectoryCorrectionDistance) * _trajectoryCorrectionVector;
-                correctionThisFrame = Vector3.ClampMagnitude(correctionThisFrame, correctionLeft.magnitude);
-                _consumedTrajectoryCorrectionVector += correctionThisFrame;
-
-                // Detect end of correction
-                if (_consumedTrajectoryCorrectionVector.sqrMagnitude == _trajectoryCorrectionVector.sqrMagnitude)
-                {
-                    _hasTrajectoryOverride = false;
-                }
-
-                transform.position += correctionThisFrame;
-            }
-
-            // Orient towards velocity
-            transform.forward = _velocity.normalized;
-
             // Gravity
-            if (projectileGravityForce > 0)
+            if (projectileGravityForce != 0)
             {
+                // Orient towards velocity
+                transform.forward = _velocity.normalized;
+
                 // add gravity to the projectile velocity for ballistic effect
-                _velocity += Vector3.down * projectileGravityForce * Time.deltaTime;
+                _velocity += projectileGravityForce * Time.deltaTime * Vector3.down;
             }
 
             // Hit detection
             {
-                RaycastHit closestHit = new RaycastHit();
-                closestHit.distance = Mathf.Infinity;
+                RaycastHit closestHit = new() { distance = Mathf.Infinity };
                 bool foundHit = false;
 
                 // Sphere cast
@@ -201,7 +157,7 @@ namespace Potato.Gameplay
                     Quaternion.LookRotation(normal));
                 if (impactVfxDuration > 0)
                 {
-                    Destroy(impactVfxInstance.gameObject, impactVfxDuration);
+                    Destroy(impactVfxInstance, impactVfxDuration);
                 }
             }
 
@@ -212,7 +168,7 @@ namespace Potato.Gameplay
             // }
 
             // Self Destruct
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
 
         void OnDrawGizmosSelected()

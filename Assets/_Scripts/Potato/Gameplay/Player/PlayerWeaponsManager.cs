@@ -40,7 +40,6 @@ namespace Potato.Gameplay
         [Header("Out Data")]
         [SerializeField] private WeaponAttackEvent onShootEvent;
         [SerializeField] private WeaponReference activeWeaponRef;
-        [SerializeField] private BoolReference isAimingAtEnemy;
         [SerializeField] private IntReference playerCurrentAmmo;        
 
         public bool IsAiming { get; private set; }
@@ -94,13 +93,6 @@ namespace Potato.Gameplay
                 if(playerCurrentAmmo.Value != activeWeapon.CurrentAmmo)
                     playerCurrentAmmo.Value = activeWeapon.CurrentAmmo;
             }
-
-            // Pointing at enemy handling
-            var targetingHostile = activeWeapon != null && rats.IsTargetingEnemy(gameObject, playerCams.AimPos, playerCams.AimDir);
-            
-            // avoid firing an onChanged event unless it changed
-            if(isAimingAtEnemy.Value != targetingHostile)
-                isAimingAtEnemy.Value = targetingHostile;
         }
 
         // Update various animated features in LateUpdate because it needs to override the animated arm position

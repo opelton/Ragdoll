@@ -79,6 +79,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rats: {fileID: 11400000, guid: beabe8fa1f42ec944b266f906c28d1ff, type: 2}
   weaponAnimator: {fileID: 214781457000268412}
+  playerAimPoint:
+    UseConstant: 0
+    _description: 
+    ConstantValue: {x: 0, y: 0, z: 0}
+    ReferenceData: {fileID: 11400000, guid: edca8956cc4b2d2458635810c8a15541, type: 2}
   projectilePrefab: {fileID: -8391667986270217369, guid: 20335a8d57e8c234ea0c5484516e5961, type: 3}
   weaponRoot: {fileID: 272834481384891812}
   weaponMeshTransform: {fileID: 7481629919649122903}
