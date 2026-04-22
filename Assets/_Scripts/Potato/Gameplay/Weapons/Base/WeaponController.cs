@@ -76,8 +76,9 @@ namespace Potato.Gameplay
         protected virtual void FireWeapon()
         {
             var attackDirection = (playerAimPoint.Value - weaponMuzzle.position).normalized;
-            rats.DoProjectileAttack(this, projectilePrefab, weaponMuzzle.position, attackDirection, bulletsPerShot, bulletSpreadAngle);
-            weaponAnimator.AnimateWeaponAttack();
+            var attackDamage = 1f;  // todo damage stats
+            rats.DoHitscanAttack(this, weaponMuzzle.position, attackDirection, attackDamage, bulletsPerShot, bulletSpreadAngle);
+            weaponAnimator.AnimateWeaponAttack(this, bulletsPerShot, bulletSpreadAngle);
             _lastShotTime = Time.time;
         }
     }

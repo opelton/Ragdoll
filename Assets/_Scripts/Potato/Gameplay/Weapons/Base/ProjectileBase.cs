@@ -20,6 +20,6 @@ namespace Potato.Gameplay
             HandleOnShoot();
         }
 
-        protected abstract void HandleOnShoot();
+        protected virtual void HandleOnShoot() { }
     }
 }

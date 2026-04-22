@@ -1,6 +1,6 @@
-using Potato.Game;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
+using Potato.Game;
+using Potato.Core;
 
 namespace Potato.Gameplay
 {
@@ -20,6 +20,13 @@ namespace Potato.Gameplay
         [SerializeField] private Transform shellEjectionPort;
         [SerializeField] private float shellEjectionForce = 2f;
         [SerializeField] private float shellEjectionSpin = 15f;
+
+        [Header("Bullet Tracers")]
+        [SerializeField] private TracerProjectile tracerPrefab;
+        [SerializeField] private float tracerSpeed = 300f;
+        [SerializeField] private float tracerDuration = .5f;
+        [SerializeField] private RangedAttackSystem rats;
+        [SerializeField] protected Vector3Reference playerAimPoint;
 
         public Vector3 MuzzleWorldVelocity { get; private set; }
         public Vector3 EjectorWorldVelocity { get; private set; }
@@ -62,7 +69,7 @@ namespace Potato.Gameplay
                 shellEjectionSpin);
         }
 
-        public virtual void AnimateWeaponAttack()
+        public virtual void AnimateWeaponAttack(WeaponController owner, int bulletCount, float bulletSpreadAngle)
         {
             if (muzzleFlashPrefab != null)
             {
@@ -79,6 +86,19 @@ namespace Potato.Gameplay
             // play shoot SFX
             if (shootSfx)
                 audioSystem.PlayFirstPersonAudio(shootSfx);
+
+            // todo -- fire tracers at the impact point
+            // particle system instead of ranged attack system?
+            // trail renderer
+            // speed/spread/lifetime params?
+            if (tracerPrefab != null)
+            {
+                var tracerDirection = (playerAimPoint.Value - weaponMuzzle.position).normalized;
+                var adjustedOrigin = weaponMuzzle.position + Time.deltaTime * MuzzleWorldVelocity;
+
+                rats.FireTracers(owner, tracerPrefab, adjustedOrigin,
+                    tracerDirection, bulletCount, bulletSpreadAngle, tracerSpeed, tracerDuration);
+            }
         }
     }
 }

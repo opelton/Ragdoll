@@ -126,6 +126,14 @@ MonoBehaviour:
   shellEjectionPort: {fileID: 4340773259444232793}
   shellEjectionForce: 2
   shellEjectionSpin: 15
+  tracerPrefab: {fileID: 4451441854257555881, guid: d7d53bd678307d6468087a44594e6975, type: 3}
+  tracerFlightTime: 0.25
+  rats: {fileID: 11400000, guid: beabe8fa1f42ec944b266f906c28d1ff, type: 2}
+  playerAimPoint:
+    UseConstant: 0
+    _description: 
+    ConstantValue: {x: 0, y: 0, z: 0}
+    ReferenceData: {fileID: 11400000, guid: edca8956cc4b2d2458635810c8a15541, type: 2}
   forendBone: {fileID: 5721818058870618333}
   triggerBone: {fileID: 1375567587646462410}
   forendPose_Front: 1.456282

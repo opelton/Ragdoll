@@ -6,6 +6,8 @@ namespace Potato.Gameplay
     [CreateAssetMenu(menuName = "ScriptableObjects/Systems/RangedAttack")]
     public class RangedAttackSystem : ScriptableObject
     {
+        const int kRaycastBufferSize = 32;
+
         [SerializeField] private float maxRaycastRange = 1000f; // tf2 uses ~156
         [Tooltip("Layers that can block raycasts")]
         [SerializeField] private LayerMask targetLayers;
@@ -13,6 +15,7 @@ namespace Potato.Gameplay
         // [SerializeField][LayerIndex] int hitboxLayer;
 
         public float MaxAttackRange => maxRaycastRange;
+        private RaycastHit[] _hitBuffer = new RaycastHit[kRaycastBufferSize];
 
         // raycast on layer for enemies + surfaces
         // if no hits, targeting nothing
@@ -23,9 +26,29 @@ namespace Potato.Gameplay
             return Physics.RaycastNonAlloc(origin, direction, hits, maxRaycastRange, targetLayers, QueryTriggerInteraction.Ignore);
         }
 
-        public void DoHitscanAttack(WeaponController owner, Vector3 origin, Vector3 direction, int count, float spread)
+        public bool DoHitscanAttack(WeaponController owner, Vector3 origin, Vector3 direction, float damage, int count, float spread)
         {
-            Debug.Log($"{count} Shots requested by {owner} from {origin} going {direction} with {spread} spread");
+            var hitCount = PreviewAttackRaycast(origin, direction, ref _hitBuffer);
+
+            if(hitCount == 0)
+                return false;
+            else if(hitCount >= kRaycastBufferSize * .9)
+                Debug.Log($"HitBuffer size {hitCount} is approaching max {kRaycastBufferSize}");
+
+            for (int i = 0; i < hitCount; ++i)
+            {
+                var hit = _hitBuffer[i];
+                if (hit.collider.gameObject == owner.gameObject)
+                    continue;
+
+                if (hit.collider.TryGetComponent(out Target component))
+                {
+                    component.InflictDamage(damage, owner.gameObject);
+                    return true;
+                }
+                return false;
+            }
+            return false;
         }
 
         public void DoProjectileAttack(WeaponController owner, ProjectileBase projectilePrefab, Vector3 origin, Vector3 direction, int count, float spread)
@@ -35,6 +58,18 @@ namespace Potato.Gameplay
                 Vector3 shotDirection = ApplySpread(direction, spread);
                 ProjectileBase newProjectile = Instantiate(projectilePrefab, origin, Quaternion.LookRotation(shotDirection));
                 newProjectile.Shoot(owner);
+            }
+        }
+
+        public void FireTracers(WeaponController owner, TracerProjectile tracerPrefab, Vector3 origin, Vector3 direction, int count, float spread, float speed, float lifetime)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                Vector3 shotDirection = ApplySpread(direction, spread);
+                TracerProjectile tracer = Instantiate(tracerPrefab, origin, Quaternion.LookRotation(shotDirection));
+                tracer.Speed = speed;
+                tracer.Lifespan = lifetime;
+                tracer.Shoot(owner);
             }
         }
 
