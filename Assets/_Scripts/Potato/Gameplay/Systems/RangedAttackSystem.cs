@@ -11,43 +11,37 @@ namespace Potato.Gameplay
         [SerializeField] private float maxRaycastRange = 1000f; // tf2 uses ~156
         [Tooltip("Layers that can block raycasts")]
         [SerializeField] private LayerMask targetLayers;
-        // [Tooltip("Layer to assign projectiles")]
-        // [SerializeField][LayerIndex] int hitboxLayer;
 
         public float MaxAttackRange => maxRaycastRange;
         private RaycastHit[] _hitBuffer = new RaycastHit[kRaycastBufferSize];
 
-        // raycast on layer for enemies + surfaces
-        // if no hits, targeting nothing
-        // else if enemy component, targeting enemy
-        // else, targeting wall
         public int PreviewAttackRaycast(Vector3 origin, Vector3 direction, ref RaycastHit[] hits)
         {
             return Physics.RaycastNonAlloc(origin, direction, hits, maxRaycastRange, targetLayers, QueryTriggerInteraction.Ignore);
         }
 
-        public bool DoHitscanAttack(WeaponController owner, Vector3 origin, Vector3 direction, float damage, int count, float spread)
+        public void DoHitscanAttack(WeaponController owner, Vector3 origin, Vector3 direction, float damage, int count, float spread)
         {
-            var hitCount = PreviewAttackRaycast(origin, direction, ref _hitBuffer);
-
-            if(hitCount == 0)
-                return false;
-            else if(hitCount >= kRaycastBufferSize * .9)
-                Debug.Log($"HitBuffer size {hitCount} is approaching max {kRaycastBufferSize}");
-
-            for (int i = 0; i < hitCount; ++i)
+            for (int i = 0; i < count; ++i)
             {
-                var hit = _hitBuffer[i];
-                if (hit.collider.gameObject == owner.gameObject)
-                    continue;
+                Vector3 shotDirection = ApplySpread(direction, spread);
+                var hitCount = PreviewAttackRaycast(origin, shotDirection, ref _hitBuffer);
 
-                if (hit.collider.TryGetComponent(out Target component))
+                if (hitCount == 0)
+                    break;
+                else if (hitCount >= kRaycastBufferSize * .9)
+                    Debug.Log($"HitBuffer size {hitCount} is approaching max {kRaycastBufferSize}");
+
+                for (int j = 0; j < hitCount; ++j)
                 {
-                    component.InflictDamage(damage, owner.gameObject);
-                    return true;
+                    var hit = _hitBuffer[j];
+                    if (hit.collider.gameObject == owner.gameObject)
+                        continue;
+
+                    if (hit.collider.TryGetComponent(out Target component))
+                        component.InflictDamage(damage, owner.gameObject);
                 }
             }
-            return false;
         }
 
         public void DoProjectileAttack(WeaponController owner, ProjectileBase projectilePrefab, Vector3 origin, Vector3 direction, int count, float spread)

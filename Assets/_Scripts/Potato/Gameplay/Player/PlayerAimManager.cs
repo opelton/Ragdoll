@@ -20,9 +20,7 @@ namespace Potato.Gameplay
             var targetingHostile = false;
             var hitCount = rats.PreviewAttackRaycast(playerCams.AimPos, playerCams.AimDir, ref _hitBuffer);
 
-            if(hitCount == 0)
-                SetAimPointNoTarget();
-            else if(hitCount >= kRaycastBufferSize * .9)
+            if(hitCount >= kRaycastBufferSize * .9)
                 Debug.Log($"HitBuffer size {hitCount} is approaching max {kRaycastBufferSize}");
 
             for (int i = 0; i < hitCount; ++i)
@@ -33,15 +31,14 @@ namespace Potato.Gameplay
 
                 if (hit.collider.GetComponentInParent<Target>() != null)
                 {
-                    playerAimPoint.Value = hit.point;                    
+                    playerAimPoint.Value = hit.point;
                     targetingHostile = true;
-                }
-                else
-                {
-                    SetAimPointNoTarget();           
                     break;
                 }
             }
+
+            if(!targetingHostile)
+                SetAimPointNoTarget();
             
             // avoid firing an onChanged event unless it changed
             if(isAimingAtEnemy.Value != targetingHostile)
