@@ -16,11 +16,10 @@ namespace Potato.Gameplay
 
         void Update()
         {
-            //var targetingHostile = rats.IsTargetingEnemy(gameObject, playerCams.AimPos, playerCams.AimDir);
             var targetingHostile = false;
-            var hitCount = rats.PreviewAttackRaycast(playerCams.AimPos, playerCams.AimDir, ref _hitBuffer);
+            var hitCount = rats.PreviewAttackRaycast(playerCams.AimPos, playerCams.AimDir, ref _hitBuffer, true);
 
-            if(hitCount >= kRaycastBufferSize * .9)
+            if(hitCount >= kRaycastBufferSize * .8)
                 Debug.Log($"HitBuffer size {hitCount} is approaching max {kRaycastBufferSize}");
 
             for (int i = 0; i < hitCount; ++i)

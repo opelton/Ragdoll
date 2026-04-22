@@ -35,6 +35,7 @@ namespace Potato.Gameplay
         [SerializeField] protected float shotCooldown = 0.5f;
         [SerializeField] protected float bulletSpreadAngle = 0f;
         [SerializeField] protected int bulletsPerShot = 1;
+        [SerializeField] protected float bulletDamage = 1f;
         [SerializeField][Range(0f, 2f)] protected float recoilForce = 1;
         [SerializeField][Range(0f, 1f)] protected float aimZoomRatio = 1f;
 
@@ -77,9 +78,7 @@ namespace Potato.Gameplay
 
         protected virtual void FireWeapon()
         {
-            var attackDamage = 1f;  // todo damage stats
-
-            rats.DoHitscanAttack(this, PlayerCams.AimPos, PlayerCams.AimDir, attackDamage, bulletsPerShot, bulletSpreadAngle);
+            rats.DoHitscanAttack(this, PlayerCams.AimPos, PlayerCams.AimDir, bulletDamage, bulletsPerShot, bulletSpreadAngle);
             weaponAnimator.AnimateWeaponAttack(this, bulletsPerShot, bulletSpreadAngle);
             _lastShotTime = Time.time;
         }

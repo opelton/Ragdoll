@@ -1,23 +1,35 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Potato.Gameplay
 {
+    // todo -- utils?
+    class RaycastHitDistanceComparer : IComparer<RaycastHit>
+    {
+        public static readonly RaycastHitDistanceComparer Instance = new();
+        public int Compare(RaycastHit a, RaycastHit b) => a.distance.CompareTo(b.distance);
+    }
+
     // owner of hitscan, projectiles, and explosions
     [CreateAssetMenu(menuName = "ScriptableObjects/Systems/RangedAttack")]
     public class RangedAttackSystem : ScriptableObject
     {
         const int kRaycastBufferSize = 32;
 
-        [SerializeField] private float maxRaycastRange = 1000f; // tf2 uses ~156
+        [SerializeField] private float maxRaycastRange = 100f; // tf2 uses ~156 in unity meters
         [Tooltip("Layers that can block raycasts")]
         [SerializeField] private LayerMask targetLayers;
 
         public float MaxAttackRange => maxRaycastRange;
         private RaycastHit[] _hitBuffer = new RaycastHit[kRaycastBufferSize];
 
-        public int PreviewAttackRaycast(Vector3 origin, Vector3 direction, ref RaycastHit[] hits)
+        public int PreviewAttackRaycast(Vector3 origin, Vector3 direction, ref RaycastHit[] hits, bool sort = false)
         {
-            return Physics.RaycastNonAlloc(origin, direction, hits, maxRaycastRange, targetLayers, QueryTriggerInteraction.Ignore);
+            int hitCount = Physics.RaycastNonAlloc(origin, direction, hits, maxRaycastRange, targetLayers, QueryTriggerInteraction.Ignore);
+            if (sort)
+                Array.Sort(hits, 0, hitCount, RaycastHitDistanceComparer.Instance);
+            return hitCount;
         }
 
         public void DoHitscanAttack(WeaponController owner, Vector3 origin, Vector3 direction, float damage, int count, float spread)
@@ -25,7 +37,7 @@ namespace Potato.Gameplay
             for (int i = 0; i < count; ++i)
             {
                 Vector3 shotDirection = ApplySpread(direction, spread);
-                var hitCount = PreviewAttackRaycast(origin, shotDirection, ref _hitBuffer);
+                var hitCount = PreviewAttackRaycast(origin, shotDirection, ref _hitBuffer, true);
 
                 if (hitCount == 0)
                     break;
@@ -39,7 +51,10 @@ namespace Potato.Gameplay
                         continue;
 
                     if (hit.collider.TryGetComponent(out Target component))
+                    {
                         component.InflictDamage(damage, owner.gameObject);
+                        break;
+                    }
                 }
             }
         }
@@ -73,8 +88,11 @@ namespace Potato.Gameplay
 
         Vector3 ApplySpread(Vector3 vec, float spreadAngle)
         {
+            if(spreadAngle == 0f)
+                return vec;
+                
             float spreadAngleRatio = spreadAngle / 180f;
-            Vector3 spreadWorldDirection = Vector3.Slerp(vec, Random.insideUnitSphere,
+            Vector3 spreadWorldDirection = Vector3.Slerp(vec, UnityEngine.Random.insideUnitSphere,
                 spreadAngleRatio);
 
             return spreadWorldDirection;
