@@ -178,6 +178,7 @@ namespace Potato.Gameplay
 
                     // Set owner to this gameObject so the weapon can alter projectile/damage logic accordingly
                     weaponInstance.Owner = gameObject;
+                    weaponInstance.PlayerCams = playerCams;
                     weaponInstance.ShowWeapon(false);
 
                     // Assign the first person layer to the weapon

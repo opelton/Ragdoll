@@ -46,7 +46,6 @@ namespace Potato.Gameplay
                     component.InflictDamage(damage, owner.gameObject);
                     return true;
                 }
-                return false;
             }
             return false;
         }

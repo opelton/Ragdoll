@@ -1,5 +1,6 @@
 using System;
 using Potato.Core;
+using Potato.Game;
 using UnityEngine;
 
 namespace Potato.Gameplay
@@ -49,6 +50,7 @@ namespace Potato.Gameplay
         protected float _lastShotTime = Mathf.NegativeInfinity;
 
         public GameObject Owner { get; set; }
+        public PlayerCamerasController PlayerCams;
         public int CurrentAmmo => _currentAmmo;
         public int MaxAmmo => maxAmmo;
         public Vector3 MuzzleWorldVelocity => weaponAnimator.MuzzleWorldVelocity;
@@ -75,9 +77,9 @@ namespace Potato.Gameplay
 
         protected virtual void FireWeapon()
         {
-            var attackDirection = (playerAimPoint.Value - weaponMuzzle.position).normalized;
             var attackDamage = 1f;  // todo damage stats
-            rats.DoHitscanAttack(this, weaponMuzzle.position, attackDirection, attackDamage, bulletsPerShot, bulletSpreadAngle);
+
+            rats.DoHitscanAttack(this, PlayerCams.AimPos, PlayerCams.AimDir, attackDamage, bulletsPerShot, bulletSpreadAngle);
             weaponAnimator.AnimateWeaponAttack(this, bulletsPerShot, bulletSpreadAngle);
             _lastShotTime = Time.time;
         }
