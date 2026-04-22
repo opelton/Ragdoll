@@ -18,14 +18,12 @@ namespace Potato.FPS.Game
             // this assumes all rigidbodies are for the ragdoll, and aren't actually being used for movement
             m_Rigidbodies = GetComponentsInChildren<Rigidbody>();
 
-            // todo injection
             Health health = GetComponentInChildren<Health>();
             health.OnDie += HandleDeath;
         }
 
         void HandleDeath()
         {
-            // todo spice this up
             SetRagdoll(true);
         }
 

@@ -68,7 +68,7 @@ namespace Potato.Gameplay
             SwapWeapon();
         }
 
-        // todo -- only forward the inputs to current weapon, should not handle things like ammo or reloading
+        // todo -- should aiming actually prevent reloading? Should it be a gun stat?
         void Update()
         {
             WeaponController activeWeapon = GetActiveWeapon();

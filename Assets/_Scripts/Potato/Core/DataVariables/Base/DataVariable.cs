@@ -2,7 +2,6 @@ using UnityEngine;
 
 namespace Potato.Core
 {
-    // todo -- set/reset methods using readonly guard and triggering onchanged
     // holds the variable where it can be referenced in the editor
     public abstract class DataVariable<T> : DataVariableBase
     {

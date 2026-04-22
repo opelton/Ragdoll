@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace Potato.Game
 {
-    // todo -- input context should persist values through scene changes, but reset them when context changes
     public class InputBridge : MonoBehaviour, IInputPollingProvider
     {
         [SerializeField] private GameStateReference currentGameStateRef;

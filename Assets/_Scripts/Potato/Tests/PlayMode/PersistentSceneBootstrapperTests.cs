@@ -74,8 +74,5 @@ namespace Potato.Tests.PlayMode
             Assert.AreEqual(1, sceneCount);
             yield return null;
         }
-
-        // todo -- bridge scene needs to survive reloading, scene transitions, and state transitions
-        // (under upcoming scene management bridge)
     }
 }

@@ -87,10 +87,7 @@ namespace Potato.Gameplay
             if (shootSfx)
                 audioSystem.PlayFirstPersonAudio(shootSfx);
 
-            // todo -- fire tracers at the impact point
-            // particle system instead of ranged attack system?
-            // trail renderer
-            // speed/spread/lifetime params?
+            // fire tracers at the impact point
             if (tracerPrefab != null)
             {
                 var tracerDirection = (playerAimPoint.Value - weaponMuzzle.position).normalized;

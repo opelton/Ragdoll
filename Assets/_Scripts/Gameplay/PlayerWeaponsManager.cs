@@ -187,7 +187,7 @@ namespace Potato.FPS.Gameplay
             {
                 var hits = Physics.RaycastAll(WeaponCamera.transform.position, WeaponCamera.transform.forward, 1000, -1, QueryTriggerInteraction.Ignore);
                 // Ray ray = new(WeaponCamera.transform.position, WeaponCamera.transform.forward);
-                // RaycastHit[] hits = new RaycastHit[16]; // todo determine size correctly?
+                // RaycastHit[] hits = new RaycastHit[16];
                 // Physics.RaycastNonAlloc(ray, hits, 1000, -1, QueryTriggerInteraction.Ignore);
 
                 foreach (RaycastHit hit in hits)
