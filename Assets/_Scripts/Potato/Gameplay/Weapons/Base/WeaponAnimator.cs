@@ -54,7 +54,7 @@ namespace Potato.Gameplay
 
         public virtual void AnimateShowWeapon()
         {
-            audioSystem.PlayFirstPersonAudio(changeWeaponSfx);
+            audioSystem.PlayFirstPersonWeaponAudio(changeWeaponSfx);
         }
 
         public virtual void AnimateShellEject()
@@ -85,7 +85,7 @@ namespace Potato.Gameplay
 
             // play shoot SFX
             if (shootSfx)
-                audioSystem.PlayFirstPersonAudio(shootSfx);
+                audioSystem.PlayFirstPersonWeaponAudio(shootSfx);
 
             // fire tracers at the impact point
             if (tracerPrefab != null)

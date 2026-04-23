@@ -103,6 +103,15 @@ namespace Potato.Gameplay
                 _fsm.SetCurrentState(WeaponState.Neutral);
         }
 
+        protected override void FireWeapon()
+        {
+            // guarantees one pellet hitting the crosshair exactly
+            rats.DoHitscanAttack(this, PlayerCams.AimPos, PlayerCams.AimDir, bulletDamage, 1, 0f);
+            rats.DoHitscanAttack(this, PlayerCams.AimPos, PlayerCams.AimDir, bulletDamage, bulletsPerShot - 1, bulletSpreadAngle);
+            weaponAnimator.AnimateWeaponAttack(this, bulletsPerShot, bulletSpreadAngle);
+            _lastShotTime = Time.time;
+        }
+
         void InitializeStateMachine()
         {
             _fsm = new StateMachine<WeaponState>();

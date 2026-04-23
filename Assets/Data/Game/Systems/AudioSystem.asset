@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: AudioSystem
   m_EditorClassIdentifier: 
   firstPersonAudio: {fileID: 11400000, guid: 60b7b959107d48c41ad5023bfbf2f321, type: 2}
+  firstPersonWeaponAudio: {fileID: 11400000, guid: 279d41b90b505ef45ad822d8319d7372, type: 2}

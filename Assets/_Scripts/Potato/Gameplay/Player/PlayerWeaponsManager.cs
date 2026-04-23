@@ -5,13 +5,6 @@ using Potato.Game;
 
 namespace Potato.Gameplay
 {
-    public class WeaponAttackInfo
-    {
-        public Vector3 shotOrigin;
-        public Vector3 shotDirection;
-        public float recoilForce;
-    }
-
     [RequireComponent(typeof(FirstPersonAnimationController))]
     public class PlayerWeaponsManager : MonoBehaviour
     {
@@ -38,7 +31,6 @@ namespace Potato.Gameplay
         [SerializeField] private float weaponSwitchDelay = 1f;
 
         [Header("Out Data")]
-        [SerializeField] private WeaponAttackEvent onShootEvent;
         [SerializeField] private WeaponReference activeWeaponRef;
         [SerializeField] private IntReference playerCurrentAmmo;        
 
@@ -51,6 +43,7 @@ namespace Potato.Gameplay
 
         // ---
         private WeaponController[] _weaponSlots = new WeaponController[9]; // 9 available weapon slots
+        private FirstPersonAnimationController _animationController;
         private float _weaponSwitchStartTime;
         private WeaponStance _weaponStance;
         private int _nextWeaponIndex;
@@ -58,6 +51,7 @@ namespace Potato.Gameplay
         // first person animator should have the weapon audio source, not each weapon prefab
         void Start()
         {
+            _animationController = GetComponent<FirstPersonAnimationController>();
             ActiveWeaponIndex = -1;
             _weaponStance = WeaponStance.Down;
 
@@ -87,7 +81,7 @@ namespace Potato.Gameplay
                         reloadInput.ButtonPressed);
 
                     if (hasFired)
-                        onShootEvent.Invoke(GetWeaponAttackInfo(activeWeapon), this);
+                        _animationController.AnimateRecoil(activeWeapon.RecoilForce);
                 }
 
                 if(playerCurrentAmmo.Value != activeWeapon.CurrentAmmo)
@@ -226,16 +220,6 @@ namespace Potato.Gameplay
                 nextIndex = 0;
 
             SwitchToWeaponIndex(nextIndex);
-        }
-        
-        WeaponAttackInfo GetWeaponAttackInfo(WeaponController activeWeapon)
-        {
-            return new()
-            {
-                shotOrigin = AimPosition,
-                shotDirection = AimDirection,
-                recoilForce = activeWeapon.RecoilForce
-            };
         }
     }
 }

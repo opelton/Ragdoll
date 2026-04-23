@@ -1,15 +1,19 @@
 using UnityEngine;
 using Potato.Core;
+using Potato.Game;
 
 namespace Potato.Gameplay
 {
-    [RequireComponent(typeof(PlayerCharacterController), typeof(PlayerWeaponsManager))]
+    [RequireComponent(typeof(PlayerWeaponsManager))]
     public class FirstPersonAnimationController : MonoBehaviour
-    {
+    {       
+        [Header("Grip poses")]
         [SerializeField] private Transform weaponRoot;
         [SerializeField] private Transform weaponPose_Default;
         [SerializeField] private Transform weaponPose_Aiming;
         [SerializeField] private Transform weaponPose_Down;
+
+        [Header("Grip animation params")]
         [SerializeField] private float weaponBobFrequency = 10f;
         [SerializeField] private float weaponBobSharpness = 10f;
         [SerializeField] private float weaponBob_default = 0.05f;
@@ -20,7 +24,16 @@ namespace Potato.Gameplay
         [SerializeField] private float aimAnimationSpeed = 10f;
         [SerializeField] private FloatReference playerStanceFovModifier;
 
-        private PlayerCharacterController _player;
+        [Header("Sfx")]
+        [SerializeField] protected AudioSystem audioSystem;
+        [SerializeField] private AudioClip footstepSfx;
+        [SerializeField] private AudioClip jumpSfx;
+        [SerializeField] private AudioClip landSfx;
+
+        [Header("Sfx params")]
+        [SerializeField] private float footstepFrequency = .3f;
+        [SerializeField] private float footstepFrequencySprinting = .2f;
+
         private PlayerWeaponsManager _weapons;
         private Vector3 _weaponRecoilLocalPos;
         private Vector3 _totalRecoil;
@@ -29,10 +42,10 @@ namespace Potato.Gameplay
         private Vector3 _weaponBobLocalPos;
         private Vector3 _lastPlayerPos;
         private float _weaponBobFactor;
+        private float _footstepDistanceCounter = 0f;
 
         void Start()
         {
-            _player = GetComponent<PlayerCharacterController>();
             _weapons = GetComponent<PlayerWeaponsManager>();
             SetWeaponPose_Down();
         }
@@ -41,7 +54,6 @@ namespace Potato.Gameplay
         void LateUpdate()
         {
             UpdateWeaponAiming();
-            UpdateWeaponBob();
             UpdateWeaponRecoil();
             UpdateWeaponSwitchingAnimation(_weapons.WeaponSwitchTimingFactor);
 
@@ -69,21 +81,19 @@ namespace Potato.Gameplay
             }
         }
 
-        void UpdateWeaponBob()
+        public void LateUpdateWeaponBob(Vector3 playerPos, bool isGrounded, float maxGroundSpeed, float sprintModifier)
         {
             if (Time.deltaTime > 0f)
             {
                 Vector3 playerCharacterVelocity =
-                    (_player.transform.position - _lastPlayerPos) / Time.deltaTime;
+                    (playerPos - _lastPlayerPos) / Time.deltaTime;
 
                 // calculate a smoothed weapon bob amount based on how close to our max grounded movement velocity we are
                 float characterMovementFactor = 0f;
-                if (_player.IsGrounded)
+                if (isGrounded)
                 {
-                    characterMovementFactor =
-                        Mathf.Clamp01(playerCharacterVelocity.magnitude /
-                                      (_player.MaxSpeedOnGround *
-                                       _player.SprintSpeedModifier));
+                    characterMovementFactor = Mathf.Clamp01(
+                        playerCharacterVelocity.magnitude / (maxGroundSpeed * sprintModifier));
                 }
 
                 _weaponBobFactor =
@@ -100,7 +110,7 @@ namespace Potato.Gameplay
                 _weaponBobLocalPos.x = hBobValue;
                 _weaponBobLocalPos.y = Mathf.Abs(vBobValue);
 
-                _lastPlayerPos = _player.transform.position;
+                _lastPlayerPos = playerPos;
             }
         }
 
@@ -167,10 +177,27 @@ namespace Potato.Gameplay
         void SetWeaponPose_Down() => _weaponLocalPos = weaponPose_Down.localPosition;
 
         // todo -- better animation controls (state-based?) recoil time + position
-        public void OnWeaponFired(WeaponAttackInfo attackData)
+        public void AnimateRecoil(float recoilForce)
         {
-            _totalRecoil += Vector3.back * attackData.recoilForce;
+            _totalRecoil += Vector3.back * recoilForce;
             _totalRecoil = Vector3.ClampMagnitude(_totalRecoil, maxRecoil);
         }
+
+        public void UpdateFootstepSfx(float moveDistance, bool isSprinting)
+        {
+            // footsteps sound
+            float chosenFootstepSfxFrequency = isSprinting ? footstepFrequencySprinting : footstepFrequency;
+            if (_footstepDistanceCounter >= 1f/ chosenFootstepSfxFrequency)
+            {
+                _footstepDistanceCounter = 0;
+                audioSystem.PlayFirstPersonAudio(footstepSfx);
+            }
+
+            // keep track of distance traveled for footsteps sound
+            _footstepDistanceCounter += moveDistance;
+        }
+
+        public void PlaySfx_Jump() => audioSystem.PlayFirstPersonAudio(jumpSfx);
+        public void PlaySfx_Land() => audioSystem.PlayFirstPersonAudio(landSfx);
     }
 }

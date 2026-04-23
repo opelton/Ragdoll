@@ -34,19 +34,19 @@ namespace Potato.Gameplay
                  lerp);
         }
 
-        public void Sfx_Extract() => audioSystem.PlayFirstPersonAudio(sfxExtract);
-        public void Sfx_Chamber() => audioSystem.PlayFirstPersonAudio(sfxChamber);
-        public void Sfx_Reload() => audioSystem.PlayFirstPersonAudio(sfxReload);
+        public void Sfx_Extract() => audioSystem.PlayFirstPersonWeaponAudio(sfxExtract);
+        public void Sfx_Chamber() => audioSystem.PlayFirstPersonWeaponAudio(sfxChamber);
+        public void Sfx_Reload() => audioSystem.PlayFirstPersonWeaponAudio(sfxReload);
 
         public void AnimateTrigger_Pulled(bool dryfire = false)
         {
-            audioSystem.PlayFirstPersonAudio(dryfire ? sfxTriggerDryfire : sfxTriggerPull);
+            audioSystem.PlayFirstPersonWeaponAudio(dryfire ? sfxTriggerDryfire : sfxTriggerPull);
             triggerBone.localRotation = Quaternion.Euler(new Vector3(triggerPose_Pulled, 0f, 0f));
         }
 
         public void AnimateTrigger_Release()
         {
-            audioSystem.PlayFirstPersonAudio(sfxTriggerRelease);
+            audioSystem.PlayFirstPersonWeaponAudio(sfxTriggerRelease);
             triggerBone.localRotation = Quaternion.Euler(new Vector3(triggerPose_Neutral, 0f, 0f));
         }
     }

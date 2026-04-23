@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Potato.Gameplay
 {
-    [RequireComponent(typeof(CharacterController))]
+    [RequireComponent(typeof(CharacterController), typeof(FirstPersonAnimationController))]
     public class PlayerCharacterController : MonoBehaviour
     {
         const float k_JumpGroundingPreventionTime = 0.2f;
@@ -20,11 +20,6 @@ namespace Potato.Gameplay
 
         [Header("Settings")]
         [SerializeField] private BoolReference isPausedRef;
-
-        // [Header("Out Events")]
-        // [SerializeField] private FloatEvent playerGroundImpact;
-        // [SerializeField] private GameEvent playerJumped;
-        // [SerializeField] private GameEvent playerFootstep;
 
         [Header("Gravity")]
         [SerializeField] private float gravityDownForce = 20f;
@@ -46,10 +41,10 @@ namespace Potato.Gameplay
         [SerializeField] private float airAcceleration = 25f;
         [SerializeField] private float turnSpeed = 1000f;
         [SerializeField] private float jumpForce = 9f;
-        [SerializeField] private float footstepFrequency = 1f;
 
         // --
         private CharacterController _controller;
+        private FirstPersonAnimationController _animationController;
         private Vector3 _velocity = Vector3.zero;
         private float _cameraY = 0;
         private bool _isGrounded = false;
@@ -57,7 +52,6 @@ namespace Potato.Gameplay
         private Vector3 _groundNormal = Vector3.up;
         //private Vector3 _lastImpactSpeed = Vector3.zero;
         private float _lastJumpTime = 0f;
-        private float _footstepDistanceCounter = 0f;
         private float _targetCharacterHeight;
 
         // --
@@ -68,6 +62,7 @@ namespace Potato.Gameplay
         void Start()
         {
             _controller = GetComponent<CharacterController>();
+            _animationController = GetComponent<FirstPersonAnimationController>();
             _controller.enableOverlapRecovery = true;
 
             SetCrouchingState(false, true);
@@ -78,13 +73,18 @@ namespace Potato.Gameplay
         {
             if(!isPausedRef.Value)
             {
-                //bool wasGrounded = _isGrounded;
+                bool wasGrounded = _isGrounded;
                 GroundCheck();
-                //CheckFallDamage(wasGrounded);
+                CheckFallDamage(wasGrounded);
                 UpdateCharacterHeight(false);
                 UpdateCamera();
                 UpdateMovement(Time.deltaTime);
             }
+        }
+
+        void LateUpdate()
+        {
+            _animationController.LateUpdateWeaponBob(transform.position, _isGrounded, MaxSpeedOnGround, SprintSpeedModifier);
         }
 
         void UpdateCamera()
@@ -108,6 +108,10 @@ namespace Potato.Gameplay
             float speedModifier = isSprinting ? sprintSpeedModifier : 1f;
             Vector3 worldspaceMoveInput = transform.TransformVector(moveInput.Value.x, 0f, moveInput.Value.y);
 
+            // normalize diagonal speed (wouldn't work if controllers were supported)
+            if(worldspaceMoveInput.x != 0 && worldspaceMoveInput.z != 0)
+                worldspaceMoveInput.Normalize();
+
             // movement
             if (_isGrounded)
             {
@@ -119,16 +123,7 @@ namespace Potato.Gameplay
                                  targetVelocity.magnitude;
 
                 _velocity = Vector3.Lerp(_velocity, targetVelocity, groundTurningSharpness * dt);
-
-                // footsteps sound
-                if (_footstepDistanceCounter >= footstepFrequency)
-                {
-                    _footstepDistanceCounter -= footstepFrequency;
-                    //playerFootstep.Invoke(this);
-                }
-
-                // keep track of distance traveled for footsteps sound
-                _footstepDistanceCounter += _velocity.magnitude * dt;
+                _animationController.UpdateFootstepSfx(_velocity.magnitude * dt, isSprinting);
             }
             // air movement
             else
@@ -176,7 +171,7 @@ namespace Potato.Gameplay
                     _velocity = new Vector3(_velocity.x, 0f, _velocity.z);
                     _velocity += Vector3.up * jumpForce;
 
-                    //playerJumped.Invoke(this);
+                    _animationController.PlaySfx_Jump();
 
                     // remember last time we jumped because we need to prevent snapping to ground for a short time
                     _lastJumpTime = Time.time;
@@ -192,29 +187,30 @@ namespace Potato.Gameplay
         public void TryCrouching() => SetCrouchingState(true, false);
         public void TryUncrouching() => SetCrouchingState(false, false);
 
-        // void CheckFallDamage(bool wasGrounded)
-        // {
-        //     if (_isGrounded && !wasGrounded)
-        //     {
-        //         // Fall damage
-        //         float fallSpeed = -Mathf.Min(_velocity.y, _lastImpactSpeed.y);
-        //         float fallSpeedRatio = (fallSpeed - MinSpeedForFallDamage) /
-        //                                (MaxSpeedForFallDamage - MinSpeedForFallDamage);
-        //         if (receivesFallDamage && fallSpeedRatio > 0f)
-        //         {
-        //             float dmgFromFall = Mathf.Lerp(FallDamageAtMinSpeed, FallDamageAtMaxSpeed, fallSpeedRatio);
-        //             // m_Health.TakeDamage(dmgFromFall, null);
+        void CheckFallDamage(bool wasGrounded)
+        {
+            if (_isGrounded && !wasGrounded)
+            {
+                // // Fall damage
+                // float fallSpeed = -Mathf.Min(_velocity.y, _lastImpactSpeed.y);
+                // float fallSpeedRatio = (fallSpeed - MinSpeedForFallDamage) /
+                //                        (MaxSpeedForFallDamage - MinSpeedForFallDamage);
+                // if (receivesFallDamage && fallSpeedRatio > 0f)
+                // {
+                //     float dmgFromFall = Mathf.Lerp(FallDamageAtMinSpeed, FallDamageAtMaxSpeed, fallSpeedRatio);
+                //     // m_Health.TakeDamage(dmgFromFall, null);
 
-        //             // // fall damage SFX
-        //             // AudioSource.PlayOneShot(FallDamageSfx);
-        //         }
-        //         // else
-        //         // {
-        //         //     // land SFX
-        //         //     AudioSource.PlayOneShot(LandSfx);
-        //         // }
-        //     }
-        // }
+                //     // // fall damage SFX
+                //     // AudioSource.PlayOneShot(FallDamageSfx);
+                // }
+                // else
+                // {
+                //     // land SFX
+                //     //AudioSource.PlayOneShot(LandSfx);
+                // }
+                _animationController.PlaySfx_Land();
+            }
+        }
 
         void UpdateCharacterHeight(bool force)
         {

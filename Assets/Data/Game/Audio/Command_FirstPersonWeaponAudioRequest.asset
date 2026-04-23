@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: acd0cf5029785164a952da29c287e197, type: 3}
-  m_Name: Notify_OnPlayerShoot
+  m_Script: {fileID: 11500000, guid: 0550c3e340b26d246ad1e8d1891a2a12, type: 3}
+  m_Name: Command_FirstPersonWeaponAudioRequest
   m_EditorClassIdentifier: 
-  _logInvocations: 0
-  _description: player fired their weapon
-  _listeners: []
+  _logInvocations: 1
+  _description: 
+  _testValue: {fileID: 0}

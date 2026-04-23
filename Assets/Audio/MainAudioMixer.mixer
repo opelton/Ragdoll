@@ -136,7 +136,7 @@ AudioMixerGroupController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: WeaponShoot
+  m_Name: PlayerBody
   m_AudioMixer: {fileID: 24100000}
   m_GroupID: d754f0daa6619544cb3da28b970d7dbb
   m_Children: []
@@ -361,6 +361,7 @@ AudioMixerSnapshotController:
   m_SnapshotID: b00d9329249d4f0468108c5beb9c2f72
   m_FloatValues:
     ba332cbe10dc0a3419a0f82eff0d0a73: -19.93
+    8cf708ee2b95e274a9b7503d68bec7b6: 1
   m_TransitionOverrides: {}
 --- !u!243 &2935891507420824985
 AudioMixerGroupController:
@@ -476,7 +477,7 @@ AudioMixerGroupController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PlayerMovement
+  m_Name: PlayerWeapon
   m_AudioMixer: {fileID: 24100000}
   m_GroupID: 92693494a7506b34eb0a2c9dcf1f6294
   m_Children: []
