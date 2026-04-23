@@ -4,7 +4,6 @@ using Potato.Game;
 
 namespace Potato.Gameplay
 {
-    [RequireComponent(typeof(PlayerWeaponsManager))]
     public class FirstPersonAnimationController : MonoBehaviour
     {       
         [Header("Grip poses")]
@@ -34,7 +33,6 @@ namespace Potato.Gameplay
         [SerializeField] private float footstepFrequency = .3f;
         [SerializeField] private float footstepFrequencySprinting = .2f;
 
-        private PlayerWeaponsManager _weapons;
         private Vector3 _weaponRecoilLocalPos;
         private Vector3 _totalRecoil;
         private Vector3 _weaponLocalPos;
@@ -46,19 +44,15 @@ namespace Potato.Gameplay
 
         void Start()
         {
-            _weapons = GetComponent<PlayerWeaponsManager>();
             SetWeaponPose_Down();
         }
 
         // todo -- only update these when they're actually happening, instead of always checking if they are
         void LateUpdate()
         {
-            UpdateWeaponAiming();
             UpdateWeaponRecoil();
-            UpdateWeaponSwitchingAnimation(_weapons.WeaponSwitchTimingFactor);
 
             // Set final weapon socket position based on all the combined animation influences
-            
             weaponRoot.SetLocalPositionAndRotation(
                 _weaponLocalPos + _weaponBobLocalPos + _weaponRecoilLocalPos,
                 _weaponLocalRotation);
@@ -81,7 +75,7 @@ namespace Potato.Gameplay
             }
         }
 
-        public void LateUpdateWeaponBob(Vector3 playerPos, bool isGrounded, float maxGroundSpeed, float sprintModifier)
+        public void LateUpdateWeaponBob(Vector3 playerPos, bool isGrounded, bool isAiming, float maxGroundSpeed, float sprintModifier)
         {
             if (Time.deltaTime > 0f)
             {
@@ -100,7 +94,7 @@ namespace Potato.Gameplay
                     Mathf.Lerp(_weaponBobFactor, characterMovementFactor, weaponBobSharpness * Time.deltaTime);
 
                 // Calculate vertical and horizontal weapon bob values based on a sine function
-                float bobAmount = _weapons.IsAiming ? weaponBob_aiming : weaponBob_default;
+                float bobAmount = isAiming ? weaponBob_aiming : weaponBob_default;
                 float frequency = weaponBobFrequency;
                 float hBobValue = Mathf.Sin(Time.time * frequency) * bobAmount * _weaponBobFactor;
                 float vBobValue = ((Mathf.Sin(Time.time * frequency * 2f) * 0.5f) + 0.5f) * bobAmount *
@@ -115,46 +109,44 @@ namespace Potato.Gameplay
         }
 
         // Updates weapon position and camera FoV for the aiming transition
-        void UpdateWeaponAiming()
+        public void LateUpdateWeaponAiming(WeaponController activeWeapon, bool stanceUp, bool isAiming, float dt)
         {
-            if (_weapons.Stance == PlayerWeaponsManager.WeaponStance.Up)
+            if (stanceUp)
             {
-                WeaponController activeWeapon = _weapons.GetActiveWeapon();
-                if (_weapons.IsAiming && activeWeapon)
+                if (isAiming && activeWeapon)
                 {
                     _weaponLocalPos = Vector3.Lerp(_weaponLocalPos,
                         weaponPose_Aiming.localPosition + activeWeapon.AimOffset,
-                        aimAnimationSpeed * Time.deltaTime);
+                        aimAnimationSpeed * dt);
 
                     _weaponLocalRotation = Quaternion.Lerp(_weaponLocalRotation,
                         Quaternion.Inverse(activeWeapon.WeaponMeshTransform.localRotation),
-                        aimAnimationSpeed * Time.deltaTime);
+                        aimAnimationSpeed * dt);
 
-                    playerStanceFovModifier.Value = Mathf.Lerp(playerStanceFovModifier.Value, activeWeapon.AimZoomRatio, aimAnimationSpeed * Time.deltaTime);
+                    playerStanceFovModifier.Value = Mathf.Lerp(playerStanceFovModifier.Value, activeWeapon.AimZoomRatio, aimAnimationSpeed * dt);
                 }
                 else
                 {
                     _weaponLocalPos = Vector3.Lerp(_weaponLocalPos,
-                        weaponPose_Default.localPosition, aimAnimationSpeed * Time.deltaTime);
+                        weaponPose_Default.localPosition, aimAnimationSpeed * dt);
 
                     _weaponLocalRotation = Quaternion.Lerp(_weaponLocalRotation,
                         Quaternion.identity,
-                        aimAnimationSpeed * Time.deltaTime);
+                        aimAnimationSpeed * dt);
 
-                    playerStanceFovModifier.Value = Mathf.Lerp(playerStanceFovModifier.Value, 1f, aimAnimationSpeed * Time.deltaTime);
+                    playerStanceFovModifier.Value = Mathf.Lerp(playerStanceFovModifier.Value, 1f, aimAnimationSpeed * dt);
                 }
             }
         }
         
         // Updates the animated transition of switching weapons
-        void UpdateWeaponSwitchingAnimation(float switchingTimeFactor)
+        public void UpdateWeaponSwitchingAnimation(WeaponController activeWeapon, float switchingTimeFactor, bool stowing, bool drawing)
         {
-            WeaponController activeWeapon = _weapons.GetActiveWeapon();
             if(activeWeapon == null)
                 return;
 
             // Handle moving the weapon socket position for the animated weapon switching
-            if (_weapons.Stance == PlayerWeaponsManager.WeaponStance.Stowing)
+            if (stowing)
             {
                 _weaponLocalPos = Vector3.Lerp(weaponPose_Default.localPosition,
                     weaponPose_Down.localPosition, switchingTimeFactor);
@@ -163,7 +155,7 @@ namespace Potato.Gameplay
                         weaponPose_Down.transform.localRotation,
                         aimAnimationSpeed * Time.deltaTime);
             }
-            else if (_weapons.Stance == PlayerWeaponsManager.WeaponStance.Drawing)
+            else if (drawing)
             {
                 _weaponLocalPos = Vector3.Lerp(weaponPose_Down.localPosition,
                     weaponPose_Default.localPosition, switchingTimeFactor);

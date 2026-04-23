@@ -1289,7 +1289,7 @@ MonoBehaviour:
   recoilSharpness: 50
   maxRecoil: 0.5
   recoilRecoverySharpness: 10
-  aimAnimationSpeed: 10
+  aimAnimationSpeed: 2.5
   playerStanceFovModifier:
     UseConstant: 0
     _description: 

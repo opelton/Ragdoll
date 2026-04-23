@@ -93,6 +93,7 @@ namespace Potato.Gameplay
         void LateUpdate()
         {
             UpdateWeaponSwitching();
+            _animationController.LateUpdateWeaponAiming(GetActiveWeapon(), _weaponStance == WeaponStance.Up, IsAiming, Time.fixedDeltaTime);
         }
 
         // Switches to the given weapon index in weapon slots if the new index is a valid weapon that is different from our current one
@@ -126,6 +127,7 @@ namespace Potato.Gameplay
         {
             // Calculate the time ratio (0 to 1) since weapon switch was triggered
             WeaponSwitchTimingFactor = weaponSwitchDelay == 0f ? 1f : Mathf.Clamp01((Time.time - _weaponSwitchStartTime) / weaponSwitchDelay);
+            WeaponController activeWeapon = GetActiveWeapon();
 
             // Handle transiting to new switch state
             if (WeaponSwitchTimingFactor >= 1f)
@@ -133,18 +135,17 @@ namespace Potato.Gameplay
                 if (_weaponStance == WeaponStance.Stowing)
                 {
                     // Deactivate old weapon
-                    WeaponController oldWeapon = GetWeaponAtSlotIndex(ActiveWeaponIndex);
-                    if (oldWeapon != null)
-                        oldWeapon.ShowWeapon(false);
+                    if (activeWeapon != null)
+                        activeWeapon.ShowWeapon(false);
 
                     ActiveWeaponIndex = _nextWeaponIndex;
                     WeaponSwitchTimingFactor = 0f;
 
                     // Activate new weapon
-                    WeaponController newWeapon = GetWeaponAtSlotIndex(ActiveWeaponIndex);
-                    OnWeaponSwitched(newWeapon);
+                    activeWeapon = GetWeaponAtSlotIndex(ActiveWeaponIndex);
+                    OnWeaponSwitched(activeWeapon);
 
-                    if (newWeapon)
+                    if (activeWeapon)
                     {
                         _weaponSwitchStartTime = Time.time;
                         _weaponStance = WeaponStance.Drawing;
@@ -155,6 +156,12 @@ namespace Potato.Gameplay
                 else if (_weaponStance == WeaponStance.Drawing)
                     _weaponStance = WeaponStance.Up;
             }
+
+            _animationController.UpdateWeaponSwitchingAnimation(
+                activeWeapon,
+                WeaponSwitchTimingFactor,
+                Stance == WeaponStance.Stowing,
+                Stance == WeaponStance.Drawing);
         }
 
         // Adds a weapon to our inventory

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Potato.Gameplay
 {
-    [RequireComponent(typeof(CharacterController), typeof(FirstPersonAnimationController))]
+    [RequireComponent(typeof(CharacterController), typeof(PlayerWeaponsManager), typeof(FirstPersonAnimationController))]
     public class PlayerCharacterController : MonoBehaviour
     {
         const float k_JumpGroundingPreventionTime = 0.2f;
@@ -45,12 +45,12 @@ namespace Potato.Gameplay
         // --
         private CharacterController _controller;
         private FirstPersonAnimationController _animationController;
+        private PlayerWeaponsManager _weapons;
         private Vector3 _velocity = Vector3.zero;
         private float _cameraY = 0;
         private bool _isGrounded = false;
         private bool _isCrouching = false;
         private Vector3 _groundNormal = Vector3.up;
-        //private Vector3 _lastImpactSpeed = Vector3.zero;
         private float _lastJumpTime = 0f;
         private float _targetCharacterHeight;
 
@@ -63,6 +63,7 @@ namespace Potato.Gameplay
         {
             _controller = GetComponent<CharacterController>();
             _animationController = GetComponent<FirstPersonAnimationController>();
+            _weapons = GetComponent<PlayerWeaponsManager>();
             _controller.enableOverlapRecovery = true;
 
             SetCrouchingState(false, true);
@@ -84,7 +85,7 @@ namespace Potato.Gameplay
 
         void LateUpdate()
         {
-            _animationController.LateUpdateWeaponBob(transform.position, _isGrounded, MaxSpeedOnGround, SprintSpeedModifier);
+            _animationController.LateUpdateWeaponBob(transform.position, _isGrounded, _weapons.IsAiming, MaxSpeedOnGround, SprintSpeedModifier);
         }
 
         void UpdateCamera()
@@ -152,13 +153,9 @@ namespace Potato.Gameplay
                 _velocity.normalized, out RaycastHit hit, _velocity.magnitude * dt, groundCheckLayers,
                 QueryTriggerInteraction.Ignore))
             {
-                //_lastImpactSpeed = _velocity;
-                //playerGroundImpact.Invoke(_velocity.magnitude, this);
 
                 _velocity = Vector3.ProjectOnPlane(_velocity, hit.normal);
             }
-            // else
-            //     _lastImpactSpeed = Vector3.zero;
         }
 
         public void TryJumping()
