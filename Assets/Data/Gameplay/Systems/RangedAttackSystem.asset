@@ -15,4 +15,4 @@ MonoBehaviour:
   maxRaycastRange: 100
   targetLayers:
     serializedVersion: 2
-    m_Bits: 1280
+    m_Bits: 5376

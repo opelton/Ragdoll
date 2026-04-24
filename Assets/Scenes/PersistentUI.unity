@@ -4504,7 +4504,6 @@ GameObject:
   - component: {fileID: 1049908542}
   - component: {fileID: 1049908541}
   - component: {fileID: 1049908540}
-  - component: {fileID: 1049908545}
   m_Layer: 5
   m_Name: SettingsPanel
   m_TagString: Untagged
@@ -4690,35 +4689,6 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 2
   m_TargetDisplay: 0
---- !u!114 &1049908545
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1049908538}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec46447c201f4d84183400d1a5ba1810, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _description: 
-  _eventSource: {fileID: 11400000, guid: a3265377b141ce047965de864368d86c, type: 2}
-  Response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1049908540}
-        m_TargetAssemblyTypeName: Potato.Game.UI.SettingsPanelController, potato.game.ui
-        m_MethodName: OnGameStateChanged
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1 &1076527272
 GameObject:
   m_ObjectHideFlags: 0

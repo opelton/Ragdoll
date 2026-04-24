@@ -46,10 +46,13 @@ namespace Potato.Game.UI
         private Dictionary<Vector2Int, int> _resolutionLookup;
 #endif
 
-        void Start()
+        void OnEnable()
         {
             SetGameplayOptionsVisibility(gameStateRef.Value.ShowGameFlowSettingsButtons);
+        }
 
+        void Start()
+        {
 #if UNITY_WEBGL || UNITY_EDITOR
             _allResolutions = new[] { SettingsBridge.GetCurrentResolution()};
 
@@ -73,13 +76,8 @@ namespace Potato.Game.UI
             PopulateResolutionDropdown();
 
 #if UNITY_WEBGL
-            // no quit in webgl
-            quitButton.SetActive(false);
-
             // vsync being forced-on overrides target fps
             lockFpsToggle.SetInteractable(false);
-#else
-            quitButton.SetActive(true);
 #endif
             SyncWidgetsToData();
         }
@@ -89,7 +87,13 @@ namespace Potato.Game.UI
             settingsTitle.text = showGameplayOptions ? "PAUSE / SETTINGS" : "SETTINGS";
             restartButton.SetActive(showGameplayOptions);
             mainMenuButton.SetActive(showGameplayOptions);
+
+#if UNITY_WEBGL
+            // no quit in webgl
+            quitButton.SetActive(false);
+#else
             quitButton.SetActive(showGameplayOptions);
+#endif
         }
 
         void PopulateResolutionDropdown()
@@ -145,7 +149,6 @@ namespace Potato.Game.UI
         }
         public void OnFramerateToggleChanged(bool isToggled) => showFramerateRef.Value = isToggled;
         public void OnFovSliderChanged(float fov) => fovRef.Value = (int)fov;
-        public void OnGameStateChanged(GameState state) => SetGameplayOptionsVisibility(state.ShowGameFlowSettingsButtons);
         public void OnFpsCapSliderChanged(float newValue) => targetFramerateRef.Value = (int)newValue;
         public void OnFpsCapToggleChanged(bool isToggled)
         {

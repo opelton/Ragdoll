@@ -22,7 +22,6 @@ namespace Potato.Gameplay
 
         public void SetRagdoll(bool enabled)
         {
-            Debug.Log("set ragdoll");
             animator.enabled = !enabled;
 
             foreach (var limb in limbs)
