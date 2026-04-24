@@ -22,6 +22,7 @@ namespace Potato.Gameplay
 
         public void SetRagdoll(bool enabled)
         {
+            Debug.Log("set ragdoll");
             animator.enabled = !enabled;
 
             foreach (var limb in limbs)
@@ -34,6 +35,12 @@ namespace Potato.Gameplay
                 hitbox.TeamId = enabled ? Target.Team.Neutral : Target.Team.Hostile;
         }
 
-        void OnAttacked() => SetRagdoll(true);
+        void OnAttacked()
+        {
+            SetRagdoll(true);
+
+            foreach(var limb in limbs)
+                limb.onAttacked -= OnAttacked;
+        }
     }
 }

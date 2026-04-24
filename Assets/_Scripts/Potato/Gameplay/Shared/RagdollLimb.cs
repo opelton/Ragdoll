@@ -23,9 +23,11 @@ namespace Potato.Gameplay
             _collider.enabled = enabled;
         }
 
-        public void AttackLimb(float damage, GameObject attacker)
+        public void AttackLimb(float damage, Vector3 point, Vector3 direction, GameObject attacker)
         {
             onAttacked?.Invoke();
+            var force = 1000f;
+            _rb.AddForceAtPosition(direction * force, point);
         }
     }
 }

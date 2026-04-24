@@ -7,7 +7,8 @@ namespace Potato.Gameplay
     {
         public enum Team { Neutral, Hostile }
         public Team TeamId = Team.Hostile;
-        public UnityEvent<float, GameObject> OnDamaged;
-        public void InflictDamage(float damage, GameObject damageSource) => OnDamaged?.Invoke(damage, damageSource);
+        public UnityEvent<float, Vector3, Vector3, GameObject> OnDamaged;
+        public void InflictDamage(float damage, Vector3 hitPoint, Vector3 hitDirection, GameObject damageSource)
+            => OnDamaged?.Invoke(damage, hitPoint, hitDirection, damageSource);
     }
 }

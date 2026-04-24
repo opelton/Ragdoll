@@ -2305,7 +2305,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7051844009664903748, guid: 49d6eb2ecfcacd2409f70fa0c25ac189, type: 3}
       propertyPath: m_Name
-      value: SandbagBot
+      value: NewSandbagBot
+      objectReference: {fileID: 0}
+    - target: {fileID: 7303998308964732406, guid: 49d6eb2ecfcacd2409f70fa0c25ac189, type: 3}
+      propertyPath: ragdollLayer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

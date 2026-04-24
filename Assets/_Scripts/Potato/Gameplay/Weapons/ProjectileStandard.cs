@@ -147,7 +147,7 @@ namespace Potato.Gameplay
                 // point damage
                 Target target = collider.GetComponent<Target>();
                 if (target)
-                    target.InflictDamage(damage, Owner);
+                    target.InflictDamage(damage, point, -normal, Owner);
             }
 
             // impact vfx
