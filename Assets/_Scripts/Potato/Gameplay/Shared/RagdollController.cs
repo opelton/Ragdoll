@@ -1,33 +1,39 @@
 using UnityEngine;
+using Potato.Core;
 
 namespace Potato.Gameplay
 {
     public class RagdollController : MonoBehaviour
     {
         [SerializeField] private Animator animator;
-        [SerializeField] private Collider[] hitboxes;
-        [SerializeField] private Collider[] limbs;
+        [SerializeField][LayerIndex] private int neutralLayer;
+        [SerializeField][LayerIndex] private int ragdollLayer;
+        [SerializeField] private RagdollLimb[] limbs;
 
-        Rigidbody[] _bodies;
+        private Target[] _hitboxes;
 
         void Start()
         {
-            _bodies = GetComponentsInChildren<Rigidbody>();
+            _hitboxes = GetComponentsInChildren<Target>();
+
+            foreach(var limb in limbs)
+                limb.onAttacked += OnAttacked;
         }
 
         public void SetRagdoll(bool enabled)
         {
             animator.enabled = !enabled;
 
-            foreach (var rb in _bodies)
-                rb.isKinematic = !enabled;
-
-            // hitboxes and limb boxes are active at opposite times (for now)
-            foreach (var hitbox in hitboxes)
-                hitbox.enabled = !enabled;
-
             foreach (var limb in limbs)
-                limb.enabled = enabled;
+            {
+                limb.gameObject.layer = enabled ? ragdollLayer : neutralLayer;
+                limb.SetRagdoll(enabled);
+            }
+
+            foreach(var hitbox in _hitboxes)
+                hitbox.TeamId = enabled ? Target.Team.Neutral : Target.Team.Hostile;
         }
+
+        void OnAttacked() => SetRagdoll(true);
     }
 }

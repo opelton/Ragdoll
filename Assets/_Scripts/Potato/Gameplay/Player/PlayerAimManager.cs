@@ -28,7 +28,8 @@ namespace Potato.Gameplay
                 if (hit.collider.gameObject == gameObject)
                     continue;
 
-                if (hit.collider.GetComponentInParent<Target>() != null)
+                var target = hit.collider.GetComponentInParent<Target>();
+                if (target != null && target.TeamId == Target.Team.Hostile)
                 {
                     playerAimPoint.Value = hit.point;
                     targetingHostile = true;
