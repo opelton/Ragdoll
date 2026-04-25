@@ -97,6 +97,7 @@ MonoBehaviour:
   shotCooldown: 0.4
   bulletSpreadAngle: 0
   bulletsPerShot: 1
+  bulletDamage: 1
   recoilForce: 1
   aimZoomRatio: 0.65
   aimOffset: {x: 0, y: 0.075, z: 0}
@@ -130,6 +131,7 @@ MonoBehaviour:
   tracerPrefab: {fileID: 4451441854257555881, guid: d7d53bd678307d6468087a44594e6975, type: 3}
   tracerSpeed: 300
   tracerDuration: 0.5
+  pointBlankThreshold: 0.75
   rats: {fileID: 11400000, guid: beabe8fa1f42ec944b266f906c28d1ff, type: 2}
   playerAimPoint:
     UseConstant: 0

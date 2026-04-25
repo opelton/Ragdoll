@@ -25,6 +25,7 @@ namespace Potato.Gameplay
         [SerializeField] private TracerProjectile tracerPrefab;
         [SerializeField] private float tracerSpeed = 300f;
         [SerializeField] private float tracerDuration = .5f;
+        [SerializeField] private float pointBlankThreshold = .75f;
         [SerializeField] private RangedAttackSystem rats;
         [SerializeField] protected Vector3Reference playerAimPoint;
 
@@ -90,7 +91,9 @@ namespace Potato.Gameplay
             // fire tracers at the impact point
             if (tracerPrefab != null)
             {
-                var tracerDirection = (playerAimPoint.Value - weaponMuzzle.position).normalized;
+                var muzzleToTarget = playerAimPoint.Value - weaponMuzzle.position;
+                Debug.Log($"shot distance {muzzleToTarget.magnitude}");
+                var tracerDirection = muzzleToTarget.magnitude <= pointBlankThreshold ? weaponMuzzle.transform.forward : muzzleToTarget.normalized;
                 var adjustedOrigin = weaponMuzzle.position + Time.deltaTime * MuzzleWorldVelocity;
 
                 rats.FireTracers(owner, tracerPrefab, adjustedOrigin,
