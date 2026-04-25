@@ -88,11 +88,11 @@ namespace Potato.Gameplay
             if (shootSfx)
                 audioSystem.PlayFirstPersonWeaponAudio(shootSfx);
 
-            // fire tracers at the impact point
+            // fire tracers at the impact point, or straight forward if the impact is too close
             if (tracerPrefab != null)
             {
                 var muzzleToTarget = playerAimPoint.Value - weaponMuzzle.position;
-                Debug.Log($"shot distance {muzzleToTarget.magnitude}");
+                //Debug.Log($"shot distance {muzzleToTarget.magnitude}");
                 var tracerDirection = muzzleToTarget.magnitude <= pointBlankThreshold ? weaponMuzzle.transform.forward : muzzleToTarget.normalized;
                 var adjustedOrigin = weaponMuzzle.position + Time.deltaTime * MuzzleWorldVelocity;
 

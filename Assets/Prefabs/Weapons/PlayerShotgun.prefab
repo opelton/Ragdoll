@@ -131,7 +131,7 @@ MonoBehaviour:
   tracerPrefab: {fileID: 4451441854257555881, guid: d7d53bd678307d6468087a44594e6975, type: 3}
   tracerSpeed: 300
   tracerDuration: 0.5
-  pointBlankThreshold: 1
+  pointBlankThreshold: 1.2
   rats: {fileID: 11400000, guid: beabe8fa1f42ec944b266f906c28d1ff, type: 2}
   playerAimPoint:
     UseConstant: 0
