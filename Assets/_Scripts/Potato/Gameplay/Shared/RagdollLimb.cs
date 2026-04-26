@@ -37,6 +37,8 @@ namespace Potato.Gameplay
                     joint.connectedBody = null;
                     Destroy(joint);
                 }
+
+                dismembering = false;
             }
         }
     }
