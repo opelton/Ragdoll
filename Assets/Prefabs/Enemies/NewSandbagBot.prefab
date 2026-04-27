@@ -337,8 +337,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d05d89842f7d824bb26d48ff24e9bad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dismembering: 1
-  knockbackForce: 1500
+  hitForceModifier: 1
+  severVelocityModifier: 0.5
+  dismembering: 0
 --- !u!114 &1441505194772053339
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -639,8 +640,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d05d89842f7d824bb26d48ff24e9bad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitForceModifier: 1
+  severVelocityModifier: 0.5
   dismembering: 1
-  knockbackForce: 1500
 --- !u!114 &4280296205930712408
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -846,8 +848,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d05d89842f7d824bb26d48ff24e9bad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitForceModifier: 1
+  severVelocityModifier: 0.75
   dismembering: 1
-  knockbackForce: 1500
 --- !u!114 &3606313071422521090
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1021,8 +1024,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d05d89842f7d824bb26d48ff24e9bad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitForceModifier: 1
+  severVelocityModifier: 0.75
   dismembering: 1
-  knockbackForce: 1500
 --- !u!114 &5866003485605008076
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1403,7 +1407,7 @@ CharacterJoint:
     bounciness: 0
     contactDistance: 0
   m_Swing2Limit:
-    limit: 0
+    limit: 65.34953
     bounciness: 0
     contactDistance: 0
   m_EnableProjection: 0
@@ -1427,8 +1431,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d05d89842f7d824bb26d48ff24e9bad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitForceModifier: 1
+  severVelocityModifier: 0.5
   dismembering: 1
-  knockbackForce: 1500
 --- !u!114 &3959048927558483851
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1555,8 +1560,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d05d89842f7d824bb26d48ff24e9bad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitForceModifier: 1
+  severVelocityModifier: 0.5
   dismembering: 1
-  knockbackForce: 1500
 --- !u!114 &8865573903278294645
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1983,8 +1989,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d05d89842f7d824bb26d48ff24e9bad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitForceModifier: 1
+  severVelocityModifier: 0.5
   dismembering: 0
-  knockbackForce: 1500
 --- !u!114 &5234128790721885765
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2221,8 +2228,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d05d89842f7d824bb26d48ff24e9bad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitForceModifier: 1
+  severVelocityModifier: 0.5
   dismembering: 1
-  knockbackForce: 1500
 --- !u!114 &699078015854279163
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2524,8 +2532,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d05d89842f7d824bb26d48ff24e9bad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitForceModifier: 1
+  severVelocityModifier: 0.5
   dismembering: 1
-  knockbackForce: 1500
 --- !u!114 &8403648127250139407
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3143,8 +3152,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d05d89842f7d824bb26d48ff24e9bad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitForceModifier: 1
+  severVelocityModifier: 0.5
   dismembering: 1
-  knockbackForce: 1500
 --- !u!114 &42224899790206863
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3959,8 +3969,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d05d89842f7d824bb26d48ff24e9bad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dismembering: 1
-  knockbackForce: 1500
+  hitForceModifier: 1
+  severVelocityModifier: 0.5
+  dismembering: 0
 --- !u!114 &1650803940763665904
 MonoBehaviour:
   m_ObjectHideFlags: 0
