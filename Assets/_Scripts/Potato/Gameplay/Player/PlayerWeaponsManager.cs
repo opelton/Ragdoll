@@ -92,8 +92,9 @@ namespace Potato.Gameplay
         // Update various animated features in LateUpdate because it needs to override the animated arm position
         void LateUpdate()
         {
-            UpdateWeaponSwitching();
-            _animationController.LateUpdateWeaponAiming(GetActiveWeapon(), _weaponStance == WeaponStance.Up, IsAiming, Time.fixedDeltaTime);
+            var dt = Time.deltaTime;
+            UpdateWeaponSwitching(dt);
+            _animationController.LateUpdateWeaponAiming(GetActiveWeapon(), _weaponStance == WeaponStance.Up, IsAiming, dt);
         }
 
         // Switches to the given weapon index in weapon slots if the new index is a valid weapon that is different from our current one
@@ -123,7 +124,7 @@ namespace Potato.Gameplay
         }
 
         // Updates the animated transition of switching weapons
-        void UpdateWeaponSwitching()
+        void UpdateWeaponSwitching(float dt)
         {
             // Calculate the time ratio (0 to 1) since weapon switch was triggered
             WeaponSwitchTimingFactor = weaponSwitchDelay == 0f ? 1f : Mathf.Clamp01((Time.time - _weaponSwitchStartTime) / weaponSwitchDelay);
@@ -161,7 +162,8 @@ namespace Potato.Gameplay
                 activeWeapon,
                 WeaponSwitchTimingFactor,
                 Stance == WeaponStance.Stowing,
-                Stance == WeaponStance.Drawing);
+                Stance == WeaponStance.Drawing,
+                dt);
         }
 
         // Adds a weapon to our inventory

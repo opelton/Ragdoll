@@ -50,7 +50,7 @@ namespace Potato.Gameplay
         // todo -- only update these when they're actually happening, instead of always checking if they are
         void LateUpdate()
         {
-            UpdateWeaponRecoil();
+            UpdateWeaponRecoil(Time.deltaTime);
 
             // Set final weapon socket position based on all the combined animation influences
             weaponRoot.SetLocalPositionAndRotation(
@@ -58,19 +58,19 @@ namespace Potato.Gameplay
                 _weaponLocalRotation);
         }
 
-        void UpdateWeaponRecoil()
+        void UpdateWeaponRecoil(float dt)
         {
             // if the accumulated recoil is further away from the current position, make the current position move towards the recoil target
             if (_weaponRecoilLocalPos.z >= _totalRecoil.z * 0.99f)
             {
                 _weaponRecoilLocalPos = Vector3.Lerp(_weaponRecoilLocalPos, _totalRecoil,
-                    recoilSharpness * Time.deltaTime);
+                    recoilSharpness * dt);
             }
             // otherwise, move recoil position to make it recover towards its resting pose
             else
             {
                 _weaponRecoilLocalPos = Vector3.Lerp(_weaponRecoilLocalPos, Vector3.zero,
-                    recoilRecoverySharpness * Time.deltaTime);
+                    recoilRecoverySharpness * dt);
                 _totalRecoil = _weaponRecoilLocalPos;
             }
         }
@@ -140,7 +140,7 @@ namespace Potato.Gameplay
         }
         
         // Updates the animated transition of switching weapons
-        public void UpdateWeaponSwitchingAnimation(WeaponController activeWeapon, float switchingTimeFactor, bool stowing, bool drawing)
+        public void UpdateWeaponSwitchingAnimation(WeaponController activeWeapon, float switchingTimeFactor, bool stowing, bool drawing, float dt)
         {
             if(activeWeapon == null)
                 return;
@@ -153,7 +153,7 @@ namespace Potato.Gameplay
 
                 _weaponLocalRotation = Quaternion.Lerp(_weaponLocalRotation,
                         weaponPose_Down.transform.localRotation,
-                        aimAnimationSpeed * Time.deltaTime);
+                        aimAnimationSpeed * dt);
             }
             else if (drawing)
             {
@@ -162,7 +162,7 @@ namespace Potato.Gameplay
 
                 _weaponLocalRotation = Quaternion.Lerp(_weaponLocalRotation,
                         weaponPose_Default.transform.localRotation,
-                        aimAnimationSpeed * Time.deltaTime);
+                        aimAnimationSpeed * dt);
             }
         }
 
