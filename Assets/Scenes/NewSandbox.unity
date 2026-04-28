@@ -2744,7 +2744,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7051844009664903748, guid: 49d6eb2ecfcacd2409f70fa0c25ac189, type: 3}
       propertyPath: m_Name
-      value: NewSandbagBot
+      value: SandbagBot
       objectReference: {fileID: 0}
     - target: {fileID: 7303998308964732406, guid: 49d6eb2ecfcacd2409f70fa0c25ac189, type: 3}
       propertyPath: ragdollLayer
@@ -2765,7 +2765,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5886909609703047410, guid: 9c862769efb68154a8df7015e7453bf8, type: 3}
       propertyPath: m_Name
-      value: NewPlayer
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 6657562907950387057, guid: 9c862769efb68154a8df7015e7453bf8, type: 3}
       propertyPath: m_LocalPosition.x
