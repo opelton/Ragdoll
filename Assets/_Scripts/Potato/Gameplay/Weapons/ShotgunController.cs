@@ -29,7 +29,15 @@ namespace Potato.Gameplay
 
         void OnEnable()
         {
-            _fsm?.SetNextState(WeaponState.Neutral);
+            if(_currentAmmo != 0 && _chamberState != ChamberState.Ready)
+            {
+                if(_chamberState == ChamberState.Empty && _receiverLoaded)
+                    _fsm.SetCurrentState(WeaponState.Chambering);
+                else
+                    _fsm.SetCurrentState(WeaponState.Extracting);
+            }
+            else
+                _fsm.SetNextState(WeaponState.Neutral);
         }
 
         void Update()

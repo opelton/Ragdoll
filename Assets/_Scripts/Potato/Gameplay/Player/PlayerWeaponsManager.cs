@@ -72,7 +72,7 @@ namespace Potato.Gameplay
                 if (_weaponStance == WeaponStance.Up)
                 {
                     // handle aiming down sights
-                    IsAiming = fire2Input.ButtonDown && !activeWeapon.IsReloading;
+                    IsAiming = fire2Input.ButtonDown;
 
                     // handle shooting
                     bool hasFired = activeWeapon.HandleWeaponInputs(

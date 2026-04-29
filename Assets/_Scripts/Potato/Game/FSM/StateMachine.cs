@@ -49,6 +49,7 @@ namespace Potato.Game
             _currentState?.UpdateState(dt);
         }
 
+        // calls EnterState but not ExitState, resets time to 0
         public void ResetState() => _currentState?.EnterState();
 
         public void RepeatState()
