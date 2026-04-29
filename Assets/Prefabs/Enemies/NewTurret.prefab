@@ -41,6 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3186200417508640173}
   - component: {fileID: 4190006621643255867}
+  - component: {fileID: 7342290713546833499}
   m_Layer: 9
   m_Name: NewTurret
   m_TagString: Untagged
@@ -86,6 +87,37 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &7342290713546833499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2171847098068999231}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50ac1a3c19c8717479d4a292fee22a43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHp: 5
+  OnHealthLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnKilledEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2171847098068999231}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &3501565655909193385
 GameObject:
   m_ObjectHideFlags: 0
@@ -165,8 +197,8 @@ GameObject:
   m_Component:
   - component: {fileID: 207170942612993010}
   - component: {fileID: 7741503925211655715}
-  - component: {fileID: 564987486648637848}
   - component: {fileID: 7884250870998542051}
+  - component: {fileID: 4963466622083970506}
   m_Layer: 10
   m_Name: HitboxBottom
   m_TagString: Untagged
@@ -210,20 +242,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 0.15, z: 1}
   m_Center: {x: 0, y: 0.075, z: 0}
---- !u!114 &564987486648637848
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4063784869375340424}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d207b853c3dc684ebde26de9959ff1e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DamageMultiplier: 1
-  SensibilityToSelfdamage: 0.5
 --- !u!65 &7884250870998542051
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -245,6 +263,34 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.2, y: 0.5, z: 0.2}
   m_Center: {x: 0, y: 0.3, z: 0}
+--- !u!114 &4963466622083970506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063784869375340424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59a7908b715d13649963dd6942152fad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TeamId: 1
+  OnDamaged:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7342290713546833499}
+        m_TargetAssemblyTypeName: Potato.Gameplay.Health, potato.gameplay
+        m_MethodName: OnTargetDamaged
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &7415420940325111230
 GameObject:
   m_ObjectHideFlags: 0
@@ -255,7 +301,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3893422131110778500}
   - component: {fileID: 7924416972321663033}
-  - component: {fileID: 2604854102402239142}
+  - component: {fileID: 4549662246527586193}
   m_Layer: 10
   m_Name: HitboxTop
   m_TagString: Untagged
@@ -299,7 +345,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.65, y: 0.7539736, z: 0.66}
   m_Center: {x: 0, y: -0.04, z: 0}
---- !u!114 &2604854102402239142
+--- !u!114 &4549662246527586193
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -308,11 +354,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 7415420940325111230}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d207b853c3dc684ebde26de9959ff1e, type: 3}
+  m_Script: {fileID: 11500000, guid: 59a7908b715d13649963dd6942152fad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DamageMultiplier: 1
-  SensibilityToSelfdamage: 0.5
+  TeamId: 1
+  OnDamaged:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7342290713546833499}
+        m_TargetAssemblyTypeName: Potato.Gameplay.Health, potato.gameplay
+        m_MethodName: OnTargetDamaged
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &7759010782833088916
 GameObject:
   m_ObjectHideFlags: 0
