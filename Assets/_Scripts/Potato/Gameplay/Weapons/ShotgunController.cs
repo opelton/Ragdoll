@@ -21,10 +21,10 @@ namespace Potato.Gameplay
         protected override void Awake()
         {
             base.Awake();
-            if (_fsm == null)
+            if(_fsm == null)
                 InitializeStateMachine();
 
-            _fsm.SetNextState(WeaponState.Neutral);
+            _fsm.SetCurrentState(WeaponState.Neutral);
         }
 
         void OnEnable()
@@ -37,7 +37,7 @@ namespace Potato.Gameplay
                     _fsm.SetCurrentState(WeaponState.Extracting);
             }
             else
-                _fsm.SetNextState(WeaponState.Neutral);
+                _fsm.SetCurrentState(WeaponState.Neutral);
         }
 
         void Update()
@@ -60,13 +60,13 @@ namespace Potato.Gameplay
                 RequestReload();
             else if(fire1Held)
                 return TryShoot();
-            
+
             return false;
         }
 
         bool TryShoot()
         {
-            if (CurrentAmmo > 0 && _lastShotTime + shotCooldown < Time.time)
+            if(CurrentAmmo > 0 && _lastShotTime + shotCooldown < Time.time)
             {
                 if(_chamberState == ChamberState.Ready)
                 {
@@ -150,7 +150,7 @@ namespace Potato.Gameplay
                     if(_fsm.TimeInState >= ammoReloadDelay)
                     {
                         Animator.Sfx_Reload();
-                        
+
                         _currentAmmo = Math.Min(_currentAmmo + shotsPerReload, MaxAmmo);
                         if(CurrentAmmo != MaxAmmo)
                             _fsm.ResetState();
