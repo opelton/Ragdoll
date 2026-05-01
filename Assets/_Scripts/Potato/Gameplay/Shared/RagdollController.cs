@@ -8,15 +8,15 @@ namespace Potato.Gameplay
         [SerializeField] private Animator animator;
         [SerializeField][LayerIndex] private int neutralLayer;
         [SerializeField][LayerIndex] private int ragdollLayer;
-        [SerializeField] private RagdollLimb[] limbs;
 
         private Target[] _hitboxes;
-
+        private RagdollLimb[] _limbs;
         void Start()
         {
             _hitboxes = GetComponentsInChildren<Target>();
+            _limbs = GetComponentsInChildren<RagdollLimb>();
 
-            foreach(var limb in limbs)
+            foreach(var limb in _limbs)
                 limb.onAttacked += OnAttacked;
         }
 
@@ -24,7 +24,7 @@ namespace Potato.Gameplay
         {
             animator.enabled = !enabled;
 
-            foreach (var limb in limbs)
+            foreach (var limb in _limbs)
             {
                 limb.gameObject.layer = enabled ? ragdollLayer : neutralLayer;
                 limb.SetRagdoll(enabled);
@@ -38,7 +38,7 @@ namespace Potato.Gameplay
         {
             SetRagdoll(true);
 
-            foreach(var limb in limbs)
+            foreach(var limb in _limbs)
                 limb.onAttacked -= OnAttacked;
         }
     }

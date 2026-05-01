@@ -1207,6 +1207,11 @@ MonoBehaviour:
   moveInput: {fileID: 11400000, guid: 961e4355c1e5a0948b1a9a3263b3f243, type: 2}
   lookInput: {fileID: 11400000, guid: 075cf99767d5472478095234510951a8, type: 2}
   sprintInput: {fileID: 11400000, guid: a6c8c83cf44537d47bf79f48e20b82f1, type: 2}
+  playerRef:
+    UseConstant: 0
+    _description: 
+    ConstantValue: {fileID: 0}
+    ReferenceData: {fileID: 11400000, guid: a059aaae4dc6948418dc5b5b95d4c56c, type: 2}
   isPausedRef:
     UseConstant: 0
     _description: 

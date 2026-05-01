@@ -19,6 +19,7 @@ namespace Potato.Gameplay
         [SerializeField] private InputButton sprintInput;
 
         [Header("Settings")]
+        [SerializeField] private PlayerCharacterControllerReference playerRef;
         [SerializeField] private BoolReference isPausedRef;
 
         [Header("Gravity")]
@@ -55,6 +56,7 @@ namespace Potato.Gameplay
         private float _targetCharacterHeight;
 
         // --
+        public bool IsAlive => true;
         public bool IsGrounded => _isGrounded;
         public float MaxSpeedOnGround => maxGroundSpeed;
         public float SprintSpeedModifier => sprintSpeedModifier;
@@ -68,6 +70,16 @@ namespace Potato.Gameplay
 
             SetCrouchingState(false, true);
             UpdateCharacterHeight(true);
+        }
+
+        void OnEnable()
+        {
+            playerRef.Value = this;
+        }
+
+        void OnDisable()
+        {
+            playerRef.Value = null;
         }
 
         void Update()

@@ -41,11 +41,11 @@ namespace Potato.Gameplay
             dismembering = false;
         }
 
-        public void AttackLimb(float damage, Vector3 point, Vector3 direction, GameObject _)
+        public void AttackLimb(AttackInfo data)
         {
             onAttacked?.Invoke();
-            var force = damage * kHitForce * hitForceModifier;
-            _rb.AddForceAtPosition(direction * force, point);
+            var force = data.Damage * kHitForce * hitForceModifier;
+            _rb.AddForceAtPosition(data.HitDirection * force, data.HitPoint);
 
             if (dismembering)
                 StartCoroutine(BeginSevering());

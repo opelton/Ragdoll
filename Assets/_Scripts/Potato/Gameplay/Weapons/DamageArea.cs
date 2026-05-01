@@ -33,8 +33,8 @@ namespace Potato.Gameplay
             foreach (Target uniqueTarget in uniqueTargets)
             {
                 float distance = Vector3.Distance(uniqueTarget.transform.position, transform.position);
-                uniqueTarget.InflictDamage(damage * DamageRatioOverDistance.Evaluate(distance / AreaOfEffectDistance),
-                    center, (center - uniqueTarget.transform.position).normalized, owner);
+                uniqueTarget.InflictDamage(new(damage * DamageRatioOverDistance.Evaluate(distance / AreaOfEffectDistance), owner,
+                    center, (center - uniqueTarget.transform.position).normalized));
             }
         }
 

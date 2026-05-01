@@ -6,38 +6,44 @@ namespace Potato.Gameplay
     public class Health : MonoBehaviour
     {
         [SerializeField] protected float maxHp;
-        public UnityEvent<int> OnHealthLostEvent;
+        public UnityEvent<float> OnHealthLostEvent;
+        public UnityEvent<float> OnHealthGainedEvent;
+        public UnityEvent<AttackInfo> OnAttackedEvent;
         public UnityEvent OnKilledEvent;
 
         public float CurrentHp { get; protected set; }
-        public bool IsAlive { get; protected set; } = true;
+        public bool IsAlive => CurrentHp > 0;
 
         protected virtual void Start()
         {
             CurrentHp = maxHp;
         }
 
-        // matches target onDamaged event signature
-        public virtual void OnTargetDamaged(float damage, Vector3 hitPoint, Vector3 hitDirection, GameObject damageSource)
+        public virtual void OnTargetDamaged(AttackInfo data)
         {
-            InflictDamage(damage);
+            InflictDamage(data.Damage);
+            OnAttackedEvent?.Invoke(data);
         }
 
         public virtual void InflictDamage(float damage)
         {
             CurrentHp -= damage;
+            OnHealthLostEvent?.Invoke(damage);
             if (CurrentHp <= 0)
                 HandleDeath();
         }
 
         public virtual void Heal(float healing)
         {
+            var oldHp = CurrentHp;
             CurrentHp = Mathf.Min(CurrentHp + healing, maxHp);
+            var healed = CurrentHp - oldHp;
+            if(healed > 0f)
+                OnHealthGainedEvent?.Invoke(healed);
         }
 
-        void HandleDeath()
+        protected virtual void HandleDeath()
         {
-            IsAlive = false;
             OnKilledEvent?.Invoke();
         }
     }
