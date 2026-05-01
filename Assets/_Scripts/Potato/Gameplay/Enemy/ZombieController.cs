@@ -21,6 +21,7 @@ namespace Potato.Gameplay
         private CharacterController _controller;
         private ZombieAnimator _animator;
         private Target[] _hitboxes;
+        private int _startingLayer;
 
         void Start()
         {
@@ -28,6 +29,7 @@ namespace Potato.Gameplay
             _animator = GetComponent<ZombieAnimator>();
             _hitboxes = GetComponentsInChildren<Target>();
             _animator.OnLimbAttacked += OnLimbsAttacked;
+            _startingLayer = gameObject.layer;
 
             ToggleHitboxes(true);
         }
@@ -62,11 +64,16 @@ namespace Potato.Gameplay
 
         void ToggleHitboxes(bool alive)
         {
+            var teamId = alive ? Target.Team.Hostile : Target.Team.Neutral;
+            var layer = alive ? defaultLayer : ragdollLayer;
+
             foreach(var hitbox in _hitboxes)
             {
-                hitbox.TeamId = alive ? Target.Team.Hostile : Target.Team.Neutral;
-                hitbox.gameObject.layer = alive ? defaultLayer : ragdollLayer;
+                hitbox.TeamId = teamId;
+                hitbox.gameObject.layer = layer;
             }
+
+            gameObject.layer = alive ? _startingLayer : layer;
         }
     }
 }
