@@ -13,6 +13,7 @@ namespace Potato.Game
         [Header("Settings")]
         [SerializeField] KeyCode altSubmitKey1 = KeyCode.Space;
         [SerializeField] KeyCode altSubmitKey2 = KeyCode.Return;
+        [SerializeField] KeyCode altSubmitKey3 = KeyCode.Mouse0;
 
 
         public override void UpdateInputState(IInputPollingProvider provider)
@@ -26,7 +27,8 @@ namespace Potato.Game
             uiSubmitInput.UpdateState(
                 provider.GetKeyDown(uiSubmitInput.Key)
                 || provider.GetKeyDown(altSubmitKey1)
-                || provider.GetKeyDown(altSubmitKey2));
+                || provider.GetKeyDown(altSubmitKey2)
+                || provider.GetKeyDown(altSubmitKey3));
 
             uiCancelInput.UpdateState(provider.GetKeyDown(InputConstants.Menu_Cancel));
         }
