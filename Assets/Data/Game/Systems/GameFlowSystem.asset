@@ -33,4 +33,4 @@ MonoBehaviour:
   gameplayState: {fileID: 11400000, guid: 3b10525250371cf44806063d6ed41fe7, type: 2}
   splash: SplashScreen
   mainMenu: MainMenu
-  play: NewSandbox
+  play: Sandbox
