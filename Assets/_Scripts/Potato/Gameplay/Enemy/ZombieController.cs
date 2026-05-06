@@ -3,12 +3,12 @@ using Potato.Core;
 
 namespace Potato.Gameplay
 {
-    [RequireComponent(typeof(CharacterController), typeof(ZombieAnimator))]
+    [RequireComponent(typeof(CharacterController), typeof(ZombieAnimator), typeof(PlayerDetector))]
     public class ZombieController : MonoBehaviour
     {
         // public enum AiState { Idle, Chasing, Attacking }
         // public enum MotorState { Upright, Downed }
-        [SerializeField] private PlayerCharacterControllerReference playerRef;
+        //[SerializeField] private PlayerCharacterControllerReference playerRef;
         [SerializeField] private float moveSpeed = 5f;
         [SerializeField] private float turnSpeed = 5f;
         [SerializeField] private float followRange = 0.5f;
@@ -20,6 +20,7 @@ namespace Potato.Gameplay
         public bool IsAlive { get; private set; } = true;
         private CharacterController _controller;
         private ZombieAnimator _animator;
+        private PlayerDetector _zombieSenses;
         private Target[] _hitboxes;
         private int _startingLayer;
 
@@ -27,6 +28,7 @@ namespace Potato.Gameplay
         {
             _controller = GetComponent<CharacterController>();
             _animator = GetComponent<ZombieAnimator>();
+            _zombieSenses = GetComponent<PlayerDetector>();
             _hitboxes = GetComponentsInChildren<Target>();
             _animator.OnLimbAttacked += OnLimbsAttacked;
             _startingLayer = gameObject.layer;
@@ -36,17 +38,17 @@ namespace Potato.Gameplay
 
         void Update()
         {
-            if(!IsAlive)
+            if (!IsAlive)
                 return;
 
             var dt = Time.deltaTime;
-            if(playerRef.Value != null)
+            if (_zombieSenses.DetectedTarget != null)
             {
                 // move to player
-                Vector3 targetDir = playerRef.Value.transform.position - transform.position;
+                Vector3 targetDir = _zombieSenses.DetectedTarget.transform.position - transform.position;
                 Vector3 gravityDir = Vector3.down * 10f;
 
-                if(targetDir.magnitude >= followRange)
+                if (targetDir.magnitude >= followRange)
                     _controller.Move(moveSpeed * dt * targetDir.normalized + gravityDir);
 
                 // rotate toward player
@@ -67,7 +69,7 @@ namespace Potato.Gameplay
             var teamId = alive ? Target.Team.Hostile : Target.Team.Neutral;
             var layer = alive ? defaultLayer : ragdollLayer;
 
-            foreach(var hitbox in _hitboxes)
+            foreach (var hitbox in _hitboxes)
             {
                 hitbox.TeamId = teamId;
                 hitbox.gameObject.layer = layer;

@@ -3919,6 +3919,7 @@ GameObject:
   - component: {fileID: 2136072757201793024}
   - component: {fileID: 5132806378887662135}
   - component: {fileID: -37089952001662110}
+  - component: {fileID: 3259346337594414522}
   m_Layer: 9
   m_Name: Zombie
   m_TagString: Untagged
@@ -3980,13 +3981,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2dd6a7fd4a3e628408cfab05c0ad518c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerRef:
-    UseConstant: 0
-    _description: 
-    ConstantValue: {fileID: 0}
-    ReferenceData: {fileID: 11400000, guid: a059aaae4dc6948418dc5b5b95d4c56c, type: 2}
   moveSpeed: 3
-  turnSpeed: 1
+  turnSpeed: 5
   followRange: 0.5
   defaultLayer: 10
   ragdollLayer: 12
@@ -4003,6 +3999,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 8626578337163168204}
+--- !u!114 &3259346337594414522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7202553346381062346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be756288886d6914aa644efc9f9b40c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerRef:
+    UseConstant: 0
+    _description: 
+    ConstantValue: {fileID: 0}
+    ReferenceData: {fileID: 11400000, guid: a059aaae4dc6948418dc5b5b95d4c56c, type: 2}
+  visionRange: 15
+  visionAngle: 90
+  hearingRange: 20
+  checkDelay: 0.5
 --- !u!1 &7259714078213508412
 GameObject:
   m_ObjectHideFlags: 0
