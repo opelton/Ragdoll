@@ -43,6 +43,9 @@ namespace Potato.Gameplay
         [SerializeField] private float turnSpeed = 1000f;
         [SerializeField] private float jumpForce = 9f;
 
+        [Header("Ai Detection")]
+        [SerializeField] private Transform[] detectionPoints;
+
         // --
         private CharacterController _controller;
         private FirstPersonAnimationController _animationController;
@@ -60,6 +63,7 @@ namespace Potato.Gameplay
         public bool IsGrounded => _isGrounded;
         public float MaxSpeedOnGround => maxGroundSpeed;
         public float SprintSpeedModifier => sprintSpeedModifier;
+        public Transform[] DetectionPoints => detectionPoints;
 
         void Start()
         {

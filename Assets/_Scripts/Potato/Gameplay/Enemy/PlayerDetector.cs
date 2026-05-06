@@ -8,6 +8,8 @@ namespace Potato.Gameplay
         //public enum AttentionState { Normal, Distracted, Searching, Zero }
 
         [SerializeField] private PlayerCharacterControllerReference playerRef;
+        [SerializeField] private Transform detectionPoint;
+        [SerializeField] private LayerMask losBlockers;
         //[SerializeField] private AttentionState attention = AttentionState.Normal;
         [SerializeField, Min(0f)] private float visionRange = 10f;
         [SerializeField, Range(0f, 360f)] private float visionAngle = 80f;
@@ -67,7 +69,7 @@ namespace Potato.Gameplay
         // todo -- sound intensity?
         bool CheckAudioSource(Vector3 position)
         {
-            Vector3 toTarget = position - transform.position;
+            Vector3 toTarget = position - detectionPoint.position;
             float sqDist = Vector3.Dot(toTarget, toTarget);
 
             return sqDist <= _sqHearingRange;
@@ -75,7 +77,7 @@ namespace Potato.Gameplay
 
         bool LookForPlayer()
         {
-            Vector3 toTarget = playerRef.Value.transform.position - transform.position;
+            Vector3 toTarget = playerRef.Value.transform.position - detectionPoint.position;
             float sqDist = Vector3.Dot(toTarget, toTarget);
 
             // target should be within view range
@@ -85,7 +87,7 @@ namespace Potato.Gameplay
                 return false;
             }
 
-            float scalar = Vector3.Dot(transform.forward, toTarget);
+            float scalar = Vector3.Dot(detectionPoint.forward, toTarget);
 
             // target should be in front
             if (scalar <= 0f)
@@ -101,9 +103,33 @@ namespace Potato.Gameplay
                 return false;
             }
 
-            // todo -- raycast for obstructions/walls/etc
-            //Debug.Log("player seen");
-            return true;
+            //Debug.Log("checking LOS");
+            return UnobstructedLosToPlayer();
+        }
+
+        bool UnobstructedLosToPlayer()
+        {
+            foreach (var playerPoint in playerRef.Value.DetectionPoints)
+            {
+                // check for blocking los to player
+                if (Physics.Linecast(detectionPoint.position, playerPoint.position, out RaycastHit hit, losBlockers, QueryTriggerInteraction.Ignore))
+                {
+                    // if player's layer blocks los
+                    if (hit.collider.gameObject == playerRef.Value.gameObject)
+                        return true;
+                    // else
+                    //     Debug.Log($"los blocked by {hit.collider.gameObject.name}");
+                }
+                else
+                {
+                    //Debug.Log("player seen");
+                    return true;
+                }
+            }
+
+            // all detection points were blocked
+           // Debug.Log("player blocked by something");
+            return false;
         }
     }
 }

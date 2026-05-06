@@ -3916,7 +3916,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 169317522230514253}
-  - component: {fileID: 2136072757201793024}
+  - component: {fileID: 6997636608042969499}
   - component: {fileID: 5132806378887662135}
   - component: {fileID: -37089952001662110}
   - component: {fileID: 3259346337594414522}
@@ -3943,32 +3943,28 @@ Transform:
   - {fileID: 3271974889872013000}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!143 &2136072757201793024
-CharacterController:
+--- !u!195 &6997636608042969499
+NavMeshAgent:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7202553346381062346}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Height: 1.8
+  m_AgentTypeID: 0
   m_Radius: 0.25
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0.9, z: 0}
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 1.5
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 1.8
+  m_BaseOffset: 0
+  m_WalkableMask: 1
+  m_ObstacleAvoidanceType: 4
 --- !u!114 &5132806378887662135
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3981,8 +3977,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2dd6a7fd4a3e628408cfab05c0ad518c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 3
-  turnSpeed: 5
+  turnSpeed: 10
   followRange: 0.5
   defaultLayer: 10
   ragdollLayer: 12
@@ -4016,10 +4011,14 @@ MonoBehaviour:
     _description: 
     ConstantValue: {fileID: 0}
     ReferenceData: {fileID: 11400000, guid: a059aaae4dc6948418dc5b5b95d4c56c, type: 2}
+  detectionPoint: {fileID: 1079299484097376566}
+  losBlockers:
+    serializedVersion: 2
+    m_Bits: 257
   visionRange: 15
   visionAngle: 90
   hearingRange: 20
-  checkDelay: 0.5
+  searchDelay: 0.5
 --- !u!1 &7259714078213508412
 GameObject:
   m_ObjectHideFlags: 0

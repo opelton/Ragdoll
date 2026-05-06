@@ -1234,6 +1234,8 @@ MonoBehaviour:
   airAcceleration: 25
   turnSpeed: 1000
   jumpForce: 9
+  detectionPoints:
+  - {fileID: 2227685919118097372}
 --- !u!114 &4615072429341156804
 MonoBehaviour:
   m_ObjectHideFlags: 0
