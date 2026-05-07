@@ -5,6 +5,8 @@ namespace Potato.Gameplay
 {
     public class ZombieAnimator : MonoBehaviour
     {
+        private static readonly int ZombieSpeedHash = Animator.StringToHash("Speed");
+        
         [SerializeField] private Animator animator;
         private RagdollLimb[] _limbs;
 
@@ -16,6 +18,11 @@ namespace Potato.Gameplay
 
             foreach(var limb in _limbs)
                 limb.onAttacked += OnAttacked;
+        }
+
+        public void SetZombieSpeed(float speed)
+        {
+            animator.SetFloat(ZombieSpeedHash, speed);
         }
 
         public void EnableRagdoll(bool enabled)

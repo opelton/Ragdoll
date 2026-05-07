@@ -56,6 +56,7 @@ namespace Potato.Gameplay
                 Quaternion targetRot = Quaternion.LookRotation(targetDir);
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, turnSpeed * dt);
             }
+            _animator.SetZombieSpeed(_nav.velocity.sqrMagnitude);
         }
 
         void OnLimbsAttacked()
