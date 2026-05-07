@@ -4016,7 +4016,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 257
   visionRange: 15
-  visionAngle: 90
+  visionAngle: 180
   hearingRange: 20
   searchDelay: 0.5
 --- !u!1 &7259714078213508412

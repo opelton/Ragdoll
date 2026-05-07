@@ -67,6 +67,7 @@ namespace Potato.Gameplay
         }
 
         // todo -- sound intensity?
+        // todo -- playerDetector runtime set, audioSystem should check for being heard
         bool CheckAudioSource(Vector3 position)
         {
             Vector3 toTarget = position - detectionPoint.position;
@@ -77,6 +78,7 @@ namespace Potato.Gameplay
 
         bool LookForPlayer()
         {
+            // faster math, but precomputing squared values removes the negative component, and breaks viewcones larger than 180
             Vector3 toTarget = playerRef.Value.transform.position - detectionPoint.position;
             float sqDist = Vector3.Dot(toTarget, toTarget);
 
@@ -103,7 +105,7 @@ namespace Potato.Gameplay
                 return false;
             }
 
-            //Debug.Log("checking LOS");
+            // target shouldn't be blocked from view behind terrain
             return UnobstructedLosToPlayer();
         }
 

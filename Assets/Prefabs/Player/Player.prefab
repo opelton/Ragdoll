@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6934066893293710498}
   - component: {fileID: 3139918093055837931}
   - component: {fileID: 1616345825765946341}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PlayerCamera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -150,7 +150,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8038956896207867447}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: FirstPersonSocket
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -186,7 +186,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8874129527476796180}
   - component: {fileID: 3994790540778442830}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: FirstPersonAudioSource
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -313,7 +313,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5693599264937656764}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: WeaponPose_Default
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -346,7 +346,7 @@ GameObject:
   - component: {fileID: 8940080519784274938}
   - component: {fileID: 7789353188300807451}
   - component: {fileID: 2111353597825929054}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: WeaponOverlayCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -473,7 +473,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5079222079486886674}
   - component: {fileID: 717323394209819513}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: WeaponAudioSource
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -601,7 +601,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2289506000538217991}
   - component: {fileID: 1160700389852471942}
-  m_Layer: 9
+  m_Layer: 7
   m_Name: PlayerAudioResponder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -645,7 +645,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6197250215360902188}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: AudioSources
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -679,7 +679,7 @@ GameObject:
   m_Component:
   - component: {fileID: 53880138975550137}
   - component: {fileID: 3987069486185360856}
-  m_Layer: 9
+  m_Layer: 7
   m_Name: WeaponAudioResponder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -723,7 +723,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 29420179540390383}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: WeaponPose_Aiming
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -762,7 +762,7 @@ GameObject:
   - component: {fileID: 5646522603461414655}
   - component: {fileID: 6652292788303839053}
   - component: {fileID: 5632306928268732170}
-  m_Layer: 9
+  m_Layer: 7
   m_Name: EventListeners
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1029,7 +1029,7 @@ GameObject:
   - component: {fileID: 383583639453121482}
   - component: {fileID: 474274340960877635}
   - component: {fileID: 3538010742275564257}
-  m_Layer: 9
+  m_Layer: 7
   m_Name: Auxiliary
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1341,7 +1341,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3338884953393690280}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: WeaponRoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1372,7 +1372,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4234807056407393514}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: WeaponPose_Down
   m_TagString: Untagged
   m_Icon: {fileID: 0}
