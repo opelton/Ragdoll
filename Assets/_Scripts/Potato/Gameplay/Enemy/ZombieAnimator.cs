@@ -8,9 +8,12 @@ namespace Potato.Gameplay
         private static readonly int ZombieSpeedHash = Animator.StringToHash("Speed");
         
         [SerializeField] private Animator animator;
-        private RagdollLimb[] _limbs;
+        [SerializeField] private ParticleSystem onDetectedVfx;
+
 
         public UnityAction OnLimbAttacked;
+
+        private RagdollLimb[] _limbs;
 
         void Start()
         {
@@ -31,6 +34,17 @@ namespace Potato.Gameplay
 
             foreach (var limb in _limbs)
                 limb.SetRagdoll(enabled);
+        }
+
+        public void OnDetectedPlayer()
+        {
+            onDetectedVfx.Play();
+        }
+
+        public void OnLostPlayer()
+        {
+            onDetectedVfx.Clear();
+            onDetectedVfx.Stop();
         }
 
         void OnAttacked()

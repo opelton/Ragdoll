@@ -55,10 +55,10 @@ namespace Potato.Gameplay
             _cosHalfAngle = Mathf.Cos(visionAngle * .5f * Mathf.Deg2Rad);
             _sqCosHalfAngle = _cosHalfAngle * _cosHalfAngle;
         }
-
-        void Update()
+        
+        public void UpdateSenses(float dt)
         {
-            _searchTimer -= Time.deltaTime;
+            _searchTimer -= dt;
             if (_searchTimer <= 0)
             {
                 DetectedTarget = LookForPlayer() ? playerRef.Value : null;

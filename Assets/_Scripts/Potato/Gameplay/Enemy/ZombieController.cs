@@ -33,6 +33,9 @@ namespace Potato.Gameplay
             _animator.OnLimbAttacked += OnLimbsAttacked;
             _startingLayer = gameObject.layer;
 
+            _zombieSenses.onDetectedTarget += _animator.OnDetectedPlayer;
+            _zombieSenses.onLostTarget += _animator.OnLostPlayer;
+
             ToggleHitboxes(true);
         }
 
@@ -42,29 +45,40 @@ namespace Potato.Gameplay
                 return;
 
             var dt = Time.deltaTime;
+            _zombieSenses.UpdateSenses(dt);
+
             if (_zombieSenses.DetectedTarget != null)
             {
-                // // move to player
+                // move to player
                 Vector3 targetDir = _zombieSenses.DetectedTarget.transform.position - transform.position;
-                //Vector3 gravityDir = Vector3.down * 10f;
 
                 if (targetDir.sqrMagnitude >= followRange * followRange)
                     _nav.SetDestination(_zombieSenses.DetectedTarget.transform.position);
-                //     _controller.Move(moveSpeed * dt * targetDir.normalized + gravityDir);
 
                 // rotate toward player
                 Quaternion targetRot = Quaternion.LookRotation(targetDir);
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, turnSpeed * dt);
             }
-            _animator.SetZombieSpeed(_nav.velocity.sqrMagnitude);
+
+            // [0f, 1f]
+            _animator.SetZombieSpeed(_nav.velocity.sqrMagnitude / (_nav.speed * _nav.speed));
         }
 
         void OnLimbsAttacked()
         {
             ToggleHitboxes(false);
             _animator.OnLimbAttacked -= OnLimbsAttacked;
+            OnKilled();
+        }
+
+        void OnKilled()
+        {
             IsAlive = false;
             _nav.isStopped = true;
+            _animator.OnLostPlayer();
+
+            _zombieSenses.onDetectedTarget -= _animator.OnDetectedPlayer;
+            _zombieSenses.onLostTarget -= _animator.OnLostPlayer;
         }
 
         void ToggleHitboxes(bool alive)
