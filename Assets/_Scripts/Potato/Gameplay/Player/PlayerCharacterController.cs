@@ -17,6 +17,7 @@ namespace Potato.Gameplay
         [SerializeField] private InputFloatAxis moveInput;
         [SerializeField] private InputFloatAxis lookInput;
         [SerializeField] private InputButton sprintInput;
+        [SerializeField] private InputButton crouchInput;
 
         [Header("Settings")]
         [SerializeField] private PlayerCharacterControllerReference playerRef;
@@ -54,9 +55,11 @@ namespace Potato.Gameplay
         private float _cameraY = 0;
         private bool _isGrounded = false;
         private bool _isCrouching = false;
+        private bool _isSprinting = false;
         private Vector3 _groundNormal = Vector3.up;
         private float _lastJumpTime = 0f;
         private float _targetCharacterHeight;
+        private Collider[] _crouchOverlapBuffer = new Collider[4];
 
         // --
         public bool IsAlive => true;
@@ -88,11 +91,12 @@ namespace Potato.Gameplay
 
         void Update()
         {
-            if(!isPausedRef.Value)
+            if (!isPausedRef.Value)
             {
                 bool wasGrounded = _isGrounded;
                 GroundCheck();
                 CheckFallDamage(wasGrounded);
+                UpdateCrouchInput();
                 UpdateCharacterHeight(false);
                 UpdateCamera();
                 UpdateMovement(Time.deltaTime);
@@ -118,15 +122,15 @@ namespace Potato.Gameplay
         void UpdateMovement(float dt)
         {
             // sprinting
-            bool isSprinting = sprintInput.ButtonDown;
-            if (isSprinting)
-                isSprinting = SetCrouchingState(false, false);
+            _isSprinting = sprintInput.ButtonDown;
+            if (_isSprinting)
+                _isSprinting = SetCrouchingState(false, false);
 
-            float speedModifier = isSprinting ? sprintSpeedModifier : 1f;
+            float speedModifier = _isSprinting ? sprintSpeedModifier : 1f;
             Vector3 worldspaceMoveInput = transform.TransformVector(moveInput.Value.x, 0f, moveInput.Value.y);
 
             // normalize diagonal speed (wouldn't work if controllers were supported)
-            if(worldspaceMoveInput.x != 0 && worldspaceMoveInput.z != 0)
+            if (worldspaceMoveInput.x != 0 && worldspaceMoveInput.z != 0)
                 worldspaceMoveInput.Normalize();
 
             // movement
@@ -140,7 +144,7 @@ namespace Potato.Gameplay
                                  targetVelocity.magnitude;
 
                 _velocity = Vector3.Lerp(_velocity, targetVelocity, groundTurningSharpness * dt);
-                _animationController.UpdateFootstepSfx(_velocity.magnitude * dt, isSprinting);
+                _animationController.UpdateFootstepSfx(_velocity.magnitude * dt, _isSprinting);
             }
             // air movement
             else
@@ -196,10 +200,6 @@ namespace Potato.Gameplay
             }
         }
 
-        public void ToggleCrouch() => SetCrouchingState(!_isCrouching, false);
-        public void TryCrouching() => SetCrouchingState(true, false);
-        public void TryUncrouching() => SetCrouchingState(false, false);
-
         void CheckFallDamage(bool wasGrounded)
         {
             if (_isGrounded && !wasGrounded)
@@ -246,6 +246,16 @@ namespace Potato.Gameplay
             }
         }
 
+        void UpdateCrouchInput()
+        {
+            // crouch state doesn't need updating
+            if (crouchInput.ButtonDown == _isCrouching)
+                return;
+
+            var wantsCrouch = crouchInput.ButtonDown && !_isSprinting;
+            SetCrouchingState(wantsCrouch, false);
+        }
+
         // returns false if there was an obstruction
         bool SetCrouchingState(bool crouched, bool ignoreObstructions)
         {
@@ -259,19 +269,18 @@ namespace Potato.Gameplay
                 // Detect obstructions
                 if (!ignoreObstructions)
                 {
-                    Collider[] standingOverlaps = Physics.OverlapCapsule(
+                    int overlapCount = Physics.OverlapCapsuleNonAlloc(
                         GetCapsuleBottomHemisphere(),
                         GetCapsuleTopHemisphere(standingHeight),
                         _controller.radius,
+                        _crouchOverlapBuffer,
                         groundCheckLayers,
                         QueryTriggerInteraction.Ignore);
 
-                    foreach (Collider c in standingOverlaps)
+                    for (int i = 0; i < overlapCount; ++i)
                     {
-                        if (c != _controller)
-                        {
+                        if (_crouchOverlapBuffer[i] != _controller)
                             return false;
-                        }
                     }
                 }
 

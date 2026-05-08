@@ -756,8 +756,6 @@ GameObject:
   - component: {fileID: 7141486092395837094}
   - component: {fileID: 1111713056483603718}
   - component: {fileID: 6324086442476015078}
-  - component: {fileID: 8450269946794536070}
-  - component: {fileID: 1046679319790994097}
   - component: {fileID: 4652617024928818412}
   - component: {fileID: 5646522603461414655}
   - component: {fileID: 6652292788303839053}
@@ -833,64 +831,6 @@ MonoBehaviour:
       - m_Target: {fileID: 5465555400534215456}
         m_TargetAssemblyTypeName: Potato.Gameplay.PlayerCharacterController, potato.gameplay
         m_MethodName: TryJumping
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
---- !u!114 &8450269946794536070
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4344926436189153364}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e3ce58489b3ad34d82e05b3c35d493b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _description: +crouch
-  _eventSource: {fileID: 11400000, guid: 38bb7769b661fff4fb13d1c228a154be, type: 2}
-  Response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5465555400534215456}
-        m_TargetAssemblyTypeName: Potato.Gameplay.PlayerCharacterController, potato.gameplay
-        m_MethodName: TryCrouching
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
---- !u!114 &1046679319790994097
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4344926436189153364}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e3ce58489b3ad34d82e05b3c35d493b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _description: -crouch
-  _eventSource: {fileID: 11400000, guid: 1a0ffdffbec045d44b58f3ed5cc0ef1d, type: 2}
-  Response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5465555400534215456}
-        m_TargetAssemblyTypeName: Potato.Gameplay.PlayerCharacterController, potato.gameplay
-        m_MethodName: TryUncrouching
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1207,6 +1147,7 @@ MonoBehaviour:
   moveInput: {fileID: 11400000, guid: 961e4355c1e5a0948b1a9a3263b3f243, type: 2}
   lookInput: {fileID: 11400000, guid: 075cf99767d5472478095234510951a8, type: 2}
   sprintInput: {fileID: 11400000, guid: a6c8c83cf44537d47bf79f48e20b82f1, type: 2}
+  crouchInput: {fileID: 11400000, guid: f0a7c79542659da4fac2d1fc24aa6a8c, type: 2}
   playerRef:
     UseConstant: 0
     _description: 
