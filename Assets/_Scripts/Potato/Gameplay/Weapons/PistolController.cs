@@ -53,8 +53,10 @@ namespace Potato.Gameplay
             _fsm.Update(Time.deltaTime);
         }
 
-        public override bool HandleWeaponInputs(bool fire1Down, bool fire1Held, bool reloadDown)
+        public override bool HandleWeaponInputs(bool fire1Down, bool fire1Held, bool reloadDown, bool isAiming)
         {
+            IsAiming = isAiming;
+            
             if(reloadDown)
             {
                 _fsm.SetNextState(WeaponState.Reloading);

@@ -45,8 +45,10 @@ namespace Potato.Gameplay
             _fsm.Update(Time.deltaTime);
         }
 
-        public override bool HandleWeaponInputs(bool fire1Down, bool fire1Held, bool reloadDown)
+        public override bool HandleWeaponInputs(bool fire1Down, bool fire1Held, bool reloadDown, bool isAiming)
         {
+            IsAiming = isAiming;
+
             if(_triggerPulled != fire1Held)
             {
                 if(fire1Held)
@@ -109,15 +111,6 @@ namespace Potato.Gameplay
             // if the previous conditions are cleared, gun is ready to fire
             else
                 _fsm.SetCurrentState(WeaponState.Neutral);
-        }
-
-        protected override void FireWeapon()
-        {
-            // guarantees one pellet hitting the crosshair exactly
-            rats.DoHitscanAttack(this, PlayerCams.AimPos, PlayerCams.AimDir, bulletDamage, 1, 0f);
-            rats.DoHitscanAttack(this, PlayerCams.AimPos, PlayerCams.AimDir, bulletDamage, bulletsPerShot - 1, bulletSpreadAngle);
-            weaponAnimator.AnimateWeaponAttack(this, bulletsPerShot, bulletSpreadAngle);
-            _lastShotTime = Time.time;
         }
 
         void InitializeStateMachine()

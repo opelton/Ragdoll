@@ -78,7 +78,8 @@ namespace Potato.Gameplay
                     bool hasFired = activeWeapon.HandleWeaponInputs(
                         fire1Input.ButtonPressed,
                         fire1Input.ButtonDown,
-                        reloadInput.ButtonPressed);
+                        reloadInput.ButtonPressed,
+                        IsAiming);
 
                     if (hasFired)
                         _animationController.AnimateRecoil(activeWeapon.RecoilForce);

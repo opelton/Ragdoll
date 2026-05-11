@@ -38,6 +38,7 @@ namespace Potato.Gameplay
         [SerializeField] protected float bulletDamage = 1f;
         [SerializeField][Range(0f, 2f)] protected float recoilForce = 1;
         [SerializeField][Range(0f, 1f)] protected float aimZoomRatio = 1f;
+        [SerializeField][Range(0f, 1f)] protected float aimSpreadRatio = .5f;
 
         [Tooltip("Translation to apply to weapon arm when aiming with this weapon")]
         [SerializeField] protected Vector3 aimOffset;
@@ -51,7 +52,7 @@ namespace Potato.Gameplay
         protected float _lastShotTime = Mathf.NegativeInfinity;
 
         public GameObject Owner { get; set; }
-        public PlayerCamerasController PlayerCams;
+        [HideInInspector] public PlayerCamerasController PlayerCams;
         public int CurrentAmmo => _currentAmmo;
         public int MaxAmmo => maxAmmo;
         public Vector3 MuzzleWorldVelocity => weaponAnimator.MuzzleWorldVelocity;
@@ -59,7 +60,8 @@ namespace Potato.Gameplay
         public Vector3 AimOffset => aimOffset;
         public Transform WeaponMeshTransform => weaponMeshTransform;
         public float AimZoomRatio => aimZoomRatio;
-        public bool IsReloading { get; protected set; }
+        public bool IsReloading { get; protected set; } = false;
+        public bool IsAiming { get; protected set; } = false;
 
         protected virtual void Awake()
         {
@@ -74,12 +76,24 @@ namespace Potato.Gameplay
                 weaponAnimator.AnimateShowWeapon();
         }
 
-        public abstract bool HandleWeaponInputs(bool fire1Down, bool fire1Held, bool reloadDown);
+        public abstract bool HandleWeaponInputs(bool fire1Down, bool fire1Held, bool reloadDown, bool isAiming);
 
         protected virtual void FireWeapon()
         {
-            rats.DoHitscanAttack(this, PlayerCams.AimPos, PlayerCams.AimDir, bulletDamage, bulletsPerShot, bulletSpreadAngle);
-            weaponAnimator.AnimateWeaponAttack(this, bulletsPerShot, bulletSpreadAngle);
+            var angle = bulletSpreadAngle;
+            if(IsAiming)
+                angle *= aimSpreadRatio;
+
+            // when firing multiple shots, guarantee at least one goes toward the crosshair
+            if(bulletsPerShot > 1)
+            {
+                rats.DoHitscanAttack(this, PlayerCams.AimPos, PlayerCams.AimDir, bulletDamage, 1, 0f);
+                rats.DoHitscanAttack(this, PlayerCams.AimPos, PlayerCams.AimDir, bulletDamage, bulletsPerShot - 1, angle);
+            }
+            else
+                rats.DoHitscanAttack(this, PlayerCams.AimPos, PlayerCams.AimDir, bulletDamage, bulletsPerShot, angle);
+
+            weaponAnimator.AnimateWeaponAttack(this, bulletsPerShot, angle);
             _lastShotTime = Time.time;
         }
     }

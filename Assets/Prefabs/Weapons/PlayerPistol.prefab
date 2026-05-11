@@ -94,16 +94,17 @@ MonoBehaviour:
     CrosshairSprite: {fileID: 21300000, guid: 023899b8caf58b74ab4c70538b22b2af, type: 3}
     CrosshairSize: 10
   shootType: 0
-  shotCooldown: 0.4
-  bulletSpreadAngle: 0
+  shotCooldown: 0.2
+  bulletSpreadAngle: 3
   bulletsPerShot: 1
   bulletDamage: 2
   recoilForce: 1
   aimZoomRatio: 0.65
+  aimSpreadRatio: 0
   aimOffset: {x: 0, y: 0.075, z: 0}
-  ammoReloadDelay: 2
-  maxAmmo: 6
-  shotsPerReload: 6
+  ammoReloadDelay: 1.5
+  maxAmmo: 16
+  shotsPerReload: 16
   PlayerCams: {fileID: 0}
 --- !u!114 &214781457000268412
 MonoBehaviour:
