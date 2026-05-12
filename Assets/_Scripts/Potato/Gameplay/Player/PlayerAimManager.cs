@@ -33,8 +33,8 @@ namespace Potato.Gameplay
                 {
                     playerAimPoint.Value = hit.point;
                     targetingHostile = true;
-                    break;
                 }
+                break;
             }
 
             if(!targetingHostile)

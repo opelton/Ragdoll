@@ -51,10 +51,8 @@ namespace Potato.Gameplay
                         continue;
 
                     if (hit.collider.TryGetComponent(out Target component))
-                    {
                         component.InflictDamage(new(damage, owner.gameObject, hit.point, direction));
-                        break;
-                    }
+                    break;
                 }
             }
         }
