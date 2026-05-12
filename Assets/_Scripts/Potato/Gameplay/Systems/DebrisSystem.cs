@@ -25,13 +25,21 @@ namespace Potato.Gameplay
         // translates prefab in gameplayCamera's layer to the position it would occupy using fpsCamera's view matrix
         public GameObject SpawnWeaponSpacePrefabInWorldSpace(GameObject prefab, Vector3 weaponSpacePosition, Quaternion weaponSpaceRotation)
         {
+            return Instantiate(prefab,
+                WeaponToGameSpacePosition(weaponSpacePosition),
+                WeaponToGameSpaceRotation(weaponSpaceRotation));
+        }
+
+        public Vector3 WeaponToGameSpacePosition(Vector3 weaponSpacePosition)
+        {
             Vector3 screenPos = gameCams.Value.fpsCamera.WorldToViewportPoint(weaponSpacePosition);
-            Vector3 worldPos = gameCams.Value.gameplayCamera.ViewportToWorldPoint(screenPos);
+            return gameCams.Value.gameplayCamera.ViewportToWorldPoint(screenPos);
+        }
 
+        public Quaternion WeaponToGameSpaceRotation(Quaternion weaponSpaceRotation)
+        {
             Quaternion relativeRotation = Quaternion.Inverse(gameCams.Value.fpsCamera.transform.rotation) * weaponSpaceRotation;
-            Quaternion worldRotation = gameCams.Value.gameplayCamera.transform.rotation * relativeRotation;
-
-            return Instantiate(prefab, worldPos, worldRotation);
+            return gameCams.Value.gameplayCamera.transform.rotation * relativeRotation;
         }
     }
 }

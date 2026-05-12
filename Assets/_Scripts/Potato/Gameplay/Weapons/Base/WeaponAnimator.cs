@@ -74,8 +74,11 @@ namespace Potato.Gameplay
         {
             if (muzzleFlashPrefab != null)
             {
-                GameObject muzzleFlashInstance = Instantiate(muzzleFlashPrefab, weaponMuzzle.position,
-                    weaponMuzzle.rotation, weaponMuzzle);
+                GameObject muzzleFlashInstance = Instantiate(
+                    muzzleFlashPrefab,
+                    junkSpawner.WeaponToGameSpacePosition(weaponMuzzle.position),
+                    junkSpawner.WeaponToGameSpaceRotation(weaponMuzzle.rotation),
+                    weaponMuzzle);
 
                 if (unparentMuzzleFlash)
                     muzzleFlashInstance.transform.SetParent(null);
@@ -91,10 +94,16 @@ namespace Potato.Gameplay
             // fire tracers at the impact point, or straight forward if the impact is too close
             if (tracerPrefab != null)
             {
-                var muzzleToTarget = playerAimPoint.Value - weaponMuzzle.position;
+                var adjustedMuzzlePosition = junkSpawner.WeaponToGameSpacePosition(weaponMuzzle.position);
+                var muzzleToTarget = playerAimPoint.Value - adjustedMuzzlePosition;
                 //Debug.Log($"shot distance {muzzleToTarget.magnitude}");
-                var tracerDirection = muzzleToTarget.magnitude <= pointBlankThreshold ? weaponMuzzle.transform.forward : muzzleToTarget.normalized;
-                var adjustedOrigin = weaponMuzzle.position + Time.deltaTime * MuzzleWorldVelocity;
+
+                // todo -- below threshold, skip spawning tracers, and just spawn hit fx (decals, sounds, etc)
+                // todo -- hit fx (decals, sounds, etc)
+                var tracerDirection = muzzleToTarget.sqrMagnitude <= pointBlankThreshold * pointBlankThreshold
+                    ? weaponMuzzle.transform.forward
+                    : muzzleToTarget.normalized;
+                var adjustedOrigin = adjustedMuzzlePosition + Time.deltaTime * MuzzleWorldVelocity;
 
                 rats.FireTracers(owner, tracerPrefab, adjustedOrigin,
                     tracerDirection, bulletCount, bulletSpreadAngle, tracerSpeed, tracerDuration);
