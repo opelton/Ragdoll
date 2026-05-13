@@ -24,10 +24,7 @@ namespace Potato.Gameplay
         [Header("Bullet Tracers")]
         [SerializeField] private TracerProjectile tracerPrefab;
         [SerializeField] private float tracerSpeed = 300f;
-        [SerializeField] private float tracerDuration = .5f;
-        [SerializeField] private float pointBlankThreshold = .75f;
-        [SerializeField] private RangedAttackSystem rats;
-        [SerializeField] protected Vector3Reference playerAimPoint;
+        [SerializeField] private float pointBlankThreshold = 2f;
 
         public Vector3 MuzzleWorldVelocity { get; private set; }
         public Vector3 EjectorWorldVelocity { get; private set; }
@@ -70,7 +67,7 @@ namespace Potato.Gameplay
                 shellEjectionSpin);
         }
 
-        public virtual void AnimateWeaponAttack(WeaponController owner, int bulletCount, float bulletSpreadAngle)
+        public virtual void AnimateWeaponAttack(WeaponController owner, Vector3[] hitLocations)
         {
             if (muzzleFlashPrefab != null)
             {
@@ -91,22 +88,21 @@ namespace Potato.Gameplay
             if (shootSfx)
                 audioSystem.PlayFirstPersonWeaponAudio(shootSfx);
 
-            // fire tracers at the impact point, or straight forward if the impact is too close
-            if (tracerPrefab != null)
+            // fire tracers at the impact points
+            if(hitLocations.Length != 0)
             {
                 var adjustedMuzzlePosition = junkSpawner.WeaponToGameSpacePosition(weaponMuzzle.position);
-                var muzzleToTarget = playerAimPoint.Value - adjustedMuzzlePosition;
-                //Debug.Log($"shot distance {muzzleToTarget.magnitude}");
-
-                // todo -- below threshold, skip spawning tracers, and just spawn hit fx (decals, sounds, etc)
-                // todo -- hit fx (decals, sounds, etc)
-                var tracerDirection = muzzleToTarget.sqrMagnitude <= pointBlankThreshold * pointBlankThreshold
-                    ? weaponMuzzle.transform.forward
-                    : muzzleToTarget.normalized;
-                var adjustedOrigin = adjustedMuzzlePosition + Time.deltaTime * MuzzleWorldVelocity;
-
-                rats.FireTracers(owner, tracerPrefab, adjustedOrigin,
-                    tracerDirection, bulletCount, bulletSpreadAngle, tracerSpeed, tracerDuration);
+                foreach(var hit in hitLocations)
+                {
+                    if((hit-adjustedMuzzlePosition).sqrMagnitude >= pointBlankThreshold * pointBlankThreshold)
+                    {
+                        // todo -- on-impact vfx
+                        TracerProjectile tracer = Instantiate(tracerPrefab, adjustedMuzzlePosition, Quaternion.identity);
+                        tracer.Fire(hit, adjustedMuzzlePosition, tracerSpeed);
+                    }
+                    // else
+                        // todo -- spawn impact fx directly
+                }
             }
         }
     }

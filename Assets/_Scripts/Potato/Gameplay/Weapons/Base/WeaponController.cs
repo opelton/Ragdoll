@@ -1,6 +1,4 @@
 using System;
-using Potato.Core;
-using Potato.Game;
 using UnityEngine;
 
 namespace Potato.Gameplay
@@ -19,11 +17,8 @@ namespace Potato.Gameplay
 
         [SerializeField] protected RangedAttackSystem rats;
         [SerializeField] protected WeaponAnimator weaponAnimator;
-        [SerializeField] protected Vector3Reference playerAimPoint;
-        [SerializeField] protected ProjectileBase projectilePrefab;
         [SerializeField] protected GameObject weaponRoot;
         [SerializeField] protected Transform weaponMeshTransform;
-        [SerializeField] protected Transform weaponMuzzle;
 
         [Header("WeaponInfo")]
         public string WeaponDisplayName;
@@ -62,10 +57,12 @@ namespace Potato.Gameplay
         public float AimZoomRatio => aimZoomRatio;
         public bool IsReloading { get; protected set; } = false;
         public bool IsAiming { get; protected set; } = false;
+        private Vector3[] _hitBuffer;
 
         protected virtual void Awake()
         {
             _currentAmmo = maxAmmo;
+            _hitBuffer = new Vector3[bulletsPerShot];
         }
 
         public virtual void ShowWeapon(bool show)
@@ -87,13 +84,14 @@ namespace Potato.Gameplay
             // when firing multiple shots, guarantee at least one goes toward the crosshair
             if(bulletsPerShot > 1)
             {
-                rats.DoHitscanAttack(this, PlayerCams.AimPos, PlayerCams.AimDir, bulletDamage, 1, 0f);
-                rats.DoHitscanAttack(this, PlayerCams.AimPos, PlayerCams.AimDir, bulletDamage, bulletsPerShot - 1, angle);
+                int count = rats.DoBulletAttacks(this, PlayerCams.AimPos, PlayerCams.AimDir, bulletDamage, angle, bulletsPerShot - 1, ref _hitBuffer);
+                _hitBuffer[count] = rats.DoBulletAttack(this, PlayerCams.AimPos, PlayerCams.AimDir, bulletDamage, 0f);
             }
             else
-                rats.DoHitscanAttack(this, PlayerCams.AimPos, PlayerCams.AimDir, bulletDamage, bulletsPerShot, angle);
+                _hitBuffer[0] = rats.DoBulletAttack(this, PlayerCams.AimPos, PlayerCams.AimDir, bulletDamage, angle);
 
-            weaponAnimator.AnimateWeaponAttack(this, bulletsPerShot, angle);
+            // Debug.Log($"range {(PlayerCams.AimPos - _hitBuffer[0]).magnitude}");
+            weaponAnimator.AnimateWeaponAttack(this, _hitBuffer);
             _lastShotTime = Time.time;
         }
     }
