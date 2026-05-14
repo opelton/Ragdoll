@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 194752902605644694}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.06, z: 2.12}
+  m_LocalPosition: {x: 0, y: -0.06, z: 2.138}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -79,15 +79,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rats: {fileID: 11400000, guid: beabe8fa1f42ec944b266f906c28d1ff, type: 2}
   weaponAnimator: {fileID: 2925216673732141023}
-  playerAimPoint:
-    UseConstant: 0
-    _description: 
-    ConstantValue: {x: 0, y: 0, z: 0}
-    ReferenceData: {fileID: 11400000, guid: edca8956cc4b2d2458635810c8a15541, type: 2}
-  projectilePrefab: {fileID: -8391667986270217369, guid: e254e57d705dd7d4b91ffa5173f36eef, type: 3}
   weaponRoot: {fileID: 272834481384891812}
   weaponMeshTransform: {fileID: 7481629919649122903}
-  weaponMuzzle: {fileID: 1732878112373857488}
   WeaponDisplayName: Shotgun
   WeaponIcon: {fileID: 21300000, guid: 73527895d9b1a2f458340c1c094f5ca6, type: 3}
   WeaponCrosshairData:
@@ -121,7 +114,7 @@ MonoBehaviour:
   junkSpawner: {fileID: 11400000, guid: e5f13dfb4fde63f43ad512f027a28dba, type: 2}
   audioSystem: {fileID: 11400000, guid: b53c0bb3d09ac564b9285025ee046e23, type: 2}
   weaponMuzzle: {fileID: 1732878112373857488}
-  muzzleFlashPrefab: {fileID: 748781637555137343, guid: b5e7a6bb4fce0154b94696224c463829, type: 3}
+  muzzleFlashPrefab: {fileID: 8950624839484268180, guid: 6f09755268430064ead5f2e8626aae8a, type: 3}
   unparentMuzzleFlash: 0
   shootSfx: {fileID: 8300000, guid: 6f6e63e50ed328245bf82528e0180a59, type: 3}
   changeWeaponSfx: {fileID: 8300000, guid: 513333bff9ccdcd448c18e4d7220b01d, type: 3}
@@ -131,14 +124,7 @@ MonoBehaviour:
   shellEjectionSpin: 15
   tracerPrefab: {fileID: 4451441854257555881, guid: d7d53bd678307d6468087a44594e6975, type: 3}
   tracerSpeed: 300
-  tracerDuration: 0.5
   pointBlankThreshold: 1.25
-  rats: {fileID: 11400000, guid: beabe8fa1f42ec944b266f906c28d1ff, type: 2}
-  playerAimPoint:
-    UseConstant: 0
-    _description: 
-    ConstantValue: {x: 0, y: 0, z: 0}
-    ReferenceData: {fileID: 11400000, guid: edca8956cc4b2d2458635810c8a15541, type: 2}
   forendBone: {fileID: 5721818058870618333}
   triggerBone: {fileID: 1375567587646462410}
   forendPose_Front: 1.456282
