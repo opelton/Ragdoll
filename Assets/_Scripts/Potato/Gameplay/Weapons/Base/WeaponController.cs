@@ -57,12 +57,12 @@ namespace Potato.Gameplay
         public float AimZoomRatio => aimZoomRatio;
         public bool IsReloading { get; protected set; } = false;
         public bool IsAiming { get; protected set; } = false;
-        private Vector3[] _hitBuffer;
+        private HitInfo[] _hitBuffer;
 
         protected virtual void Awake()
         {
             _currentAmmo = maxAmmo;
-            _hitBuffer = new Vector3[bulletsPerShot];
+            _hitBuffer = new HitInfo[bulletsPerShot];
         }
 
         public virtual void ShowWeapon(bool show)

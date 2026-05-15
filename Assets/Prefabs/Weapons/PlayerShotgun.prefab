@@ -123,6 +123,7 @@ MonoBehaviour:
   shellEjectionForce: 2
   shellEjectionSpin: 15
   tracerPrefab: {fileID: 4451441854257555881, guid: d7d53bd678307d6468087a44594e6975, type: 3}
+  bulletImpactVfx: {fileID: 6523915449405344066, guid: 2779e65c1e5662c4f83bd04d654b1ea4, type: 3}
   tracerSpeed: 300
   pointBlankThreshold: 1.25
   forendBone: {fileID: 5721818058870618333}

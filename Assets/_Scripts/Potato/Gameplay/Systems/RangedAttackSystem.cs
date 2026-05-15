@@ -4,6 +4,14 @@ using UnityEngine;
 
 namespace Potato.Gameplay
 {
+    public class HitInfo
+    {
+        public Vector3 Point;
+        public Vector3 Normal;
+        public bool StruckEnemy;
+        public bool StruckSurface;
+    }
+
     // todo -- utils?
     class RaycastHitDistanceComparer : IComparer<RaycastHit>
     {
@@ -32,7 +40,7 @@ namespace Potato.Gameplay
             return hitCount;
         }
 
-        public int DoBulletAttacks(WeaponController owner, Vector3 origin, Vector3 direction, float damage, float spread, int count, ref Vector3[] hits)
+        public int DoBulletAttacks(WeaponController owner, Vector3 origin, Vector3 direction, float damage, float spread, int count, ref HitInfo[] hits)
         {
             int i = 0;
             while(i < count)
@@ -41,8 +49,13 @@ namespace Potato.Gameplay
             return i;
         }
 
-        public Vector3 DoBulletAttack(WeaponController owner, Vector3 origin, Vector3 direction, float damage, float spread)
+        public HitInfo DoBulletAttack(WeaponController owner, Vector3 origin, Vector3 direction, float damage, float spread)
         {
+            HitInfo info = new()
+            {
+                StruckEnemy = false,
+                StruckSurface = true
+            };
             Vector3 shotDirection = ApplySpread(direction, spread);
             var hitCount = PreviewAttackRaycast(origin, shotDirection, ref _hitBuffer, true);
 
@@ -58,14 +71,22 @@ namespace Potato.Gameplay
                     continue;
 
                 if (hit.collider.TryGetComponent(out Target component))
+                {
+                    info.StruckEnemy = true;
                     component.InflictDamage(new(damage, owner.gameObject, hit.point, shotDirection));
+                }
 
                 // return location of the hit
-                return hit.point;
+                info.Point = hit.point;
+                info.Normal = hit.normal;
+                return info;
             }
 
             // if no valid hits, return the search raycast
-            return origin + maxRaycastRange * shotDirection;
+            info.Point = origin + maxRaycastRange * shotDirection;
+            info.Normal = origin - info.Point;
+            info.StruckSurface = false;
+            return info;
         }
 
         public void DoProjectileAttack(WeaponController owner, ProjectileBase projectilePrefab, Vector3 origin, Vector3 direction, int count, float spread)

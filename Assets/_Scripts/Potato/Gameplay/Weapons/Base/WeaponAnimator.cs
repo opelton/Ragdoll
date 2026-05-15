@@ -1,6 +1,5 @@
 using UnityEngine;
 using Potato.Game;
-using Potato.Core;
 
 namespace Potato.Gameplay
 {
@@ -23,6 +22,7 @@ namespace Potato.Gameplay
 
         [Header("Bullet Tracers")]
         [SerializeField] private TracerProjectile tracerPrefab;
+        [SerializeField] private GameObject bulletImpactVfx;
         [SerializeField] private float tracerSpeed = 300f;
         [SerializeField] private float pointBlankThreshold = 2f;
 
@@ -67,10 +67,11 @@ namespace Potato.Gameplay
                 shellEjectionSpin);
         }
 
-        public virtual void AnimateWeaponAttack(WeaponController owner, Vector3[] hitLocations)
+        public virtual void AnimateWeaponAttack(WeaponController owner, HitInfo[] hitLocations)
         {
             if (muzzleFlashPrefab != null)
             {
+                // todo -- could reuse the same emitter instead of instantiating new ones
                 GameObject muzzleFlashInstance = Instantiate(
                     muzzleFlashPrefab,
                     junkSpawner.WeaponToGameSpacePosition(weaponMuzzle.position),
@@ -94,14 +95,18 @@ namespace Potato.Gameplay
                 var adjustedMuzzlePosition = junkSpawner.WeaponToGameSpacePosition(weaponMuzzle.position);
                 foreach(var hit in hitLocations)
                 {
-                    if((hit-adjustedMuzzlePosition).sqrMagnitude >= pointBlankThreshold * pointBlankThreshold)
+                    if((hit.Point-adjustedMuzzlePosition).sqrMagnitude >= pointBlankThreshold * pointBlankThreshold)
                     {
-                        // todo -- on-impact vfx
                         TracerProjectile tracer = Instantiate(tracerPrefab, adjustedMuzzlePosition, Quaternion.identity);
-                        tracer.Fire(hit, adjustedMuzzlePosition, tracerSpeed);
+                        tracer.Fire(hit.Point, adjustedMuzzlePosition, tracerSpeed);
                     }
-                    // else
-                        // todo -- spawn impact fx directly
+                    
+                    if(hit.StruckSurface)
+                    {
+                        // todo -- different fx for other surfaces/enemies
+                        GameObject impactFx = Instantiate(bulletImpactVfx, hit.Point, Quaternion.LookRotation(hit.Normal));
+                        Destroy(impactFx, 1f);
+                    }
                 }
             }
         }
