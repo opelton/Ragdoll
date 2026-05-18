@@ -22,7 +22,8 @@ namespace Potato.Gameplay
 
         [Header("Bullet Tracers")]
         [SerializeField] private TracerProjectile tracerPrefab;
-        [SerializeField] private GameObject bulletImpactVfx;
+        [SerializeField] private GameObject vfx_bulletImpact_wall;
+        [SerializeField] private GameObject vfx_bulletImpact_zombie;
         [SerializeField] private float tracerSpeed = 300f;
         [SerializeField] private float pointBlankThreshold = 2f;
 
@@ -103,8 +104,11 @@ namespace Potato.Gameplay
                     
                     if(hit.StruckSurface)
                     {
-                        // todo -- different fx for other surfaces/enemies
-                        GameObject impactFx = Instantiate(bulletImpactVfx, hit.Point, Quaternion.LookRotation(hit.Normal));
+                        // todo -- more robust system for choosing fx based on surfaces/materials/enemies/etc
+                        GameObject impactFx = Instantiate(
+                            hit.StruckEnemy ? vfx_bulletImpact_zombie : vfx_bulletImpact_wall,
+                            hit.Point, Quaternion.LookRotation(hit.Normal));
+
                         Destroy(impactFx, 1f);
                     }
                 }
