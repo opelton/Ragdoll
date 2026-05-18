@@ -88,8 +88,8 @@ MonoBehaviour:
     CrosshairSize: 25
   shootType: 0
   shotCooldown: 0.625
-  bulletSpreadAngle: 3
-  bulletsPerShot: 8
+  bulletSpreadAngle: {x: 8, y: 3}
+  bulletsPerShot: 16
   bulletDamage: 1
   recoilForce: 1.5
   aimZoomRatio: 0.8

@@ -13,6 +13,7 @@ namespace Potato.Gameplay
 
         public Vector3 AimDir => fpsCam.transform.forward;
         public Vector3 AimPos => fpsCam.transform.position;
+        public Transform AimTransform => fpsCam.transform;
 
         void Start() => UpdateFovs();
 

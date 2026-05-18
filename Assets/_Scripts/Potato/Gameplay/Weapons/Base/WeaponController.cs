@@ -28,7 +28,7 @@ namespace Potato.Gameplay
         [Header("Shoot Parameters")]
         [SerializeField] protected ShootType shootType;
         [SerializeField] protected float shotCooldown = 0.5f;
-        [SerializeField] protected float bulletSpreadAngle = 0f;
+        [SerializeField] protected Vector2 bulletSpreadAngle = Vector2.zero;
         [SerializeField] protected int bulletsPerShot = 1;
         [SerializeField] protected float bulletDamage = 1f;
         [SerializeField][Range(0f, 2f)] protected float recoilForce = 1;
@@ -84,11 +84,11 @@ namespace Potato.Gameplay
             // when firing multiple shots, guarantee at least one goes toward the crosshair
             if(bulletsPerShot > 1)
             {
-                int count = rats.DoBulletAttacks(this, PlayerCams.AimPos, PlayerCams.AimDir, bulletDamage, angle, bulletsPerShot - 1, ref _hitBuffer);
-                _hitBuffer[count] = rats.DoBulletAttack(this, PlayerCams.AimPos, PlayerCams.AimDir, bulletDamage, 0f);
+                int count = rats.DoBulletAttacks(this, bulletDamage, angle.x, angle.y, bulletsPerShot - 1, ref _hitBuffer);
+                _hitBuffer[count] = rats.DoBulletAttack(this, bulletDamage, 0f);
             }
             else
-                _hitBuffer[0] = rats.DoBulletAttack(this, PlayerCams.AimPos, PlayerCams.AimDir, bulletDamage, angle);
+                _hitBuffer[0] = rats.DoBulletAttack(this, bulletDamage, angle.x, angle.y);
 
             // Debug.Log($"range {(PlayerCams.AimPos - _hitBuffer[0]).magnitude}");
             weaponAnimator.AnimateWeaponAttack(this, _hitBuffer);
