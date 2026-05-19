@@ -13,8 +13,7 @@ namespace Potato.Gameplay
         {
             GameObject obj = SpawnWeaponSpacePrefabInWorldSpace(prefab, weaponSpacePosition, weaponSpaceRotation);
             Rigidbody rb = obj.GetComponent<Rigidbody>();
-
-            rb.velocity = gameCams.Value.gameplayCamera.transform.TransformDirection(velocity);
+            rb.velocity = velocity;
             
             if(spin != 0)
                 rb.angularVelocity = Random.insideUnitSphere * spin;

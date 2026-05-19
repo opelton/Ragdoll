@@ -96,7 +96,7 @@ namespace Potato.Gameplay
                 var adjustedMuzzlePosition = junkSpawner.WeaponToGameSpacePosition(weaponMuzzle.position);
                 foreach(var hit in hitLocations)
                 {
-                    if((hit.Point-adjustedMuzzlePosition).sqrMagnitude >= pointBlankThreshold * pointBlankThreshold)
+                    if((hit.Point - owner.PlayerCams.AimPos).sqrMagnitude >= pointBlankThreshold * pointBlankThreshold)
                     {
                         TracerProjectile tracer = Instantiate(tracerPrefab, adjustedMuzzlePosition, Quaternion.identity);
                         tracer.Fire(hit.Point, adjustedMuzzlePosition, tracerSpeed);
