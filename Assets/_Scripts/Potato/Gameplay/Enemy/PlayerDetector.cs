@@ -10,9 +10,11 @@ namespace Potato.Gameplay
         [SerializeField] private PlayerCharacterControllerReference playerRef;
         [SerializeField] private Transform detectionPoint;
         [SerializeField] private LayerMask losBlockers;
+        [SerializeField] private bool blinded = false;
+        [SerializeField] private bool deafened = false;
         //[SerializeField] private AttentionState attention = AttentionState.Normal;
         [SerializeField, Min(0f)] private float visionRange = 10f;
-        [SerializeField, Range(0f, 360f)] private float visionAngle = 80f;
+        [SerializeField, Range(0f, 180)] private float visionAngle = 80f;
         [SerializeField, Min(0f)] private float hearingRange = 20f;
         //[SerializeField] private float reactionSpeed = .5f;
         [SerializeField] private float searchDelay = .5f;
@@ -56,8 +58,17 @@ namespace Potato.Gameplay
             _sqCosHalfAngle = _cosHalfAngle * _cosHalfAngle;
         }
         
+        // todo -- attention level instead of binary yes/no on player detection
         public void UpdateSenses(float dt)
         {
+            if(blinded || playerRef.Value == null)
+            {
+                if(DetectedTarget != null)
+                    DetectedTarget = null;
+
+                return;
+            }
+
             _searchTimer -= dt;
             if (_searchTimer <= 0)
             {
@@ -70,6 +81,9 @@ namespace Potato.Gameplay
         // todo -- playerDetector runtime set, audioSystem should check for being heard
         bool CheckAudioSource(Vector3 position)
         {
+            if(deafened)
+                return false;
+
             Vector3 toTarget = position - detectionPoint.position;
             float sqDist = Vector3.Dot(toTarget, toTarget);
 
@@ -81,6 +95,9 @@ namespace Potato.Gameplay
             // faster math, but precomputing squared values removes the negative component, and breaks viewcones larger than 180
             Vector3 toTarget = playerRef.Value.transform.position - detectionPoint.position;
             float sqDist = Vector3.Dot(toTarget, toTarget);
+
+            // todo -- zombie detectionPoint.forward somehow flips when player looks into the skybox
+            //Debug.Log(detectionPoint.forward);
 
             // target should be within view range
             if (sqDist > _sqViewRange)
@@ -94,14 +111,14 @@ namespace Potato.Gameplay
             // target should be in front
             if (scalar <= 0f)
             {
-                //Debug.Log("player behind");
+                // Debug.Log("player behind");
                 return false;
             }
 
             // target should be within cone angle
             if (scalar * scalar < sqDist * _sqCosHalfAngle)
             {
-                //Debug.Log("player outside view cone");
+                // Debug.Log("player outside view cone");
                 return false;
             }
 
@@ -124,13 +141,13 @@ namespace Potato.Gameplay
                 }
                 else
                 {
-                    //Debug.Log("player seen");
+                    // Debug.Log("player seen");
                     return true;
                 }
             }
 
             // all detection points were blocked
-           // Debug.Log("player blocked by something");
+            // Debug.Log("player blocked by something");
             return false;
         }
     }
