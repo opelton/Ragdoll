@@ -981,7 +981,7 @@ CharacterJoint:
     spring: 0
     damper: 0
   m_Swing1Limit:
-    limit: 30
+    limit: 28.409212
     bounciness: 0
     contactDistance: 0
   m_Swing2Limit:
@@ -4016,6 +4016,8 @@ MonoBehaviour:
   losBlockers:
     serializedVersion: 2
     m_Bits: 257
+  blinded: 0
+  deafened: 0
   visionRange: 15
   visionAngle: 180
   hearingRange: 20

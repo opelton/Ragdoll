@@ -36,6 +36,8 @@ namespace Potato.Gameplay
 
             if (TryGetComponent(out CharacterJoint joint))
                 Destroy(joint);
+            else if(TryGetComponent(out ConfigurableJoint cJoint))
+                Destroy(cJoint);
 
             _rb.velocity *= severVelocityModifier;
             dismembering = false;
