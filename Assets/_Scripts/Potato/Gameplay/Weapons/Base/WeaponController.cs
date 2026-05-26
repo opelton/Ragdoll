@@ -46,8 +46,7 @@ namespace Potato.Gameplay
         protected int _currentAmmo = 0;
         protected float _lastShotTime = Mathf.NegativeInfinity;
 
-        public GameObject Owner { get; set; }
-        [HideInInspector] public PlayerCamerasController PlayerCams;
+        public PlayerWeaponsManager Owner { get; set; }
         public int CurrentAmmo => _currentAmmo;
         public int MaxAmmo => maxAmmo;
         public Vector3 MuzzleWorldVelocity => weaponAnimator.MuzzleWorldVelocity;

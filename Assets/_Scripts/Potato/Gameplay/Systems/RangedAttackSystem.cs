@@ -62,13 +62,13 @@ namespace Potato.Gameplay
 
         public HitInfo DoBulletAttack(WeaponController owner, float damage, float spread)
         {
-            Vector3 shotDirection = ApplyCircleSpread(owner.PlayerCams.AimTransform, spread);
+            Vector3 shotDirection = ApplyCircleSpread(owner.Owner.AimCams.AimTransform, spread);
             return ProcessShot(owner, shotDirection, damage);
         }
 
         public HitInfo DoBulletAttack(WeaponController owner, float damage, float xSpread, float ySpread)
         {
-            Vector3 shotDirection = ApplyBoxSpread(owner.PlayerCams.AimTransform, xSpread, ySpread);
+            Vector3 shotDirection = ApplyBoxSpread(owner.Owner.AimCams.AimTransform, xSpread, ySpread);
             return ProcessShot(owner, shotDirection, damage);
         }
 
@@ -80,7 +80,7 @@ namespace Potato.Gameplay
                 StruckSurface = true
             };
 
-            var hitCount = PreviewAttackRaycast(owner.PlayerCams.AimPos, adjustedShotDirection, ref _hitBuffer, true);
+            var hitCount = PreviewAttackRaycast(owner.Owner.AimCams.AimPos, adjustedShotDirection, ref _hitBuffer, true);
 
             if (hitCount >= kRaycastBufferSize * .9)
                 Debug.Log($"HitBuffer size {hitCount} is approaching max {kRaycastBufferSize}");
@@ -106,8 +106,8 @@ namespace Potato.Gameplay
             }
 
             // if no valid hits, return the search raycast
-            info.Point = owner.PlayerCams.AimPos + maxRaycastRange * adjustedShotDirection;
-            info.Normal = owner.PlayerCams.AimPos - info.Point;
+            info.Point = owner.Owner.AimCams.AimPos + maxRaycastRange * adjustedShotDirection;
+            info.Normal = owner.Owner.AimCams.AimPos - info.Point;
             info.StruckSurface = false;
             return info;
         }
@@ -116,15 +116,15 @@ namespace Potato.Gameplay
         {
             for (int i = 0; i < count; i++)
             {
-                Vector3 shotDirection = ApplyCircleSpread(owner.PlayerCams.AimTransform, spread);
-                ProjectileBase newProjectile = Instantiate(projectilePrefab, owner.PlayerCams.AimPos, Quaternion.LookRotation(shotDirection));
+                Vector3 shotDirection = ApplyCircleSpread(owner.Owner.AimCams.AimTransform, spread);
+                ProjectileBase newProjectile = Instantiate(projectilePrefab, owner.Owner.AimCams.AimPos, Quaternion.LookRotation(shotDirection));
                 newProjectile.Shoot(owner);
             }
         }
 
         public void DoExplosiveAttack(WeaponController owner, int count, float spread)
         {
-            Debug.Log($"{count} Shots requested by {owner} from {owner.PlayerCams.AimPos} going {owner.PlayerCams.AimDir} with {spread} spread");
+            Debug.Log($"{count} Shots requested by {owner} from {owner.Owner.AimCams.AimPos} going {owner.Owner.AimCams.AimDir} with {spread} spread");
         }
 
         // single spread angle for circle-shaped spread pattern

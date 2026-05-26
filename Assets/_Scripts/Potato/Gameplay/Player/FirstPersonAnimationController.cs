@@ -4,6 +4,7 @@ using Potato.Game;
 
 namespace Potato.Gameplay
 {
+    [RequireComponent(typeof(PlayerStance))]
     public class FirstPersonAnimationController : MonoBehaviour
     {       
         [Header("Grip poses")]
@@ -33,6 +34,7 @@ namespace Potato.Gameplay
         [SerializeField] private float footstepFrequency = .3f;
         [SerializeField] private float footstepFrequencySprinting = .2f;
 
+        private PlayerStance _stance;
         private Vector3 _weaponRecoilLocalPos;
         private Vector3 _totalRecoil;
         private Vector3 _weaponLocalPos;
@@ -44,6 +46,7 @@ namespace Potato.Gameplay
 
         void Start()
         {
+            _stance = GetComponent<PlayerStance>();
             SetWeaponPose_Down();
         }
 
@@ -75,16 +78,16 @@ namespace Potato.Gameplay
             }
         }
 
-        public void LateUpdateWeaponBob(Vector3 playerPos, bool isGrounded, bool isAiming, float maxGroundSpeed, float sprintModifier)
+        public void LateUpdateWeaponBob(float maxGroundSpeed, float sprintModifier)
         {
             if (Time.deltaTime > 0f)
             {
                 Vector3 playerCharacterVelocity =
-                    (playerPos - _lastPlayerPos) / Time.deltaTime;
+                    (transform.position - _lastPlayerPos) / Time.deltaTime;
 
                 // calculate a smoothed weapon bob amount based on how close to our max grounded movement velocity we are
                 float characterMovementFactor = 0f;
-                if (isGrounded)
+                if (_stance.IsGrounded)
                 {
                     characterMovementFactor = Mathf.Clamp01(
                         playerCharacterVelocity.magnitude / (maxGroundSpeed * sprintModifier));
@@ -94,7 +97,7 @@ namespace Potato.Gameplay
                     Mathf.Lerp(_weaponBobFactor, characterMovementFactor, weaponBobSharpness * Time.deltaTime);
 
                 // Calculate vertical and horizontal weapon bob values based on a sine function
-                float bobAmount = isAiming ? weaponBob_aiming : weaponBob_default;
+                float bobAmount = _stance.IsAiming ? weaponBob_aiming : weaponBob_default;
                 float frequency = weaponBobFrequency;
                 float hBobValue = Mathf.Sin(Time.time * frequency) * bobAmount * _weaponBobFactor;
                 float vBobValue = ((Mathf.Sin(Time.time * frequency * 2f) * 0.5f) + 0.5f) * bobAmount *
@@ -104,16 +107,16 @@ namespace Potato.Gameplay
                 _weaponBobLocalPos.x = hBobValue;
                 _weaponBobLocalPos.y = Mathf.Abs(vBobValue);
 
-                _lastPlayerPos = playerPos;
+                _lastPlayerPos = transform.position;
             }
         }
 
         // Updates weapon position and camera FoV for the aiming transition
-        public void LateUpdateWeaponAiming(WeaponController activeWeapon, bool stanceUp, bool isAiming, float dt)
+        public void LateUpdateWeaponAiming(WeaponController activeWeapon, float dt)
         {
-            if (stanceUp)
+            if (_stance.weaponStance == WeaponStance.Up)
             {
-                if (isAiming && activeWeapon)
+                if (_stance.IsAiming && activeWeapon)
                 {
                     _weaponLocalPos = Vector3.Lerp(_weaponLocalPos,
                         weaponPose_Aiming.localPosition + activeWeapon.AimOffset,

@@ -54,9 +54,9 @@ namespace Potato.Gameplay
             if (playerWeaponsManager)
             {
                 Vector3 cameraToMuzzle = InitialPosition -
-                                          playerWeaponsManager.AimPosition;
+                                          playerWeaponsManager.AimCams.AimPos;
 
-                if (Physics.Raycast(playerWeaponsManager.AimPosition, cameraToMuzzle.normalized,
+                if (Physics.Raycast(playerWeaponsManager.AimCams.AimPos, cameraToMuzzle.normalized,
                     out RaycastHit hit, cameraToMuzzle.magnitude, hitLayers, k_TriggerInteraction))
                 {
                     if (IsHitValid(hit))

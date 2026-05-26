@@ -5,11 +5,9 @@ using Potato.Game;
 
 namespace Potato.Gameplay
 {
-    [RequireComponent(typeof(FirstPersonAnimationController))]
+    [RequireComponent(typeof(FirstPersonAnimationController), typeof(PlayerStance))]
     public class PlayerWeaponsManager : MonoBehaviour
     {
-        public enum WeaponStance { Up, Down, Stowing, Drawing }
-
         [SerializeField] private RangedAttackSystem rats;
         [SerializeField] private Transform weaponRoot;
 
@@ -34,26 +32,25 @@ namespace Potato.Gameplay
         [SerializeField] private WeaponReference activeWeaponRef;
         [SerializeField] private IntReference playerCurrentAmmo;        
 
-        public bool IsAiming { get; private set; }
         public int ActiveWeaponIndex { get; private set; }
         public float WeaponSwitchTimingFactor { get; private set; } = 0f;
-        public Vector3 AimPosition => playerCams.AimPos;
-        public Vector3 AimDirection => playerCams.AimDir;
-        public WeaponStance Stance => _weaponStance;
+        public PlayerCamerasController AimCams => playerCams;
 
         // ---
         private WeaponController[] _weaponSlots = new WeaponController[9]; // 9 available weapon slots
         private FirstPersonAnimationController _animationController;
+        private PlayerStance _stance;
         private float _weaponSwitchStartTime;
-        private WeaponStance _weaponStance;
         private int _nextWeaponIndex;
 
         // first person animator should have the weapon audio source, not each weapon prefab
         void Start()
         {
             _animationController = GetComponent<FirstPersonAnimationController>();
+            _stance = GetComponent<PlayerStance>();
+
             ActiveWeaponIndex = -1;
-            _weaponStance = WeaponStance.Down;
+            _stance.weaponStance = WeaponStance.Down;
 
             // Add starting weapons
             foreach (var weapon in StartingWeapons)
@@ -69,17 +66,17 @@ namespace Potato.Gameplay
 
             if (activeWeapon != null)
             {
-                if (_weaponStance == WeaponStance.Up)
+                if (_stance.weaponStance == WeaponStance.Up)
                 {
                     // handle aiming down sights
-                    IsAiming = fire2Input.ButtonDown;
+                    _stance.IsAiming = fire2Input.ButtonDown;
 
                     // handle shooting
                     bool hasFired = activeWeapon.HandleWeaponInputs(
                         fire1Input.ButtonPressed,
                         fire1Input.ButtonDown,
                         reloadInput.ButtonPressed,
-                        IsAiming);
+                        _stance.IsAiming);
 
                     if (hasFired)
                         _animationController.AnimateRecoil(activeWeapon.RecoilForce);
@@ -95,7 +92,7 @@ namespace Potato.Gameplay
         {
             var dt = Time.deltaTime;
             UpdateWeaponSwitching(dt);
-            _animationController.LateUpdateWeaponAiming(GetActiveWeapon(), _weaponStance == WeaponStance.Up, IsAiming, dt);
+            _animationController.LateUpdateWeaponAiming(GetActiveWeapon(), dt);
         }
 
         // Switches to the given weapon index in weapon slots if the new index is a valid weapon that is different from our current one
@@ -110,7 +107,7 @@ namespace Potato.Gameplay
                 // Handle case of switching to a valid weapon for the first time (simply put it up without putting anything down first)
                 if (GetActiveWeapon() == null)
                 {
-                    _weaponStance = WeaponStance.Drawing;
+                    _stance.weaponStance = WeaponStance.Drawing;
                     ActiveWeaponIndex = _nextWeaponIndex;
 
                     WeaponController newWeapon = GetWeaponAtSlotIndex(_nextWeaponIndex);
@@ -119,7 +116,7 @@ namespace Potato.Gameplay
                 // otherwise, remember we are putting down our current weapon for switching to the next one
                 else
                 {
-                    _weaponStance = WeaponStance.Stowing;
+                    _stance.weaponStance = WeaponStance.Stowing;
                 }
             }
         }
@@ -134,7 +131,7 @@ namespace Potato.Gameplay
             // Handle transiting to new switch state
             if (WeaponSwitchTimingFactor >= 1f)
             {
-                if (_weaponStance == WeaponStance.Stowing)
+                if (_stance.weaponStance == WeaponStance.Stowing)
                 {
                     // Deactivate old weapon
                     if (activeWeapon != null)
@@ -150,20 +147,20 @@ namespace Potato.Gameplay
                     if (activeWeapon)
                     {
                         _weaponSwitchStartTime = Time.time;
-                        _weaponStance = WeaponStance.Drawing;
+                        _stance.weaponStance = WeaponStance.Drawing;
                     }
                     else
-                        _weaponStance = WeaponStance.Down;
+                        _stance.weaponStance = WeaponStance.Down;
                 }
-                else if (_weaponStance == WeaponStance.Drawing)
-                    _weaponStance = WeaponStance.Up;
+                else if (_stance.weaponStance == WeaponStance.Drawing)
+                    _stance.weaponStance = WeaponStance.Up;
             }
 
             _animationController.UpdateWeaponSwitchingAnimation(
                 activeWeapon,
                 WeaponSwitchTimingFactor,
-                Stance == WeaponStance.Stowing,
-                Stance == WeaponStance.Drawing,
+                _stance.weaponStance == WeaponStance.Stowing,
+                _stance.weaponStance == WeaponStance.Drawing,
                 dt);
         }
 
@@ -181,8 +178,7 @@ namespace Potato.Gameplay
                     weaponInstance.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
 
                     // Set owner to this gameObject so the weapon can alter projectile/damage logic accordingly
-                    weaponInstance.Owner = gameObject;
-                    weaponInstance.PlayerCams = playerCams;
+                    weaponInstance.Owner = this;
                     weaponInstance.ShowWeapon(false);
 
                     // Assign the first person layer to the weapon

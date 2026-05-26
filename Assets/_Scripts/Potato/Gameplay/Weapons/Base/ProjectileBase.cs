@@ -11,7 +11,7 @@ namespace Potato.Gameplay
 
         public void Shoot(WeaponController controller)
         {
-            Owner = controller.Owner;
+            Owner = controller.Owner.gameObject;
             InitialPosition = transform.position;
             InitialDirection = transform.forward;
             InheritedMuzzleVelocity = controller.MuzzleWorldVelocity;
