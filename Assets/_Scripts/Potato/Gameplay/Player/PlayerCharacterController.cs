@@ -60,8 +60,6 @@ namespace Potato.Gameplay
 
         // --
         public bool IsAlive => true;
-        public float MaxSpeedOnGround => maxGroundSpeed;
-        public float SprintSpeedModifier => sprintSpeedModifier;
         public Transform[] DetectionPoints => detectionPoints;
 
         void Start()
@@ -100,7 +98,7 @@ namespace Potato.Gameplay
 
         void LateUpdate()
         {
-            _animationController.LateUpdateWeaponBob(MaxSpeedOnGround, SprintSpeedModifier);
+            _animationController.LateUpdateWeaponBob(maxGroundSpeed, sprintSpeedModifier);
         }
 
         void UpdateCamera()

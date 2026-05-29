@@ -7,20 +7,29 @@ namespace Potato.Gameplay
     {
         [SerializeField] private Camera gameCam;
         [SerializeField] private Camera fpsCam;
+        [SerializeField] private PlayerStance playerStance;
         [SerializeField] private IntReference baseFov;
-        [SerializeField] private FloatReference stanceFovModifier;
         [SerializeField] private int fixedFirstPersonFov;
 
         public Vector3 AimDir => fpsCam.transform.forward;
         public Vector3 AimPos => fpsCam.transform.position;
         public Transform AimTransform => fpsCam.transform;
 
-        void Start() => UpdateFovs();
-
-        public void UpdateFovs()
+        void Start()
         {
-            gameCam.fieldOfView = (float)baseFov.Value * stanceFovModifier.Value;
+            UpdateFOVModifier(playerStance.FOVModifier.Value);
             fpsCam.fieldOfView = fixedFirstPersonFov;
+            playerStance.FOVModifier.OnValueChanged += UpdateFOVModifier;
+        }
+
+        void UpdateFOVModifier(float mod)
+        {
+            gameCam.fieldOfView = baseFov.Value * mod;
+        }
+
+        public void UpdateBaseFOV(int fov)
+        {
+            gameCam.fieldOfView = fov * playerStance.FOVModifier.Value;
         }
     }
 }

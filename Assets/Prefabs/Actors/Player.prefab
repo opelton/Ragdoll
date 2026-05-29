@@ -756,10 +756,10 @@ GameObject:
   - component: {fileID: 7141486092395837094}
   - component: {fileID: 1111713056483603718}
   - component: {fileID: 6324086442476015078}
-  - component: {fileID: 4652617024928818412}
   - component: {fileID: 5646522603461414655}
   - component: {fileID: 6652292788303839053}
   - component: {fileID: 5632306928268732170}
+  - component: {fileID: 4567593054975739718}
   m_Layer: 7
   m_Name: EventListeners
   m_TagString: Untagged
@@ -831,35 +831,6 @@ MonoBehaviour:
       - m_Target: {fileID: 5465555400534215456}
         m_TargetAssemblyTypeName: Potato.Gameplay.PlayerCharacterController, potato.gameplay
         m_MethodName: TryJumping
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
---- !u!114 &4652617024928818412
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4344926436189153364}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5989fe9ed7a98ed489ea6103147167b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _description: player fov modifier changed
-  _eventSource: {fileID: 11400000, guid: 0825863206021384a860660f7f3bcbd4, type: 2}
-  Response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3538010742275564257}
-        m_TargetAssemblyTypeName: Potato.Gameplay.PlayerCamerasController, potato.gameplay
-        m_MethodName: UpdateFovs
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -947,6 +918,35 @@ MonoBehaviour:
       - m_Target: {fileID: 3987069486185360856}
         m_TargetAssemblyTypeName: Potato.Game.AudioRequestResponder, potato.game
         m_MethodName: PlayClip
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &4567593054975739718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4344926436189153364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3a8121764677c74e88beb631ab09ed8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _description: 
+  _eventSource: {fileID: 11400000, guid: 972d303e80f3bae44bda6637b56678b3, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3538010742275564257}
+        m_TargetAssemblyTypeName: Potato.Gameplay.PlayerCamerasController, potato.gameplay
+        m_MethodName: UpdateBaseFOV
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1055,16 +1055,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameCam: {fileID: 6934066893293710498}
   fpsCam: {fileID: 7789353188300807451}
+  playerStance: {fileID: 2513659228925421603}
   baseFov:
     UseConstant: 0
     _description: 
     ConstantValue: 0
     ReferenceData: {fileID: 11400000, guid: 1b105e9ce6dec2a438de9474eb90c6b9, type: 2}
-  stanceFovModifier:
-    UseConstant: 0
-    _description: 
-    ConstantValue: 0
-    ReferenceData: {fileID: 11400000, guid: bb4d56ea78308244e8642699aca07fc0, type: 2}
   fixedFirstPersonFov: 60
 --- !u!1 &5886909609703047410
 GameObject:
@@ -1239,11 +1235,6 @@ MonoBehaviour:
   maxRecoil: 0.5
   recoilRecoverySharpness: 10
   aimAnimationSpeed: 20
-  playerStanceFovModifier:
-    UseConstant: 0
-    _description: 
-    ConstantValue: 0
-    ReferenceData: {fileID: 11400000, guid: bb4d56ea78308244e8642699aca07fc0, type: 2}
   audioSystem: {fileID: 11400000, guid: b53c0bb3d09ac564b9285025ee046e23, type: 2}
   footstepSfx: {fileID: 8300000, guid: 19a999a14416ab04aad911c16e41bc36, type: 3}
   jumpSfx: {fileID: 8300000, guid: 871d8a44a06ceb04f8b6eee3ad08d94f, type: 3}
@@ -1291,6 +1282,7 @@ MonoBehaviour:
   IsCrouched: 0
   IsGrounded: 0
   WasGrounded: 0
+  weaponStance: 0
 --- !u!1 &5990631301142876808
 GameObject:
   m_ObjectHideFlags: 0

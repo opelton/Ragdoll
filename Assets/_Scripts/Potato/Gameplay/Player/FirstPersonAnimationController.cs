@@ -22,7 +22,6 @@ namespace Potato.Gameplay
         [SerializeField] private float maxRecoil = 0.5f;
         [SerializeField] private float recoilRecoverySharpness = 10f;
         [SerializeField] private float aimAnimationSpeed = 10f;
-        [SerializeField] private FloatReference playerStanceFovModifier;
 
         [Header("Sfx")]
         [SerializeField] protected AudioSystem audioSystem;
@@ -126,7 +125,7 @@ namespace Potato.Gameplay
                         Quaternion.Inverse(activeWeapon.WeaponMeshTransform.localRotation),
                         aimAnimationSpeed * dt);
 
-                    playerStanceFovModifier.Value = Mathf.Lerp(playerStanceFovModifier.Value, activeWeapon.AimZoomRatio, aimAnimationSpeed * dt);
+                    _stance.FOVModifier.Value = Mathf.Lerp(_stance.FOVModifier.Value, activeWeapon.AimZoomRatio, aimAnimationSpeed * dt);
                 }
                 else
                 {
@@ -137,7 +136,7 @@ namespace Potato.Gameplay
                         Quaternion.identity,
                         aimAnimationSpeed * dt);
 
-                    playerStanceFovModifier.Value = Mathf.Lerp(playerStanceFovModifier.Value, 1f, aimAnimationSpeed * dt);
+                    _stance.FOVModifier.Value = Mathf.Lerp(_stance.FOVModifier.Value, 1f, aimAnimationSpeed * dt);
                 }
             }
         }
