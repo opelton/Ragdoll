@@ -5,13 +5,6 @@ namespace Potato.Tests.EditMode
 {
     public class BindableTests
     {
-        int sentinel = 0;
-
-        void EventSentinel(int value)
-        {
-            sentinel = value;
-        }
-
         [Test]
         public void InstantiatesToZero()
         {
@@ -42,13 +35,12 @@ namespace Potato.Tests.EditMode
         {
             Bindable<int> testBindable = new(11);
 
-            sentinel = 0;
-            testBindable.OnValueChanged += EventSentinel;
+            int sentinel = 0;
+            testBindable.OnValueChanged += value => sentinel = value;
             Assert.DoesNotThrow(() =>
             {
                 testBindable.Value = 15;
             });
-            testBindable.OnValueChanged -= EventSentinel;
 
             Assert.AreEqual(15, sentinel);
         }
