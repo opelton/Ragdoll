@@ -1165,7 +1165,7 @@ MonoBehaviour:
   standingHeight: 1.8
   cameraHeightRatio: 0.9
   crouchSpeedModifier: 0.5
-  sprintSpeedModifier: 0.4
+  walkSpeedModifier: 0.4
   maxGroundSpeed: 13
   groundTurningSharpness: 15
   maxAirSpeed: 10
@@ -1240,7 +1240,7 @@ MonoBehaviour:
   jumpSfx: {fileID: 8300000, guid: 871d8a44a06ceb04f8b6eee3ad08d94f, type: 3}
   landSfx: {fileID: 8300000, guid: 6bd5fb9b02c98374b9a8bce45c776869, type: 3}
   footstepFrequency: 0.25
-  footstepFrequencySprinting: 0.7
+  footstepFrequency_Walking: 0.7
 --- !u!114 &4214059493598820480
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1280,8 +1280,6 @@ MonoBehaviour:
   IsAiming: 0
   IsWalking: 0
   IsCrouched: 0
-  IsGrounded: 0
-  WasGrounded: 0
   weaponStance: 0
 --- !u!1 &5990631301142876808
 GameObject:

@@ -31,7 +31,7 @@ namespace Potato.Gameplay
 
         [Header("Sfx params")]
         [SerializeField] private float footstepFrequency = .3f;
-        [SerializeField] private float footstepFrequencySprinting = .2f;
+        [SerializeField] private float footstepFrequency_walking = .7f;
 
         private PlayerStance _stance;
         private Vector3 _weaponRecoilLocalPos;
@@ -86,7 +86,7 @@ namespace Potato.Gameplay
 
                 // calculate a smoothed weapon bob amount based on how close to our max grounded movement velocity we are
                 float characterMovementFactor = 0f;
-                if (_stance.IsGrounded)
+                if (_stance.IsGrounded.Value)
                 {
                     characterMovementFactor = Mathf.Clamp01(
                         playerCharacterVelocity.magnitude / (maxGroundSpeed * sprintModifier));
@@ -177,10 +177,10 @@ namespace Potato.Gameplay
             _totalRecoil = Vector3.ClampMagnitude(_totalRecoil, maxRecoil);
         }
 
-        public void UpdateFootstepSfx(float moveDistance, bool isSprinting)
+        public void UpdateFootstepSfx(float moveDistance)
         {
             // footsteps sound
-            float chosenFootstepSfxFrequency = isSprinting ? footstepFrequencySprinting : footstepFrequency;
+            float chosenFootstepSfxFrequency = _stance.IsWalking ? footstepFrequency_walking : footstepFrequency;
             if (_footstepDistanceCounter >= 1f/ chosenFootstepSfxFrequency)
             {
                 _footstepDistanceCounter = 0;

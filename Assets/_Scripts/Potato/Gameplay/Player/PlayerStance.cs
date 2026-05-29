@@ -9,10 +9,10 @@ namespace Potato.Gameplay
         [HideInInspector] public bool IsAiming = false;
         [HideInInspector] public bool IsWalking = false;
         [HideInInspector] public bool IsCrouched = false;
-        [HideInInspector] public bool IsGrounded = false;
-        [HideInInspector] public bool WasGrounded = false;
-        [HideInInspector] public WeaponStance weaponStance = WeaponStance.Up;
 
-        public Bindable<float> FOVModifier = new();
+        [HideInInspector] public Bindable<float> FOVModifier = new();
+        [HideInInspector] public Bindable<bool> IsGrounded = new();
+
+        [HideInInspector] public WeaponStance weaponStance = WeaponStance.Up;
     }
 }

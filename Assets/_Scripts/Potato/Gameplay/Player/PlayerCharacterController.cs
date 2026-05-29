@@ -36,7 +36,7 @@ namespace Potato.Gameplay
         [SerializeField][Range(0f, 1f)] private float crouchSpeedModifier = .5f;
 
         [Header("Movement")]
-        [SerializeField] private float sprintSpeedModifier = 1.5f;
+        [SerializeField] private float walkSpeedModifier = 0.4f;
         [SerializeField] private float maxGroundSpeed = 13f;
         [SerializeField] private float groundTurningSharpness = 15f;
         [SerializeField] private float maxAirSpeed = 10f;
@@ -67,6 +67,7 @@ namespace Potato.Gameplay
             _controller = GetComponent<CharacterController>();
             _animationController = GetComponent<FirstPersonAnimationController>();
             _stance = GetComponent<PlayerStance>();
+            _stance.IsGrounded.OnValueChanged += CheckFallDamage;
 
             _controller.enableOverlapRecovery = true;
             SetCrouchingState(false, true);
@@ -88,7 +89,6 @@ namespace Potato.Gameplay
             if (!isPausedRef.Value)
             {
                 GroundCheck();
-                CheckFallDamage();
                 UpdateCrouchInput();
                 UpdateCharacterHeight(false);
                 UpdateCamera();
@@ -98,7 +98,7 @@ namespace Potato.Gameplay
 
         void LateUpdate()
         {
-            _animationController.LateUpdateWeaponBob(maxGroundSpeed, sprintSpeedModifier);
+            _animationController.LateUpdateWeaponBob(maxGroundSpeed, walkSpeedModifier);
         }
 
         void UpdateCamera()
@@ -119,7 +119,7 @@ namespace Potato.Gameplay
             if (_stance.IsWalking)
                 _stance.IsWalking = SetCrouchingState(false, false);
 
-            float speedModifier = _stance.IsWalking ? sprintSpeedModifier : 1f;
+            float speedModifier = _stance.IsWalking ? walkSpeedModifier : 1f;
             Vector3 worldspaceMoveInput = transform.TransformVector(moveInput.Value.x, 0f, moveInput.Value.y);
 
             // normalize diagonal speed (wouldn't work if controllers were supported)
@@ -127,7 +127,7 @@ namespace Potato.Gameplay
                 worldspaceMoveInput.Normalize();
 
             // movement
-            if (_stance.IsGrounded)
+            if (_stance.IsGrounded.Value)
             {
                 Vector3 targetVelocity = maxGroundSpeed * speedModifier * worldspaceMoveInput;
 
@@ -137,7 +137,7 @@ namespace Potato.Gameplay
                                  targetVelocity.magnitude;
 
                 _velocity = Vector3.Lerp(_velocity, targetVelocity, groundTurningSharpness * dt);
-                _animationController.UpdateFootstepSfx(_velocity.magnitude * dt, _stance.IsWalking);
+                _animationController.UpdateFootstepSfx(_velocity.magnitude * dt);
             }
             // air movement
             else
@@ -173,7 +173,7 @@ namespace Potato.Gameplay
 
         public void TryJumping()
         {
-            if (_stance.IsGrounded)
+            if (_stance.IsGrounded.Value)
             {
                 // force the crouch state to false
                 if (SetCrouchingState(false, false))
@@ -187,35 +187,15 @@ namespace Potato.Gameplay
                     _lastJumpTime = Time.time;
 
                     // Force grounding to false
-                    _stance.IsGrounded = false;
+                    _stance.IsGrounded.Value = false;
                     _groundNormal = Vector3.up;
                 }
             }
         }
 
-        void CheckFallDamage()
+        void CheckFallDamage(bool isGrounded)
         {
-            if (_stance.IsGrounded && !_stance.WasGrounded)
-            {
-                // // Fall damage
-                // float fallSpeed = -Mathf.Min(_velocity.y, _lastImpactSpeed.y);
-                // float fallSpeedRatio = (fallSpeed - MinSpeedForFallDamage) /
-                //                        (MaxSpeedForFallDamage - MinSpeedForFallDamage);
-                // if (receivesFallDamage && fallSpeedRatio > 0f)
-                // {
-                //     float dmgFromFall = Mathf.Lerp(FallDamageAtMinSpeed, FallDamageAtMaxSpeed, fallSpeedRatio);
-                //     // m_Health.TakeDamage(dmgFromFall, null);
-
-                //     // // fall damage SFX
-                //     // AudioSource.PlayOneShot(FallDamageSfx);
-                // }
-                // else
-                // {
-                //     // land SFX
-                //     //AudioSource.PlayOneShot(LandSfx);
-                // }
-                _animationController.PlaySfx_Land();
-            }
+            _animationController.PlaySfx_Land();
         }
 
         void UpdateCharacterHeight(bool force)
@@ -234,8 +214,13 @@ namespace Potato.Gameplay
                 _controller.height = Mathf.Lerp(_controller.height, _targetCharacterHeight,
                     crouchingSharpness * Time.deltaTime);
                 _controller.center = _controller.height * 0.5f * Vector3.up;
-                playerCamera.transform.localPosition = Vector3.Lerp(playerCamera.transform.localPosition,
-                    _targetCharacterHeight * cameraHeightRatio * Vector3.up, crouchingSharpness * Time.deltaTime);
+
+                var localPos = playerCamera.transform.localPosition;
+                localPos.y = Mathf.Lerp(localPos.y, _targetCharacterHeight * cameraHeightRatio, crouchingSharpness * Time.deltaTime);
+                playerCamera.transform.localPosition = localPos;
+                
+                // playerCamera.transform.localPosition = Vector3.Lerp(playerCamera.transform.localPosition,
+                //     _targetCharacterHeight * cameraHeightRatio * Vector3.up, crouchingSharpness * Time.deltaTime);
             }
         }
 
@@ -245,7 +230,7 @@ namespace Potato.Gameplay
             if (crouchInput.ButtonDown == _stance.IsCrouched)
                 return;
 
-            var wantsCrouch = crouchInput.ButtonDown && !_stance.IsWalking;
+            var wantsCrouch = crouchInput.ButtonDown;
             SetCrouchingState(wantsCrouch, false);
         }
 
@@ -288,11 +273,10 @@ namespace Potato.Gameplay
         {
             // Make sure that the ground check distance while already in air is very small, to prevent suddenly snapping to ground
             float chosenGroundCheckDistance =
-                _stance.IsGrounded ? (_controller.skinWidth + groundCheckDistance) : k_GroundCheckDistanceInAir;
+                _stance.IsGrounded.Value ? (_controller.skinWidth + groundCheckDistance) : k_GroundCheckDistanceInAir;
 
             // reset values before the ground check
-            _stance.WasGrounded = _stance.IsGrounded;
-            _stance.IsGrounded = false;
+            var grounded = false;
             _groundNormal = Vector3.up;
 
             // only try to detect ground if it's been a short amount of time since last jump; otherwise we may snap to the ground instantly after we try jumping
@@ -311,7 +295,7 @@ namespace Potato.Gameplay
                     if (Vector3.Dot(hit.normal, transform.up) > 0f &&
                         IsNormalUnderSlopeLimit(_groundNormal))
                     {
-                        _stance.IsGrounded = true;
+                        grounded = true;
 
                         // handle snapping to the ground
                         if (hit.distance > _controller.skinWidth)
@@ -321,6 +305,7 @@ namespace Potato.Gameplay
                     }
                 }
             }
+            _stance.IsGrounded.Value = grounded;
         }
 
         bool IsNormalUnderSlopeLimit(Vector3 normal)
