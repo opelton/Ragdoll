@@ -9,6 +9,7 @@ namespace Potato.Gameplay
         [HideInInspector] public bool IsAiming = false;
         [HideInInspector] public bool IsWalking = false;
         [HideInInspector] public bool IsCrouched = false;
+        [HideInInspector] public Vector3 Velocity = Vector3.zero;
 
         [HideInInspector] public Bindable<float> FOVModifier = new();
         [HideInInspector] public Bindable<bool> IsGrounded = new();

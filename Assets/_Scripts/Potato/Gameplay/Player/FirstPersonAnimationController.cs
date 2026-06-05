@@ -77,19 +77,16 @@ namespace Potato.Gameplay
             }
         }
 
-        public void LateUpdateWeaponBob(float maxGroundSpeed, float sprintModifier)
+        public void UpdateWeaponBob(float adjustedMaxSpeed)
         {
             if (Time.deltaTime > 0f)
             {
-                Vector3 playerCharacterVelocity =
-                    (transform.position - _lastPlayerPos) / Time.deltaTime;
-
                 // calculate a smoothed weapon bob amount based on how close to our max grounded movement velocity we are
                 float characterMovementFactor = 0f;
                 if (_stance.IsGrounded.Value)
                 {
                     characterMovementFactor = Mathf.Clamp01(
-                        playerCharacterVelocity.magnitude / (maxGroundSpeed * sprintModifier));
+                        _stance.Velocity.magnitude / adjustedMaxSpeed);
                 }
 
                 _weaponBobFactor =
@@ -99,8 +96,8 @@ namespace Potato.Gameplay
                 float bobAmount = _stance.IsAiming ? weaponBob_aiming : weaponBob_default;
                 float frequency = weaponBobFrequency;
                 float hBobValue = Mathf.Sin(Time.time * frequency) * bobAmount * _weaponBobFactor;
-                float vBobValue = ((Mathf.Sin(Time.time * frequency * 2f) * 0.5f) + 0.5f) * bobAmount *
-                                  _weaponBobFactor;
+                float vBobValue = Mathf.Cos(Time.time * frequency) * bobAmount * _weaponBobFactor;
+                // float vBobValue = ((Mathf.Sin(Time.time * frequency * 2f) * 0.5f) + 0.5f) * bobAmount * _weaponBobFactor;
 
                 // Apply weapon bob
                 _weaponBobLocalPos.x = hBobValue;

@@ -24,13 +24,19 @@ namespace Potato.Gameplay
         [SerializeField] private AudioClip sfxChamber;
         [SerializeField] private AudioClip sfxReload;
 
+        float _forendY = 0;
+        void Start()
+        {
+            _forendY = forendBone.transform.localPosition.y;
+        }
+
         // 0f = default
         // 1f = back
         public void AnimateForendPosition(float lerp)
         {
             forendBone.transform.localPosition = Vector3.Lerp(
-                new Vector3(0f, 0f, forendPose_Front),
-                 new Vector3(0f, 0f, forendPose_Back),
+                new Vector3(0f, _forendY, forendPose_Front),
+                 new Vector3(0f, _forendY, forendPose_Back),
                  lerp);
         }
 

@@ -51,7 +51,6 @@ namespace Potato.Gameplay
         private CharacterController _controller;
         private FirstPersonAnimationController _animationController;
         private PlayerStance _stance;
-        private Vector3 _velocity = Vector3.zero;
         private float _cameraY = 0;
         private Vector3 _groundNormal = Vector3.up;
         private float _lastJumpTime = 0f;
@@ -97,11 +96,6 @@ namespace Potato.Gameplay
             }
         }
 
-        void LateUpdate()
-        {
-            _animationController.LateUpdateWeaponBob(maxGroundSpeed, walkSpeedModifier);
-        }
-
         void UpdateCamera()
         {
             // camera x
@@ -134,39 +128,40 @@ namespace Potato.Gameplay
                 targetVelocity = GetDirectionReorientedOnSlope(targetVelocity.normalized, _groundNormal) *
                                  targetVelocity.magnitude;
 
-                _velocity = Vector3.Lerp(_velocity, targetVelocity, groundTurningSharpness * dt);
-                _animationController.UpdateFootstepSfx(_velocity.magnitude * dt);
+                _stance.Velocity = Vector3.Lerp(_stance.Velocity, targetVelocity, groundTurningSharpness * dt);
+                _animationController.UpdateFootstepSfx(_stance.Velocity.magnitude * dt);
             }
             // air movement
             else
             {
                 // add air acceleration
-                _velocity += airAcceleration * dt * worldspaceMoveInput;
+                _stance.Velocity += airAcceleration * dt * worldspaceMoveInput;
 
                 // limit air speed to a maximum, but only horizontally
-                float verticalVelocity = _velocity.y;
-                Vector3 horizontalVelocity = Vector3.ProjectOnPlane(_velocity, Vector3.up);
+                float verticalVelocity = _stance.Velocity.y;
+                Vector3 horizontalVelocity = Vector3.ProjectOnPlane(_stance.Velocity, Vector3.up);
                 horizontalVelocity = Vector3.ClampMagnitude(horizontalVelocity, maxAirSpeed * speedModifier);
-                _velocity = horizontalVelocity + (Vector3.up * verticalVelocity);
+                _stance.Velocity = horizontalVelocity + (Vector3.up * verticalVelocity);
 
                 // apply the gravity to the velocity
-                _velocity += gravityDownForce * dt * Vector3.down;
+                _stance.Velocity += gravityDownForce * dt * Vector3.down;
             }
 
             Vector3 capsuleBottomBeforeMove = GetCapsuleBottomHemisphere();
             Vector3 capsuleTopBeforeMove = GetCapsuleTopHemisphere(_controller.height);
 
             // apply movement
-            _controller.Move(_velocity * dt);
+            _controller.Move(_stance.Velocity * dt);
 
             // ground impact
             if (Physics.CapsuleCast(capsuleBottomBeforeMove, capsuleTopBeforeMove, _controller.radius,
-                _velocity.normalized, out RaycastHit hit, _velocity.magnitude * dt, groundCheckLayers,
+                _stance.Velocity.normalized, out RaycastHit hit, _stance.Velocity.magnitude * dt, groundCheckLayers,
                 QueryTriggerInteraction.Ignore))
             {
-
-                _velocity = Vector3.ProjectOnPlane(_velocity, hit.normal);
+                _stance.Velocity = Vector3.ProjectOnPlane(_stance.Velocity, hit.normal);
             }
+
+            _animationController.UpdateWeaponBob(maxGroundSpeed * walkSpeedModifier);
         }
 
         public void TryJumping()
@@ -174,9 +169,7 @@ namespace Potato.Gameplay
             if (_stance.IsGrounded.Value)
             {
                 // todo -- should crouching modify jump force?
-                _velocity = new Vector3(_velocity.x, 0f, _velocity.z);
-                _velocity += Vector3.up * jumpForce;
-
+                _stance.Velocity.y = jumpForce;
                 _animationController.PlaySfx_Jump();
 
                 // remember last time we jumped because we need to prevent snapping to ground for a short time
