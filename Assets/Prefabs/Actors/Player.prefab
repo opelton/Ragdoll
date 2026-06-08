@@ -1163,8 +1163,9 @@ MonoBehaviour:
   crouchingSharpness: 10
   crouchingHeight: 0.9
   standingHeight: 1.8
-  cameraHeightRatio: 0.9
+  cameraHeightOffset: -0.15
   crouchSpeedModifier: 0.5
+  strideLength: 8
   walkSpeedModifier: 0.4
   maxGroundSpeed: 13
   groundTurningSharpness: 15
@@ -1227,10 +1228,9 @@ MonoBehaviour:
   weaponPose_Default: {fileID: 5693599264937656764}
   weaponPose_Aiming: {fileID: 29420179540390383}
   weaponPose_Down: {fileID: 4234807056407393514}
-  weaponBobFrequency: 10
   weaponBobSharpness: 10
-  weaponBob_default: 0.05
-  weaponBob_aiming: 0.02
+  weaponBob_default: {x: 0.05, y: 0.05}
+  weaponBob_aiming: {x: 0.005, y: 0.035}
   recoilSharpness: 50
   maxRecoil: 0.5
   recoilRecoverySharpness: 10
@@ -1239,8 +1239,6 @@ MonoBehaviour:
   footstepSfx: {fileID: 8300000, guid: 19a999a14416ab04aad911c16e41bc36, type: 3}
   jumpSfx: {fileID: 8300000, guid: 871d8a44a06ceb04f8b6eee3ad08d94f, type: 3}
   landSfx: {fileID: 8300000, guid: 6bd5fb9b02c98374b9a8bce45c776869, type: 3}
-  footstepFrequency: 0.25
-  footstepFrequency_Walking: 0.7
 --- !u!114 &4214059493598820480
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1280,6 +1278,8 @@ MonoBehaviour:
   IsAiming: 0
   IsWalking: 0
   IsCrouched: 0
+  Velocity: {x: 0, y: 0, z: 0}
+  StridePhase: 0
   weaponStance: 0
 --- !u!1 &5990631301142876808
 GameObject:

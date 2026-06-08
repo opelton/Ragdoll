@@ -1,6 +1,7 @@
 using UnityEngine;
 using Potato.Core;
 using Potato.Game;
+using System;
 
 namespace Potato.Gameplay
 {
@@ -14,10 +15,9 @@ namespace Potato.Gameplay
         [SerializeField] private Transform weaponPose_Down;
 
         [Header("Grip animation params")]
-        [SerializeField] private float weaponBobFrequency = 10f;
         [SerializeField] private float weaponBobSharpness = 10f;
-        [SerializeField] private float weaponBob_default = 0.05f;
-        [SerializeField] private float weaponBob_aiming = 0.02f;
+        [SerializeField] private Vector2 weaponBob_default = new(0.05f, 0.05f);
+        [SerializeField] private Vector2 weaponBob_aiming = new(0.02f, 0.02f);
         [SerializeField] private float recoilSharpness = 50f;
         [SerializeField] private float maxRecoil = 0.5f;
         [SerializeField] private float recoilRecoverySharpness = 10f;
@@ -29,19 +29,13 @@ namespace Potato.Gameplay
         [SerializeField] private AudioClip jumpSfx;
         [SerializeField] private AudioClip landSfx;
 
-        [Header("Sfx params")]
-        [SerializeField] private float footstepFrequency = .3f;
-        [SerializeField] private float footstepFrequency_walking = .7f;
-
         private PlayerStance _stance;
         private Vector3 _weaponRecoilLocalPos;
         private Vector3 _totalRecoil;
         private Vector3 _weaponLocalPos;
         private Quaternion _weaponLocalRotation;
         private Vector3 _weaponBobLocalPos;
-        private Vector3 _lastPlayerPos;
-        private float _weaponBobFactor;
-        private float _footstepDistanceCounter = 0f;
+        private float _weaponBobMovementScale;
 
         void Start()
         {
@@ -81,30 +75,35 @@ namespace Potato.Gameplay
         {
             if (Time.deltaTime > 0f)
             {
-                // calculate a smoothed weapon bob amount based on how close to our max grounded movement velocity we are
+                // weapon bob magnidue [0,1] from currentSpeed / maxSpeed
                 float characterMovementFactor = 0f;
                 if (_stance.IsGrounded.Value)
-                {
-                    characterMovementFactor = Mathf.Clamp01(
-                        _stance.Velocity.magnitude / adjustedMaxSpeed);
-                }
+                    characterMovementFactor = Mathf.Clamp01(_stance.Velocity.magnitude / adjustedMaxSpeed);
 
-                _weaponBobFactor =
-                    Mathf.Lerp(_weaponBobFactor, characterMovementFactor, weaponBobSharpness * Time.deltaTime);
+                // smooth lerp weapon bob magnitude
+                var sharpness = weaponBobSharpness * Time.deltaTime;
+                _weaponBobMovementScale =
+                    Mathf.Lerp(_weaponBobMovementScale, characterMovementFactor, sharpness);
+
+                // StridePhase [0,1] * 2pi = unit circle rotation
+                float bobPhase = _stance.StridePhase * 2f * Mathf.PI;
+                Vector2 bobAmount = BobMagnitudeFromStance();
 
                 // Calculate vertical and horizontal weapon bob values based on a sine function
-                float bobAmount = _stance.IsAiming ? weaponBob_aiming : weaponBob_default;
-                float frequency = weaponBobFrequency;
-                float hBobValue = Mathf.Sin(Time.time * frequency) * bobAmount * _weaponBobFactor;
-                float vBobValue = Mathf.Cos(Time.time * frequency) * bobAmount * _weaponBobFactor;
-                // float vBobValue = ((Mathf.Sin(Time.time * frequency * 2f) * 0.5f) + 0.5f) * bobAmount * _weaponBobFactor;
+                var hBobValue = Mathf.Sin(bobPhase) * bobAmount.x * _weaponBobMovementScale;
+                var vBobValue = Mathf.Cos(bobPhase) * bobAmount.y * _weaponBobMovementScale;
 
                 // Apply weapon bob
-                _weaponBobLocalPos.x = hBobValue;
-                _weaponBobLocalPos.y = Mathf.Abs(vBobValue);
-
-                _lastPlayerPos = transform.position;
+                _weaponBobLocalPos.x = Mathf.Lerp(_weaponBobLocalPos.x, hBobValue, sharpness);
+                _weaponBobLocalPos.y = Mathf.Lerp(_weaponBobLocalPos.y, Mathf.Abs(vBobValue), sharpness);    // abs creates vertical bounce
             }
+        }
+
+        Vector2 BobMagnitudeFromStance()
+        {
+            return _stance.IsAiming || _stance.IsWalking || _stance.IsCrouched
+                ? weaponBob_aiming
+                : weaponBob_default;
         }
 
         // Updates weapon position and camera FoV for the aiming transition
@@ -174,20 +173,7 @@ namespace Potato.Gameplay
             _totalRecoil = Vector3.ClampMagnitude(_totalRecoil, maxRecoil);
         }
 
-        public void UpdateFootstepSfx(float moveDistance)
-        {
-            // footsteps sound
-            float chosenFootstepSfxFrequency = _stance.IsWalking ? footstepFrequency_walking : footstepFrequency;
-            if (_footstepDistanceCounter >= 1f/ chosenFootstepSfxFrequency)
-            {
-                _footstepDistanceCounter = 0;
-                audioSystem.PlayFirstPersonAudio(footstepSfx);
-            }
-
-            // keep track of distance traveled for footsteps sound
-            _footstepDistanceCounter += moveDistance;
-        }
-
+        public void PlayFootstepSfx() => audioSystem.PlayFirstPersonAudio(footstepSfx);
         public void PlaySfx_Jump() => audioSystem.PlayFirstPersonAudio(jumpSfx);
         public void PlaySfx_Land() => audioSystem.PlayFirstPersonAudio(landSfx);
     }

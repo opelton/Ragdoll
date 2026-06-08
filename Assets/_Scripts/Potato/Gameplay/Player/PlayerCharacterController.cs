@@ -34,6 +34,7 @@ namespace Potato.Gameplay
         [SerializeField] private float standingHeight = 1.8f;
         [SerializeField] private float cameraHeightOffset = -0.15f;
         [SerializeField][Range(0f, 1f)] private float crouchSpeedModifier = .5f;
+        [SerializeField] private float strideLength = 1.5f;
 
         [Header("Movement")]
         [SerializeField] private float walkSpeedModifier = 0.4f;
@@ -67,9 +68,10 @@ namespace Potato.Gameplay
             _controller = GetComponent<CharacterController>();
             _animationController = GetComponent<FirstPersonAnimationController>();
             _stance = GetComponent<PlayerStance>();
-            _stance.IsGrounded.OnValueChanged += CheckFallDamage;
 
             _controller.enableOverlapRecovery = true;
+            _stance.IsGrounded.OnValueChanged += CheckFallDamage;
+
             SetCrouchingState(false, true);
             UpdateCharacterHeight(true);
         }
@@ -129,7 +131,20 @@ namespace Potato.Gameplay
                                  targetVelocity.magnitude;
 
                 _stance.Velocity = Vector3.Lerp(_stance.Velocity, targetVelocity, groundTurningSharpness * dt);
-                _animationController.UpdateFootstepSfx(_stance.Velocity.magnitude * dt);
+                var newStride = _stance.StridePhase + (Time.deltaTime * _stance.Velocity.magnitude / strideLength);
+
+                // according to the math, footstep timings should visually align with vertical weapon bob at t=.5 and 1.0
+                // but for some reason, those timings are off, and .75/.25 sounds correct
+                if(_stance.StridePhase < .75f && newStride >= .75f)
+                    _animationController.PlayFootstepSfx();
+
+                if(_stance.StridePhase < .25f && newStride >= .25f)
+                    _animationController.PlayFootstepSfx();
+
+                if(newStride >= 1f)
+                    newStride -= 1f;
+
+                _stance.StridePhase = newStride;
             }
             // air movement
             else
