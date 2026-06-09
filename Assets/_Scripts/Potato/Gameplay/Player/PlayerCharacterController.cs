@@ -35,6 +35,7 @@ namespace Potato.Gameplay
         [SerializeField] private float cameraHeightOffset = -0.15f;
         [SerializeField][Range(0f, 1f)] private float crouchSpeedModifier = .5f;
         [SerializeField] private float strideLength = 1.5f;
+        [SerializeField] private float[] strideFootstepTimings = new float[2] {.5f, 1f};
 
         [Header("Movement")]
         [SerializeField] private float walkSpeedModifier = 0.4f;
@@ -133,13 +134,11 @@ namespace Potato.Gameplay
                 _stance.Velocity = Vector3.Lerp(_stance.Velocity, targetVelocity, groundTurningSharpness * dt);
                 var newStride = _stance.StridePhase + (Time.deltaTime * _stance.Velocity.magnitude / strideLength);
 
-                // according to the math, footstep timings should visually align with vertical weapon bob at t=.5 and 1.0
-                // but for some reason, those timings are off, and .75/.25 sounds correct
-                if(_stance.StridePhase < .75f && newStride >= .75f)
-                    _animationController.PlayFootstepSfx();
-
-                if(_stance.StridePhase < .25f && newStride >= .25f)
-                    _animationController.PlayFootstepSfx();
+                // check stride phase to determine if any footstep sfx should be played
+                // most important to visually match weapon bob
+                foreach(var strideTiming in strideFootstepTimings)
+                    if(_stance.StridePhase < strideTiming && newStride >= strideTiming)
+                        _animationController.PlayFootstepSfx();
 
                 if(newStride >= 1f)
                     newStride -= 1f;

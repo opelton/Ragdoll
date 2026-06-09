@@ -76,14 +76,9 @@ namespace Potato.Gameplay
             if (Time.deltaTime > 0f)
             {
                 // weapon bob magnidue [0,1] from currentSpeed / maxSpeed
-                float characterMovementFactor = 0f;
+                _weaponBobMovementScale = 0f;
                 if (_stance.IsGrounded.Value)
-                    characterMovementFactor = Mathf.Clamp01(_stance.Velocity.magnitude / adjustedMaxSpeed);
-
-                // smooth lerp weapon bob magnitude
-                var sharpness = weaponBobSharpness * Time.deltaTime;
-                _weaponBobMovementScale =
-                    Mathf.Lerp(_weaponBobMovementScale, characterMovementFactor, sharpness);
+                    _weaponBobMovementScale = Mathf.Clamp01(_stance.Velocity.magnitude / adjustedMaxSpeed);
 
                 // StridePhase [0,1] * 2pi = unit circle rotation
                 float bobPhase = _stance.StridePhase * 2f * Mathf.PI;
@@ -93,7 +88,8 @@ namespace Potato.Gameplay
                 var hBobValue = Mathf.Sin(bobPhase) * bobAmount.x * _weaponBobMovementScale;
                 var vBobValue = Mathf.Cos(bobPhase) * bobAmount.y * _weaponBobMovementScale;
 
-                // Apply weapon bob
+                // Apply weapon bob smoothly
+                var sharpness = weaponBobSharpness * Time.deltaTime;
                 _weaponBobLocalPos.x = Mathf.Lerp(_weaponBobLocalPos.x, hBobValue, sharpness);
                 _weaponBobLocalPos.y = Mathf.Lerp(_weaponBobLocalPos.y, Mathf.Abs(vBobValue), sharpness);    // abs creates vertical bounce
             }

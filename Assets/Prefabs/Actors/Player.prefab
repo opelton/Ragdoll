@@ -1166,6 +1166,9 @@ MonoBehaviour:
   cameraHeightOffset: -0.15
   crouchSpeedModifier: 0.5
   strideLength: 8
+  strideFootstepTimings:
+  - 0.2
+  - 0.7
   walkSpeedModifier: 0.4
   maxGroundSpeed: 13
   groundTurningSharpness: 15
