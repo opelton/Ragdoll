@@ -105,7 +105,7 @@ namespace Potato.Gameplay
         // Updates weapon position and camera FoV for the aiming transition
         public void LateUpdateWeaponAiming(WeaponController activeWeapon, float dt)
         {
-            if (_stance.weaponStance == WeaponStance.Up)
+            if (_stance.WeaponPose.Value == WeaponStance.Up)
             {
                 if (_stance.IsAiming && activeWeapon)
                 {
@@ -134,13 +134,13 @@ namespace Potato.Gameplay
         }
         
         // Updates the animated transition of switching weapons
-        public void UpdateWeaponSwitchingAnimation(WeaponController activeWeapon, float switchingTimeFactor, bool stowing, bool drawing, float dt)
+        public void UpdateWeaponSwitchingAnimation(WeaponController activeWeapon, float switchingTimeFactor, float dt)
         {
             if(activeWeapon == null)
                 return;
 
             // Handle moving the weapon socket position for the animated weapon switching
-            if (stowing)
+            if (_stance.WeaponPose.Value == WeaponStance.Stowing)
             {
                 _weaponLocalPos = Vector3.Lerp(weaponPose_Default.localPosition,
                     weaponPose_Down.localPosition, switchingTimeFactor);
@@ -149,7 +149,7 @@ namespace Potato.Gameplay
                         weaponPose_Down.transform.localRotation,
                         aimAnimationSpeed * dt);
             }
-            else if (drawing)
+            else if (_stance.WeaponPose.Value == WeaponStance.Drawing)
             {
                 _weaponLocalPos = Vector3.Lerp(weaponPose_Down.localPosition,
                     weaponPose_Default.localPosition, switchingTimeFactor);

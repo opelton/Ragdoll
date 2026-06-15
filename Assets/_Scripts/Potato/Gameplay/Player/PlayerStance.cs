@@ -14,7 +14,6 @@ namespace Potato.Gameplay
 
         [HideInInspector] public Bindable<float> FOVModifier = new();
         [HideInInspector] public Bindable<bool> IsGrounded = new();
-
-        [HideInInspector] public WeaponStance weaponStance = WeaponStance.Up;
+        [HideInInspector] public Bindable<WeaponStance> WeaponPose = new(WeaponStance.Up);
     }
 }

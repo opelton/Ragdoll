@@ -37,7 +37,7 @@ namespace Potato.Gameplay
         public PlayerCamerasController AimCams => playerCams;
 
         // ---
-        private WeaponController[] _weaponSlots = new WeaponController[9]; // 9 available weapon slots
+        private WeaponController[] _weaponSlots = new WeaponController[2];
         private FirstPersonAnimationController _animationController;
         private PlayerStance _stance;
         private float _weaponSwitchStartTime;
@@ -50,7 +50,7 @@ namespace Potato.Gameplay
             _stance = GetComponent<PlayerStance>();
 
             ActiveWeaponIndex = -1;
-            _stance.weaponStance = WeaponStance.Down;
+            _stance.WeaponPose.Value = WeaponStance.Down;
 
             // Add starting weapons
             foreach (var weapon in StartingWeapons)
@@ -66,7 +66,7 @@ namespace Potato.Gameplay
 
             if (activeWeapon != null)
             {
-                if (_stance.weaponStance == WeaponStance.Up)
+                if (_stance.WeaponPose.Value == WeaponStance.Up)
                 {
                     // handle aiming down sights
                     _stance.IsAiming = fire2Input.ButtonDown;
@@ -107,7 +107,7 @@ namespace Potato.Gameplay
                 // Handle case of switching to a valid weapon for the first time (simply put it up without putting anything down first)
                 if (GetActiveWeapon() == null)
                 {
-                    _stance.weaponStance = WeaponStance.Drawing;
+                    _stance.WeaponPose.Value = WeaponStance.Drawing;
                     ActiveWeaponIndex = _nextWeaponIndex;
 
                     WeaponController newWeapon = GetWeaponAtSlotIndex(_nextWeaponIndex);
@@ -116,7 +116,7 @@ namespace Potato.Gameplay
                 // otherwise, remember we are putting down our current weapon for switching to the next one
                 else
                 {
-                    _stance.weaponStance = WeaponStance.Stowing;
+                    _stance.WeaponPose.Value = WeaponStance.Stowing;
                 }
             }
         }
@@ -131,7 +131,7 @@ namespace Potato.Gameplay
             // Handle transiting to new switch state
             if (WeaponSwitchTimingFactor >= 1f)
             {
-                if (_stance.weaponStance == WeaponStance.Stowing)
+                if (_stance.WeaponPose.Value == WeaponStance.Stowing)
                 {
                     // Deactivate old weapon
                     if (activeWeapon != null)
@@ -147,21 +147,16 @@ namespace Potato.Gameplay
                     if (activeWeapon)
                     {
                         _weaponSwitchStartTime = Time.time;
-                        _stance.weaponStance = WeaponStance.Drawing;
+                        _stance.WeaponPose.Value = WeaponStance.Drawing;
                     }
                     else
-                        _stance.weaponStance = WeaponStance.Down;
+                        _stance.WeaponPose.Value = WeaponStance.Down;
                 }
-                else if (_stance.weaponStance == WeaponStance.Drawing)
-                    _stance.weaponStance = WeaponStance.Up;
+                else if (_stance.WeaponPose.Value == WeaponStance.Drawing)
+                    _stance.WeaponPose.Value = WeaponStance.Up;
             }
 
-            _animationController.UpdateWeaponSwitchingAnimation(
-                activeWeapon,
-                WeaponSwitchTimingFactor,
-                _stance.weaponStance == WeaponStance.Stowing,
-                _stance.weaponStance == WeaponStance.Drawing,
-                dt);
+            _animationController.UpdateWeaponSwitchingAnimation(activeWeapon, WeaponSwitchTimingFactor, dt);
         }
 
         // Adds a weapon to our inventory
