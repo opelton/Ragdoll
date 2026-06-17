@@ -117,6 +117,8 @@ namespace Potato.Gameplay
             float speedModifier = _stance.IsWalking ? walkSpeedModifier : 1f;
             Vector3 worldspaceMoveInput = transform.TransformVector(moveInput.Value.x, 0f, moveInput.Value.y);
 
+            _stance.AdjustedMaxSpeed = maxGroundSpeed * speedModifier;
+
             // normalize diagonal speed (wouldn't work if controllers were supported)
             if (worldspaceMoveInput.x != 0 && worldspaceMoveInput.z != 0)
                 worldspaceMoveInput.Normalize();
@@ -124,7 +126,7 @@ namespace Potato.Gameplay
             // movement
             if (_stance.IsGrounded.Value)
             {
-                Vector3 targetVelocity = maxGroundSpeed * speedModifier * worldspaceMoveInput;
+                Vector3 targetVelocity = _stance.AdjustedMaxSpeed * worldspaceMoveInput;
 
                 if (_stance.IsCrouched)
                     targetVelocity *= crouchSpeedModifier;
@@ -153,7 +155,8 @@ namespace Potato.Gameplay
 
                 // limit air speed to a maximum, but only horizontally
                 float verticalVelocity = _stance.Velocity.y;
-                Vector3 horizontalVelocity = Vector3.ProjectOnPlane(_stance.Velocity, Vector3.up);
+                Vector3 horizontalVelocity = new(_stance.Velocity.x, 0f, _stance.Velocity.z);
+
                 horizontalVelocity = Vector3.ClampMagnitude(horizontalVelocity, maxAirSpeed * speedModifier);
                 _stance.Velocity = horizontalVelocity + (Vector3.up * verticalVelocity);
 
@@ -174,8 +177,6 @@ namespace Potato.Gameplay
             {
                 _stance.Velocity = Vector3.ProjectOnPlane(_stance.Velocity, hit.normal);
             }
-
-            _animationController.UpdateWeaponBob(maxGroundSpeed * walkSpeedModifier);
         }
 
         public void TryJumping()

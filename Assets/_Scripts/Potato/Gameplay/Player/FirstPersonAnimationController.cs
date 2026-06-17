@@ -46,7 +46,9 @@ namespace Potato.Gameplay
         // todo -- only update these when they're actually happening, instead of always checking if they are
         void LateUpdate()
         {
-            UpdateWeaponRecoil(Time.deltaTime);
+            float dt = Time.deltaTime;
+            UpdateWeaponRecoil(dt);
+            UpdateWeaponBob(dt);
 
             // Set final weapon socket position based on all the combined animation influences
             weaponRoot.SetLocalPositionAndRotation(
@@ -71,14 +73,14 @@ namespace Potato.Gameplay
             }
         }
 
-        public void UpdateWeaponBob(float adjustedMaxSpeed)
+        void UpdateWeaponBob(float dt)
         {
             if (Time.deltaTime > 0f)
             {
                 // weapon bob magnidue [0,1] from currentSpeed / maxSpeed
                 _weaponBobMovementScale = 0f;
                 if (_stance.IsGrounded.Value)
-                    _weaponBobMovementScale = Mathf.Clamp01(_stance.Velocity.magnitude / adjustedMaxSpeed);
+                    _weaponBobMovementScale = Mathf.Clamp01(_stance.Velocity.magnitude / _stance.AdjustedMaxSpeed);
 
                 // StridePhase [0,1] * 2pi = unit circle rotation
                 float bobPhase = _stance.StridePhase * 2f * Mathf.PI;
@@ -89,7 +91,7 @@ namespace Potato.Gameplay
                 var vBobValue = Mathf.Cos(bobPhase) * bobAmount.y * _weaponBobMovementScale;
 
                 // Apply weapon bob smoothly
-                var sharpness = weaponBobSharpness * Time.deltaTime;
+                var sharpness = weaponBobSharpness * dt;
                 _weaponBobLocalPos.x = Mathf.Lerp(_weaponBobLocalPos.x, hBobValue, sharpness);
                 _weaponBobLocalPos.y = Mathf.Lerp(_weaponBobLocalPos.y, Mathf.Abs(vBobValue), sharpness);    // abs creates vertical bounce
             }
