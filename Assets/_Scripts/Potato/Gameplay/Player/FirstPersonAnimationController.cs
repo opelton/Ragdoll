@@ -1,7 +1,5 @@
 using UnityEngine;
-using Potato.Core;
 using Potato.Game;
-using System;
 
 namespace Potato.Gameplay
 {
@@ -29,6 +27,11 @@ namespace Potato.Gameplay
         [SerializeField] private AudioClip jumpSfx;
         [SerializeField] private AudioClip landSfx;
 
+        [Header("Weapon Sway")]
+        [SerializeField] private InputFloatAxis lookInput;
+        [SerializeField] private float swaySmoothing = 4f;
+        [SerializeField] private Vector2 swayMultiplier = new(1f, 1f);
+
         private PlayerStance _stance;
         private Vector3 _weaponRecoilLocalPos;
         private Vector3 _totalRecoil;
@@ -36,6 +39,7 @@ namespace Potato.Gameplay
         private Quaternion _weaponLocalRotation;
         private Vector3 _weaponBobLocalPos;
         private float _weaponBobMovementScale;
+        private Quaternion _currentWeaponSway = Quaternion.identity;
 
         void Start()
         {
@@ -49,11 +53,12 @@ namespace Potato.Gameplay
             float dt = Time.deltaTime;
             UpdateWeaponRecoil(dt);
             UpdateWeaponBob(dt);
+            UpdateWeaponSway(dt);
 
             // Set final weapon socket position based on all the combined animation influences
             weaponRoot.SetLocalPositionAndRotation(
                 _weaponLocalPos + _weaponBobLocalPos + _weaponRecoilLocalPos,
-                _weaponLocalRotation);
+                _weaponLocalRotation * _currentWeaponSway);
         }
 
         void UpdateWeaponRecoil(float dt)
@@ -95,6 +100,13 @@ namespace Potato.Gameplay
                 _weaponBobLocalPos.x = Mathf.Lerp(_weaponBobLocalPos.x, hBobValue, sharpness);
                 _weaponBobLocalPos.y = Mathf.Lerp(_weaponBobLocalPos.y, Mathf.Abs(vBobValue), sharpness);    // abs creates vertical bounce
             }
+        }
+
+        void UpdateWeaponSway(float dt)
+        {
+            Quaternion xSway = Quaternion.AngleAxis(-lookInput.Value.x * swayMultiplier.x, Vector3.up);
+            Quaternion ySway = Quaternion.AngleAxis(-lookInput.Value.y * swayMultiplier.y, Vector3.right);
+            _currentWeaponSway = Quaternion.Lerp(_currentWeaponSway, xSway * ySway, swaySmoothing * dt);
         }
 
         Vector2 BobMagnitudeFromStance()

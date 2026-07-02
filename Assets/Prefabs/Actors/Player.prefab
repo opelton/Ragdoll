@@ -1242,6 +1242,9 @@ MonoBehaviour:
   footstepSfx: {fileID: 8300000, guid: 19a999a14416ab04aad911c16e41bc36, type: 3}
   jumpSfx: {fileID: 8300000, guid: 871d8a44a06ceb04f8b6eee3ad08d94f, type: 3}
   landSfx: {fileID: 8300000, guid: 6bd5fb9b02c98374b9a8bce45c776869, type: 3}
+  lookInput: {fileID: 11400000, guid: 99a182acbad9d9a40afeaa9c4bbc0e06, type: 2}
+  swaySmoothing: 6
+  swayMultiplier: {x: 7, y: 10}
 --- !u!114 &4214059493598820480
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1283,7 +1286,7 @@ MonoBehaviour:
   IsCrouched: 0
   Velocity: {x: 0, y: 0, z: 0}
   StridePhase: 0
-  weaponStance: 0
+  AdjustedMaxSpeed: 0
 --- !u!1 &5990631301142876808
 GameObject:
   m_ObjectHideFlags: 0

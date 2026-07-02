@@ -8,6 +8,8 @@ namespace Potato.Gameplay
         [Header("Base animator params")]
         [SerializeField] private DebrisSystem junkSpawner;
         [SerializeField] protected AudioSystem audioSystem;
+        [SerializeField] protected GameObject weaponRootObj;
+        [SerializeField] protected Transform weaponMeshTransform;
         [SerializeField] protected Transform weaponMuzzle;
         [SerializeField] protected GameObject muzzleFlashPrefab;
         [SerializeField] protected bool unparentMuzzleFlash;
@@ -29,6 +31,7 @@ namespace Potato.Gameplay
 
         public Vector3 MuzzleWorldVelocity { get; private set; }
         public Vector3 EjectorWorldVelocity { get; private set; }
+        public Transform WeaponMeshTransform => weaponMeshTransform;
 
         protected Vector3 _lastMuzzlePosition;
         protected Vector3 _lastEjectorPosition;
@@ -51,9 +54,12 @@ namespace Potato.Gameplay
             }
         }
 
-        public virtual void AnimateShowWeapon()
+        public virtual void AnimateShowWeapon(bool show)
         {
-            audioSystem.PlayFirstPersonWeaponAudio(changeWeaponSfx);
+            weaponRootObj.SetActive(show);
+
+            if(show)
+                audioSystem.PlayFirstPersonWeaponAudio(changeWeaponSfx);
         }
 
         public virtual void AnimateShellEject()

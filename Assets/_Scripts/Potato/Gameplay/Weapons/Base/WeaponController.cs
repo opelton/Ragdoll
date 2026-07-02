@@ -17,8 +17,6 @@ namespace Potato.Gameplay
 
         [SerializeField] protected RangedAttackSystem rats;
         [SerializeField] protected WeaponAnimator weaponAnimator;
-        [SerializeField] protected GameObject weaponRoot;
-        [SerializeField] protected Transform weaponMeshTransform;
 
         [Header("WeaponInfo")]
         public string WeaponDisplayName;
@@ -52,7 +50,7 @@ namespace Potato.Gameplay
         public Vector3 MuzzleWorldVelocity => weaponAnimator.MuzzleWorldVelocity;
         public float RecoilForce => recoilForce;
         public Vector3 AimOffset => aimOffset;
-        public Transform WeaponMeshTransform => weaponMeshTransform;
+        public Transform WeaponMeshTransform => weaponAnimator.WeaponMeshTransform;
         public float AimZoomRatio => aimZoomRatio;
         public bool IsReloading { get; protected set; } = false;
         public bool IsAiming { get; protected set; } = false;
@@ -64,13 +62,7 @@ namespace Potato.Gameplay
             _hitBuffer = new HitInfo[bulletsPerShot];
         }
 
-        public virtual void ShowWeapon(bool show)
-        {
-            weaponRoot.SetActive(show);
-
-            if(show)
-                weaponAnimator.AnimateShowWeapon();
-        }
+        public virtual void ShowWeapon(bool show) => weaponAnimator.AnimateShowWeapon(show);
 
         public abstract bool HandleWeaponInputs(bool fire1Down, bool fire1Held, bool reloadDown, bool isAiming);
 
