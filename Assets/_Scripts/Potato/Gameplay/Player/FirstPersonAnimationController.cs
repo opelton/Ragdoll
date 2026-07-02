@@ -104,8 +104,14 @@ namespace Potato.Gameplay
 
         void UpdateWeaponSway(float dt)
         {
-            Quaternion xSway = Quaternion.AngleAxis(-lookInput.Value.x * swayMultiplier.x, Vector3.up);
-            Quaternion ySway = Quaternion.AngleAxis(-lookInput.Value.y * swayMultiplier.y, Vector3.right);
+            Vector2 swayMod = swayMultiplier;
+
+            // while aiming, sway is smaller and leads movement instead of trailing it
+            if(_stance.IsAiming)
+                swayMod *= -.5f;    // todo -- hardcoded
+
+            Quaternion xSway = Quaternion.AngleAxis(-lookInput.Value.x * swayMod.x, Vector3.up);
+            Quaternion ySway = Quaternion.AngleAxis(-lookInput.Value.y * swayMod.y, Vector3.right);
             _currentWeaponSway = Quaternion.Lerp(_currentWeaponSway, xSway * ySway, swaySmoothing * dt);
         }
 
