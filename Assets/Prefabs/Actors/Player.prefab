@@ -1244,7 +1244,7 @@ MonoBehaviour:
   landSfx: {fileID: 8300000, guid: 6bd5fb9b02c98374b9a8bce45c776869, type: 3}
   lookInput: {fileID: 11400000, guid: 99a182acbad9d9a40afeaa9c4bbc0e06, type: 2}
   swaySmoothing: 6
-  swayMultiplier: {x: 5, y: 7}
+  swayMultiplier: {x: 1, y: 1.5}
 --- !u!114 &4214059493598820480
 MonoBehaviour:
   m_ObjectHideFlags: 0
