@@ -26,6 +26,7 @@ namespace Potato.Gameplay
         [SerializeField] private TracerProjectile tracerPrefab;
         [SerializeField] private GameObject vfx_bulletImpact_wall;
         [SerializeField] private GameObject vfx_bulletImpact_zombie;
+        [SerializeField] private GameObject decal_bulletHole;
         [SerializeField] private float tracerSpeed = 300f;
         [SerializeField] private float pointBlankThreshold = 2f;
 
@@ -114,6 +115,12 @@ namespace Potato.Gameplay
                         GameObject impactFx = Instantiate(
                             hit.StruckEnemy ? vfx_bulletImpact_zombie : vfx_bulletImpact_wall,
                             hit.Point, Quaternion.LookRotation(hit.Normal));
+
+                        Instantiate(
+                            decal_bulletHole,
+                            hit.Point + (.025f * hit.Normal),
+                            Quaternion.LookRotation(-hit.Normal) * Quaternion.Euler(0f, 0f, Random.Range(0, 180f)),
+                            hit.StruckObject.transform);
 
                         Destroy(impactFx, 1f);
                     }

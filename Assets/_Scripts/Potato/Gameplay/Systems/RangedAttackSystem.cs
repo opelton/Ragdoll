@@ -10,6 +10,7 @@ namespace Potato.Gameplay
     {
         public Vector3 Point;
         public Vector3 Normal;
+        public GameObject StruckObject;
         public bool StruckEnemy;
         public bool StruckSurface;
     }
@@ -88,6 +89,7 @@ namespace Potato.Gameplay
             for (int j = 0; j < hitCount; ++j)
             {
                 var hit = _hitBuffer[j];
+                info.StruckObject = hit.collider.gameObject;
 
                 // ignore self-hit
                 if (hit.collider.gameObject == owner.gameObject)

@@ -2036,8 +2036,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.3, y: 0.26795152, z: 0.18}
-  m_Center: {x: 0.000000029802926, y: 0.13397568, z: 0.030000027}
+  m_Size: {x: 0.3, y: 0.2679515, z: 0.22274886}
+  m_Center: {x: 0.000000029803022, y: 0.13397568, z: 0.0513745}
 --- !u!54 &7514186215321315242
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3267,22 +3267,6 @@ MonoBehaviour:
   animator: {fileID: 7764715970847570456}
   neutralLayer: 10
   ragdollLayer: 12
-  limbs:
-  - {fileID: 6556352539626040515}
-  - {fileID: 8137936112780518730}
-  - {fileID: 3602930564868433250}
-  - {fileID: 4075329261593609186}
-  - {fileID: 551938362962365814}
-  - {fileID: 175527704448900628}
-  - {fileID: 3519072610740515986}
-  - {fileID: 6040246555476046013}
-  - {fileID: 559379275912084516}
-  - {fileID: 7403638019649552213}
-  - {fileID: 2440369263850519043}
-  - {fileID: 218543600381834795}
-  - {fileID: 8231837413041361685}
-  - {fileID: 6856334371164012123}
-  - {fileID: 3442479692631508608}
 --- !u!1 &7466059846378764186
 GameObject:
   m_ObjectHideFlags: 0

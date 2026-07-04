@@ -124,11 +124,9 @@ MonoBehaviour:
   tracerPrefab: {fileID: 4451441854257555881, guid: d7d53bd678307d6468087a44594e6975, type: 3}
   vfx_bulletImpact_wall: {fileID: 6523915449405344066, guid: 2779e65c1e5662c4f83bd04d654b1ea4, type: 3}
   vfx_bulletImpact_zombie: {fileID: 6523915449405344066, guid: b07222cd6f7cfc44ca41d29e19934206, type: 3}
+  decal_bulletHole: {fileID: 38139253064847935, guid: d5bcc0de539e0674997453feac968036, type: 3}
   tracerSpeed: 300
   pointBlankThreshold: 1.25
-  lookInput: {fileID: 11400000, guid: 075cf99767d5472478095234510951a8, type: 2}
-  swaySmoothing: 8
-  swayMultiplier: {x: 4, y: 4}
   forendBone: {fileID: 5721818058870618333}
   triggerBone: {fileID: 1375567587646462410}
   forendPose_Front: 1.456282
