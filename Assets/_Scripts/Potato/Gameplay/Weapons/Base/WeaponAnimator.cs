@@ -5,9 +5,12 @@ namespace Potato.Gameplay
 {
     public class WeaponAnimator : MonoBehaviour
     {
-        [Header("Base animator params")]
+        [Header("Systems")]
         [SerializeField] private DebrisSystem junkSpawner;
         [SerializeField] protected AudioSystem audioSystem;
+        [SerializeField] protected DecalSystem decalSystem;
+
+        [Header("Base animator params")]
         [SerializeField] protected GameObject weaponRootObj;
         [SerializeField] protected Transform weaponMeshTransform;
         [SerializeField] protected Transform weaponMuzzle;
@@ -22,8 +25,9 @@ namespace Potato.Gameplay
         [SerializeField] private float shellEjectionForce = 2f;
         [SerializeField] private float shellEjectionSpin = 15f;
 
-        [Header("Bullet Tracers")]
+        [Header("Bullet Fx")]
         [SerializeField] private TracerProjectile tracerPrefab;
+        [SerializeField] private GameObject[] bulletImpactDecals;
         [SerializeField] private GameObject vfx_bulletImpact_wall;
         [SerializeField] private GameObject vfx_bulletImpact_zombie;
         [SerializeField] private GameObject decal_bulletHole;
@@ -39,6 +43,9 @@ namespace Potato.Gameplay
 
         protected virtual void Awake()
         {
+            foreach(var decal in bulletImpactDecals)
+                decalSystem.RegisterDecal(decal);
+
             _lastMuzzlePosition = weaponMuzzle.position;
             _lastEjectorPosition = shellEjectionPort.position;
         }
@@ -115,17 +122,26 @@ namespace Potato.Gameplay
                         GameObject impactFx = Instantiate(
                             hit.StruckEnemy ? vfx_bulletImpact_zombie : vfx_bulletImpact_wall,
                             hit.Point, Quaternion.LookRotation(hit.Normal));
-
-                        Instantiate(
-                            decal_bulletHole,
-                            hit.Point + (.025f * hit.Normal),
-                            Quaternion.LookRotation(-hit.Normal) * Quaternion.Euler(0f, 0f, Random.Range(0, 180f)),
-                            hit.StruckObject.transform);
-
                         Destroy(impactFx, 1f);
+
+                        decalSystem.CreateBulletHoleDecal(
+                            bulletImpactDecals[RandomDecalIndex()],
+                            hit.Point,
+                            hit.Normal,
+                            hit.StruckObject.transform);
                     }
                 }
             }
+        }
+
+        int RandomDecalIndex()
+        {
+            if(bulletImpactDecals.Length == 0)
+                return -1;
+            else if(bulletImpactDecals.Length == 1)
+                return 0;
+
+            return Random.Range(0, bulletImpactDecals.Length);
         }
     }
 }
