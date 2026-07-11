@@ -3202,7 +3202,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b92e5ec9a5c5d346b5bb1f6c1557b4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poolSize: 50
+  poolSize: 256
 --- !u!114 &971613197
 MonoBehaviour:
   m_ObjectHideFlags: 0

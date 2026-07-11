@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2441733980048070595}
+  - component: {fileID: 9194803542397269944}
   m_Layer: 0
   m_Name: BulletHoleA
   m_TagString: Untagged
@@ -32,6 +33,44 @@ Transform:
   - {fileID: 9208339779748587397}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9194803542397269944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 38139253064847935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f502fac14b55eb45b22d4ddcd624f69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  coolingTime: 2
+  coolingCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -3.2749484
+      outSlope: -3.2749484
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.025108218
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  decalProjector: {fileID: 2278469613489935880}
 --- !u!1 &7946283197798622483
 GameObject:
   m_ObjectHideFlags: 0
