@@ -41,6 +41,15 @@ namespace Potato.Gameplay
             }
         }
 
+        // returns zero if no target
+        public Vector3 VectorToTarget()
+        {
+            if(_detectedTarget == null)
+                return Vector3.zero;
+
+            return _detectedTarget.transform.position - transform.position;
+        }
+
         private PlayerCharacterController _detectedTarget = null;
         private float _searchTimer = 0;
 

@@ -36,12 +36,12 @@ namespace Potato.Gameplay
                 limb.SetRagdoll(enabled);
         }
 
-        public void OnDetectedPlayer()
+        public void OnPlayerDetected()
         {
             onDetectedVfx.Play();
         }
 
-        public void OnLostPlayer()
+        public void OnPlayerLost()
         {
             onDetectedVfx.Clear();
             onDetectedVfx.Stop();

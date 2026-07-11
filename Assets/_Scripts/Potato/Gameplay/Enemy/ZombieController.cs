@@ -5,11 +5,11 @@ using Potato.Core;
 namespace Potato.Gameplay
 {
     [RequireComponent(typeof(NavMeshAgent), typeof(ZombieAnimator), typeof(PlayerDetector))]
+    [RequireComponent(typeof(ZombieAttackController))]
     public class ZombieController : MonoBehaviour
     {
         // public enum AiState { Idle, Chasing, Attacking }
         // public enum MotorState { Upright, Downed }
-        //[SerializeField] private PlayerCharacterControllerReference playerRef;
         [SerializeField] private float turnSpeed = 5f;
         [SerializeField] private float followRange = 0.5f;
 
@@ -21,6 +21,7 @@ namespace Potato.Gameplay
         private NavMeshAgent _nav;
         private ZombieAnimator _animator;
         private PlayerDetector _zombieSenses;
+        private ZombieAttackController _attackController;
         private Target[] _hitboxes;
         private int _startingLayer;
 
@@ -29,12 +30,13 @@ namespace Potato.Gameplay
             _nav = GetComponent<NavMeshAgent>();
             _animator = GetComponent<ZombieAnimator>();
             _zombieSenses = GetComponent<PlayerDetector>();
+            _attackController = GetComponent<ZombieAttackController>();
             _hitboxes = GetComponentsInChildren<Target>();
             _animator.OnLimbAttacked += OnLimbsAttacked;
             _startingLayer = gameObject.layer;
 
-            _zombieSenses.onDetectedTarget += _animator.OnDetectedPlayer;
-            _zombieSenses.onLostTarget += _animator.OnLostPlayer;
+            _zombieSenses.onDetectedTarget += HandlePlayerDetected;
+            _zombieSenses.onLostTarget += HandlePlayerLost;
 
             ToggleHitboxes(true);
         }
@@ -50,7 +52,7 @@ namespace Potato.Gameplay
             if (_zombieSenses.DetectedTarget != null)
             {
                 // move to player
-                Vector3 targetDir = _zombieSenses.DetectedTarget.transform.position - transform.position;
+                Vector3 targetDir = _zombieSenses.VectorToTarget();
 
                 if (targetDir.sqrMagnitude >= followRange * followRange)
                     _nav.SetDestination(_zombieSenses.DetectedTarget.transform.position);
@@ -61,7 +63,19 @@ namespace Potato.Gameplay
             }
 
             // [0f, 1f]
-            _animator.SetZombieSpeed(_nav.velocity.sqrMagnitude / (_nav.speed * _nav.speed));
+            _animator.SetZombieSpeed(_nav.velocity.magnitude / _nav.speed);
+        }
+
+        void HandlePlayerDetected()
+        {
+            _animator.OnPlayerDetected();
+            _attackController.OnPlayerDetected();
+        }
+
+        void HandlePlayerLost()
+        {
+            _animator.OnPlayerLost();
+            _attackController.OnPlayerLost();
         }
 
         void OnLimbsAttacked()
@@ -75,10 +89,10 @@ namespace Potato.Gameplay
         {
             IsAlive = false;
             _nav.isStopped = true;
-            _animator.OnLostPlayer();
+            HandlePlayerLost();
 
-            _zombieSenses.onDetectedTarget -= _animator.OnDetectedPlayer;
-            _zombieSenses.onLostTarget -= _animator.OnLostPlayer;
+            _zombieSenses.onDetectedTarget -= HandlePlayerDetected;
+            _zombieSenses.onLostTarget -= HandlePlayerLost;
         }
 
         void ToggleHitboxes(bool alive)
