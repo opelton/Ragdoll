@@ -5,13 +5,13 @@ namespace Potato.Gameplay
 {
     public class Health : MonoBehaviour
     {
-        [SerializeField] protected float maxHp;
-        public UnityEvent<float> OnHealthLostEvent;
-        public UnityEvent<float> OnHealthGainedEvent;
+        [SerializeField] protected int maxHp;
+        public UnityEvent<int> OnHealthLostEvent;
+        public UnityEvent<int> OnHealthGainedEvent;
         public UnityEvent<AttackInfo> OnAttackedEvent;
         public UnityEvent OnKilledEvent;
 
-        public float CurrentHp { get; protected set; }
+        public int CurrentHp { get; protected set; }
         public bool IsAlive => CurrentHp > 0;
 
         protected virtual void Start()
@@ -25,7 +25,7 @@ namespace Potato.Gameplay
             OnAttackedEvent?.Invoke(data);
         }
 
-        public virtual void InflictDamage(float damage)
+        public virtual void InflictDamage(int damage)
         {
             CurrentHp -= damage;
             OnHealthLostEvent?.Invoke(damage);
@@ -33,7 +33,7 @@ namespace Potato.Gameplay
                 HandleDeath();
         }
 
-        public virtual void Heal(float healing)
+        public virtual void Heal(int healing)
         {
             var oldHp = CurrentHp;
             CurrentHp = Mathf.Min(CurrentHp + healing, maxHp);

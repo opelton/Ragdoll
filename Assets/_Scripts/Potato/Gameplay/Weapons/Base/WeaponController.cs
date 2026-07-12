@@ -28,7 +28,7 @@ namespace Potato.Gameplay
         [SerializeField] protected float shotCooldown = 0.5f;
         [SerializeField] protected Vector2 bulletSpreadAngle = Vector2.zero;
         [SerializeField] protected int bulletsPerShot = 1;
-        [SerializeField] protected float bulletDamage = 1f;
+        [SerializeField] protected int bulletDamage = 1;
         [SerializeField][Range(0f, 2f)] protected float recoilForce = 1;
         [SerializeField][Range(0f, 1f)] protected float aimZoomRatio = 1f;
         [SerializeField][Range(0f, 1f)] protected float aimSpreadRatio = .5f;

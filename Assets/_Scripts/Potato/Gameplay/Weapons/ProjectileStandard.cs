@@ -19,7 +19,7 @@ namespace Potato.Gameplay
         public bool inheritWeaponVelocity = false;
 
         [Header("damage")]
-        public float damage = 40f;
+        public int damage = 40;
         public DamageArea damageArea;
         public LayerMask hitLayers;
 

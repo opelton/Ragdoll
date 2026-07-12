@@ -43,7 +43,7 @@ namespace Potato.Gameplay
             return hitCount;
         }
 
-        public int DoBulletAttacks(WeaponController owner, float damage, float spread, int count, ref HitInfo[] hits)
+        public int DoBulletAttacks(WeaponController owner, int damage, float spread, int count, ref HitInfo[] hits)
         {
             int i = 0;
             while(i < count)
@@ -52,7 +52,7 @@ namespace Potato.Gameplay
             return i;
         }
 
-        public int DoBulletAttacks(WeaponController owner, float damage, float xSpread, float ySpread, int count, ref HitInfo[] hits)
+        public int DoBulletAttacks(WeaponController owner, int damage, float xSpread, float ySpread, int count, ref HitInfo[] hits)
         {
             int i = 0;
             while(i < count)
@@ -61,19 +61,19 @@ namespace Potato.Gameplay
             return i;
         }
 
-        public HitInfo DoBulletAttack(WeaponController owner, float damage, float spread)
+        public HitInfo DoBulletAttack(WeaponController owner, int damage, float spread)
         {
             Vector3 shotDirection = ApplyCircleSpread(owner.Owner.AimCams.AimTransform, spread);
             return ProcessShot(owner, shotDirection, damage);
         }
 
-        public HitInfo DoBulletAttack(WeaponController owner, float damage, float xSpread, float ySpread)
+        public HitInfo DoBulletAttack(WeaponController owner, int damage, float xSpread, float ySpread)
         {
             Vector3 shotDirection = ApplyBoxSpread(owner.Owner.AimCams.AimTransform, xSpread, ySpread);
             return ProcessShot(owner, shotDirection, damage);
         }
 
-        HitInfo ProcessShot(WeaponController owner, Vector3 adjustedShotDirection, float damage)
+        HitInfo ProcessShot(WeaponController owner, Vector3 adjustedShotDirection, int damage)
         {
             HitInfo info = new()
             {

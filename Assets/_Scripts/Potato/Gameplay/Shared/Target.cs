@@ -5,12 +5,12 @@ namespace Potato.Gameplay
 {
     public class AttackInfo
     {
-        public float Damage;
+        public int Damage;
         public GameObject DamageSource;
         public Vector3 HitPoint;
         public Vector3 HitDirection;
 
-        public AttackInfo(float damage, GameObject damageSource, Vector3 hitPoint, Vector3 hitDirection)
+        public AttackInfo(int damage, GameObject damageSource, Vector3 hitPoint, Vector3 hitDirection)
         {
             Damage = damage;
             DamageSource = damageSource;

@@ -35,6 +35,7 @@ Transform:
   - {fileID: 6197250215360902188}
   - {fileID: 8940080519784274938}
   - {fileID: 8038956896207867447}
+  - {fileID: 3135004276906512326}
   m_Father: {fileID: 6657562907950387057}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &6934066893293710498
@@ -304,6 +305,76 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!1 &1954513757586858169
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3135004276906512326}
+  - component: {fileID: 7599790669128359623}
+  - component: {fileID: 5551173279473332243}
+  m_Layer: 11
+  m_Name: PlayerHurtbox
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3135004276906512326
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1954513757586858169}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2227685919118097372}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &7599790669128359623
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1954513757586858169}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.33
+  m_Center: {x: 0, y: -0.05, z: 0}
+--- !u!114 &5551173279473332243
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1954513757586858169}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59a7908b715d13649963dd6942152fad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TeamId: 1
+  OnDamaged:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &2177198616007505734
 GameObject:
   m_ObjectHideFlags: 0
@@ -1077,6 +1148,7 @@ GameObject:
   - component: {fileID: 8377179856262897326}
   - component: {fileID: 4214059493598820480}
   - component: {fileID: 2513659228925421603}
+  - component: {fileID: 287596665299939420}
   m_Layer: 9
   m_Name: Player
   m_TagString: Untagged
@@ -1287,6 +1359,36 @@ MonoBehaviour:
   Velocity: {x: 0, y: 0, z: 0}
   StridePhase: 0
   AdjustedMaxSpeed: 0
+--- !u!114 &287596665299939420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5886909609703047410}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f705eeea036325f4cb23b91e15ee76cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHp: 100
+  OnHealthLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHealthGainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnAttackedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnKilledEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  playerHealth:
+    UseConstant: 0
+    _description: 
+    ConstantValue: 0
+    ReferenceData: {fileID: 11400000, guid: d5b80e9baa083a744b3d3109d9d97780, type: 2}
 --- !u!1 &5990631301142876808
 GameObject:
   m_ObjectHideFlags: 0

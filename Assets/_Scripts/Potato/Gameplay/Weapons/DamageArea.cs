@@ -15,7 +15,7 @@ namespace Potato.Gameplay
         [Tooltip("Color of the area of effect radius")]
         public Color AreaOfEffectColor = Color.red * 0.5f;
 
-        public void InflictDamageInArea(float damage, Vector3 center, LayerMask layers,
+        public void InflictDamageInArea(int damage, Vector3 center, LayerMask layers,
             QueryTriggerInteraction interaction, GameObject owner)
         {
             var uniqueTargets = new HashSet<Target>();
@@ -33,7 +33,7 @@ namespace Potato.Gameplay
             foreach (Target uniqueTarget in uniqueTargets)
             {
                 float distance = Vector3.Distance(uniqueTarget.transform.position, transform.position);
-                uniqueTarget.InflictDamage(new(damage * DamageRatioOverDistance.Evaluate(distance / AreaOfEffectDistance), owner,
+                uniqueTarget.InflictDamage(new((int)(damage * DamageRatioOverDistance.Evaluate(distance / AreaOfEffectDistance)), owner,
                     center, (center - uniqueTarget.transform.position).normalized));
             }
         }
