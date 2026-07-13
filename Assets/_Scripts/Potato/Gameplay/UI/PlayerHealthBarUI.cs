@@ -11,7 +11,7 @@ namespace Potato.Gameplay.UI
 
         void Update()
         {
-            HealthFillImage.fillAmount = playerHealth.Value / playerHealth.DefaultValue;
+            HealthFillImage.fillAmount = playerHealth.Value / 100f;
         }
     }
 }

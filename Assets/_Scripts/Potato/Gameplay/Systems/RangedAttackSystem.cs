@@ -114,21 +114,6 @@ namespace Potato.Gameplay
             return info;
         }
 
-        public void DoProjectileAttack(WeaponController owner, ProjectileBase projectilePrefab, int count, float spread)
-        {
-            for (int i = 0; i < count; i++)
-            {
-                Vector3 shotDirection = ApplyCircleSpread(owner.Owner.AimCams.AimTransform, spread);
-                ProjectileBase newProjectile = Instantiate(projectilePrefab, owner.Owner.AimCams.AimPos, Quaternion.LookRotation(shotDirection));
-                newProjectile.Shoot(owner);
-            }
-        }
-
-        public void DoExplosiveAttack(WeaponController owner, int count, float spread)
-        {
-            Debug.Log($"{count} Shots requested by {owner} from {owner.Owner.AimCams.AimPos} going {owner.Owner.AimCams.AimDir} with {spread} spread");
-        }
-
         // single spread angle for circle-shaped spread pattern
         Vector3 ApplyCircleSpread(Transform origin, float spreadAngle)
         {

@@ -29,8 +29,12 @@ namespace Potato.Gameplay
         {
             CurrentHp -= damage;
             OnHealthLostEvent?.Invoke(damage);
+
             if (CurrentHp <= 0)
+            {
                 HandleDeath();
+                CurrentHp = 0;
+            }
         }
 
         public virtual void Heal(int healing)

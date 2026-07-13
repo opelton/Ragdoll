@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isReadonly: 0
   _description: 
-  _initialValue: 100
+  _initialValue: 1
   _value: 100
   onValueChanged: {fileID: 11400000, guid: 845ca4fd07940124eae336041ea45470, type: 2}

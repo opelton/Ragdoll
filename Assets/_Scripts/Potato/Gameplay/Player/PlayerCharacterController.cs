@@ -5,6 +5,7 @@ using UnityEngine;
 namespace Potato.Gameplay
 {
     [RequireComponent(typeof(CharacterController), typeof(PlayerStance), typeof(FirstPersonAnimationController))]
+    [RequireComponent(typeof(PlayerHealth))]
     public class PlayerCharacterController : MonoBehaviour
     {
         const float k_JumpGroundingPreventionTime = 0.2f;
@@ -53,6 +54,9 @@ namespace Potato.Gameplay
         private CharacterController _controller;
         private FirstPersonAnimationController _animationController;
         private PlayerStance _stance;
+        private PlayerHealth _health;
+
+
         private float _cameraY = 0;
         private Vector3 _groundNormal = Vector3.up;
         private float _lastJumpTime = 0f;
@@ -69,6 +73,8 @@ namespace Potato.Gameplay
             _controller = GetComponent<CharacterController>();
             _animationController = GetComponent<FirstPersonAnimationController>();
             _stance = GetComponent<PlayerStance>();
+            _health = GetComponent<PlayerHealth>();
+            _health.OnKilledEvent.AddListener(PlayerDied);
 
             _controller.enableOverlapRecovery = true;
             _stance.IsGrounded.OnValueChanged += CheckFallDamage;
@@ -97,6 +103,11 @@ namespace Potato.Gameplay
                 UpdateCamera();
                 UpdateMovement(Time.deltaTime);
             }
+        }
+
+        void PlayerDied()
+        {
+            Debug.Log("player is dead");
         }
 
         void UpdateCamera()
