@@ -1,6 +1,7 @@
 using Potato.Game;
 using Potato.Core;
 using UnityEngine;
+using System;
 
 namespace Potato.Gameplay
 {
@@ -65,7 +66,7 @@ namespace Potato.Gameplay
         private Collider[] _crouchOverlapBuffer = new Collider[4];
 
         // --
-        public bool IsAlive => true;
+        public Bindable<bool> IsAlive => new(true);
         public Transform[] DetectionPoints => detectionPoints;
 
         void Start()
@@ -107,7 +108,8 @@ namespace Potato.Gameplay
 
         void PlayerDied()
         {
-            Debug.Log("player is dead");
+            Debug.Log("player has died");
+            IsAlive.Value = false;
         }
 
         void UpdateCamera()
