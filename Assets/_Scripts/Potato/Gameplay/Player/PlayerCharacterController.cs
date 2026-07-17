@@ -66,7 +66,7 @@ namespace Potato.Gameplay
         private Collider[] _crouchOverlapBuffer = new Collider[4];
 
         // --
-        public Bindable<bool> IsAlive => new(true);
+        public Bindable<bool> IsAlive = new(true);
         public Transform[] DetectionPoints => detectionPoints;
 
         void Start()

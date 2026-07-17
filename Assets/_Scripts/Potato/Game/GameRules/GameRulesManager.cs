@@ -9,7 +9,7 @@ namespace Potato.Game
         void OnEnable()
         {
             foreach(var rule in gameRules)
-                rule.StartRule();
+                rule.InitializeRule(this);
         }
 
         void Update()
