@@ -32,6 +32,8 @@ namespace Potato.Gameplay
         [SerializeField] private float swaySmoothing = 4f;
         [SerializeField] private Vector2 swayMultiplier = new(1f, 1f);
 
+        public Transform WeaponTransform => weaponRoot;
+
         private PlayerStance _stance;
         private Vector3 _weaponRecoilLocalPos;
         private Vector3 _totalRecoil;

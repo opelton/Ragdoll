@@ -12,8 +12,9 @@ namespace Potato.Gameplay
         const float k_JumpGroundingPreventionTime = 0.2f;
         const float k_GroundCheckDistanceInAir = 0.07f;
 
-        [Header("Main Camera")]
-        [SerializeField] private Camera playerCamera;
+        [Header("First Person Camera")]
+        [SerializeField] private Transform firstPersonRoot;
+        [SerializeField] private PlayerCamerasController cams;
 
         [Header("Input Data")]
         [SerializeField] private InputFloatAxis moveInput;
@@ -47,6 +48,10 @@ namespace Potato.Gameplay
         [SerializeField] private float airAcceleration = 25f;
         [SerializeField] private float turnSpeed = 1000f;
         [SerializeField] private float jumpForce = 9f;
+
+        [Header("On Player Death")]
+        [SerializeField] private GameObject deadHeadPrefab;
+        [SerializeField] private GameObject droppedWeaponPrefab;
 
         [Header("Ai Detection")]
         [SerializeField] private Transform[] detectionPoints;
@@ -96,7 +101,7 @@ namespace Potato.Gameplay
 
         void Update()
         {
-            if (!isPausedRef.Value)
+            if (!isPausedRef.Value && IsAlive.Value)
             {
                 GroundCheck();
                 UpdateCrouchInput();
@@ -108,8 +113,31 @@ namespace Potato.Gameplay
 
         void PlayerDied()
         {
-            Debug.Log("player has died");
             IsAlive.Value = false;
+
+            // player loses their head when they die, for now this is the only death animation
+            var detachedHead = Instantiate(deadHeadPrefab,
+                firstPersonRoot.position,
+                firstPersonRoot.rotation);
+
+            if(detachedHead.TryGetComponent<Rigidbody>(out var rollingHead))
+                rollingHead.velocity = _controller.velocity;
+
+            // player drops their weapon
+            var droppedWeapon = Instantiate(droppedWeaponPrefab,
+                _animationController.WeaponTransform.position,
+                _animationController.WeaponTransform.rotation);
+
+            if(droppedWeapon.TryGetComponent<Rigidbody>(out var rollingWeapon))
+            {
+                rollingWeapon.velocity = 0.5f * _controller.velocity +
+                     (UnityEngine.Random.Range(0f, 1.5f) * _controller.transform.right) + 
+                     (UnityEngine.Random.Range(0f, 1.5f) * _controller.transform.up);
+                rollingWeapon.angularVelocity = UnityEngine.Random.insideUnitSphere * UnityEngine.Random.Range(.5f, 2f);     
+            }
+
+            cams.ReparentCameras(detachedHead.transform);
+            firstPersonRoot.gameObject.SetActive(false);
         }
 
         void UpdateCamera()
@@ -120,7 +148,7 @@ namespace Potato.Gameplay
             // camera y
             _cameraY += lookInput.Value.y * turnSpeed;
             _cameraY = Mathf.Clamp(_cameraY, -89f, 89f);
-            playerCamera.transform.localEulerAngles = new Vector3(_cameraY, 0, 0);
+            firstPersonRoot.transform.localEulerAngles = new Vector3(_cameraY, 0, 0);
         }
 
         void UpdateMovement(float dt)
@@ -226,7 +254,7 @@ namespace Potato.Gameplay
             
             _controller.height = Mathf.Lerp(standingHeight, crouchingHeight, _crouchRatio);
             _controller.center = _controller.height * 0.5f * Vector3.up;
-            playerCamera.transform.localPosition = Vector3.up * (_controller.height + cameraHeightOffset);
+            firstPersonRoot.transform.localPosition = Vector3.up * (_controller.height + cameraHeightOffset);
         }
 
         void UpdateCrouchInput()

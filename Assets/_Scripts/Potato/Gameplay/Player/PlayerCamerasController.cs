@@ -31,5 +31,11 @@ namespace Potato.Gameplay
         {
             gameCam.fieldOfView = fov * playerStance.FOVModifier.Value;
         }
+
+        public void ReparentCameras(Transform newParent)
+        {
+            gameCam.transform.SetParent(newParent);
+            fpsCam.transform.SetParent(newParent);
+        }
     }
 }

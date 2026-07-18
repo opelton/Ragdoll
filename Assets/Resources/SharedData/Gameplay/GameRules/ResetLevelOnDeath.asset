@@ -17,3 +17,5 @@ MonoBehaviour:
     _description: 
     ConstantValue: {fileID: 0}
     ReferenceData: {fileID: 11400000, guid: a059aaae4dc6948418dc5b5b95d4c56c, type: 2}
+  gameFlow: {fileID: 11400000, guid: 8933b0ff70f3feb469e4192e43c0bbad, type: 2}
+  onDeathReloadDelay: 3
