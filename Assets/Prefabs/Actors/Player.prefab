@@ -1293,10 +1293,11 @@ MonoBehaviour:
   airAcceleration: 25
   turnSpeed: 1000
   jumpForce: 9
+  notifyPlayerDeath: {fileID: 11400000, guid: 5879aa5985e2bfd43a23d6dbd98fd2b7, type: 2}
   deadHeadPrefab: {fileID: 9017895939129754725, guid: 101374f97ae9eb94e9639e06bede6efa, type: 3}
   droppedWeaponPrefab: {fileID: 3525562823161459172, guid: 75c8afbedc55e3c48bea0a7b190f5535, type: 3}
   detectionPoints:
-  - {fileID: 2227685919118097372}
+  - {fileID: 3602000054297640430}
 --- !u!114 &4615072429341156804
 MonoBehaviour:
   m_ObjectHideFlags: 0

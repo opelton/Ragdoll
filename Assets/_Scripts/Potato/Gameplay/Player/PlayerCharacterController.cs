@@ -50,6 +50,7 @@ namespace Potato.Gameplay
         [SerializeField] private float jumpForce = 9f;
 
         [Header("On Player Death")]
+        [SerializeField] private GameEvent notifyPlayerDeath;
         [SerializeField] private GameObject deadHeadPrefab;
         [SerializeField] private GameObject droppedWeaponPrefab;
 
@@ -138,6 +139,7 @@ namespace Potato.Gameplay
 
             cams.ReparentCameras(detachedHead.transform);
             firstPersonRoot.gameObject.SetActive(false);
+            notifyPlayerDeath.Invoke(this);
         }
 
         void UpdateCamera()
