@@ -1256,6 +1256,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf4b351474280a742aa60e73e16b889b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  notifyPlayerSpawned: {fileID: 11400000, guid: ecaac2afb4f22b840a25500c6d71e3f8, type: 2}
   firstPersonRoot: {fileID: 3602000054297640430}
   cams: {fileID: 3538010742275564257}
   moveInput: {fileID: 11400000, guid: 961e4355c1e5a0948b1a9a3263b3f243, type: 2}

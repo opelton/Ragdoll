@@ -15,9 +15,10 @@ namespace Potato.Gameplay.UI
         [SerializeField] private Color crosshairColor_Hostile = Color.red;
         RectTransform _crosshairTransform;
 
-        void Start()
+        void Awake()
         {
-            _crosshairTransform = crosshairImage.GetComponent<RectTransform>();
+            if(_crosshairTransform == null)
+                _crosshairTransform = crosshairImage.GetComponent<RectTransform>();
             UpdateCrosshairSprite();
         }
 

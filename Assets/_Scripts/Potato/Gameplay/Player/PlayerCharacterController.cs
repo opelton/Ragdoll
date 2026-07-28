@@ -12,6 +12,8 @@ namespace Potato.Gameplay
         const float k_JumpGroundingPreventionTime = 0.2f;
         const float k_GroundCheckDistanceInAir = 0.07f;
 
+        [SerializeField] private GameEvent notifyPlayerSpawned;
+
         [Header("First Person Camera")]
         [SerializeField] private Transform firstPersonRoot;
         [SerializeField] private PlayerCamerasController cams;
@@ -88,6 +90,7 @@ namespace Potato.Gameplay
 
             SetCrouchingState(false, true);
             UpdateCharacterHeight(true);
+            notifyPlayerSpawned.Invoke(this);
         }
 
         void OnEnable()
